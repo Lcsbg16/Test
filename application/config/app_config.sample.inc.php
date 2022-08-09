@@ -1,0 +1,23 @@
+<?php
+
+/*
+ * Arquivo de configurações
+ */
+
+////// Configuração de BD
+define("APP_DB_SERVER", "");
+define("APP_DB_USERNAME", "");
+define("APP_DB_PASSWORD", "");
+define("APP_DB_DATABASE", "");
+define("APP_DB_PORT", 3306);
+define("DB_DRIVER", 'mysqli');
+
+/**
+ * Debug da base de dados
+ */
+define('DB_DEBUG', true);
+
+/**
+ * Nome da sessão
+ */
+define('SESSION_NAME', 'telemetria');
