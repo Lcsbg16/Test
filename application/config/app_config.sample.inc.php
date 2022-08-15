@@ -21,3 +21,6 @@ define('DB_DEBUG', true);
  * Nome da sessão
  */
 define('SESSION_NAME', 'telemetria');
+
+// Título da aplicação
+define('APPLICATION_TITLE', 'Sistema de Telemetria');
