@@ -34,3 +34,4 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 /application/config/app_config.inc.php
 /assets/bower_components/
 /application/third_party/composer/
+/application/vendor/
