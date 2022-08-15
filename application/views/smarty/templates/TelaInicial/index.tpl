@@ -1,4 +1,4 @@
-{extends file = 'app.tpl'}
-{block name = "conteudo"}
+{extends file = 'app_logado.tpl'}
+{block name = "conteudo_logado"}
     Tela incial
 {/block}

@@ -22,5 +22,13 @@ define('DB_DEBUG', true);
  */
 define('SESSION_NAME', 'telemetria');
 
-// Título da aplicação
+/**
+ * Título da aplicação
+ */
 define('APPLICATION_TITLE', 'Sistema de Telemetria');
+
+/**
+ * URL base da aplicação
+ */
+define("WEBSITE_BASE_URL", "http://localhost/mine/telemetria/");
+
