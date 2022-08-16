@@ -92,6 +92,11 @@
                 <!-- Navigation -->
                 <ul class="navbar-nav">
                     <li class="nav-item  active ">
+                        <a class="nav-link  active " href="{$BASE_URL}grafico">
+                            <i class="ni ni-tv-2 text-primary"></i> Gráficos
+                        </a>
+                    </li>
+                    <li class="nav-item  active ">
                         <a class="nav-link  active " href="{$BASE_URL}/assets/temas/argon/index.html">
                             <i class="ni ni-tv-2 text-primary"></i> Dashboard
                         </a>
