@@ -27,7 +27,7 @@
     </head>
 
     <body class="{$body_class|default:''}">
-
+        {include file="flashMessage.tpl"}
     {block name="conteudo"}{/block}
     <!--   Core   -->
     <script src="{$BASE_URL}/assets/temas/argon/assets/js/plugins/jquery/dist/jquery.min.js"></script>

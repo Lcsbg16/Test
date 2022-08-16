@@ -20,12 +20,6 @@ abstract class BasePrivateController extends BaseController
     public $LoginModel;
 
     /**
-     *
-     * @var PermissoesModel
-     */
-    public $PermissoesModel;
-
-    /**
      * Permissão de acesso ao controller. Use permissão 'GERAL' para liberar acesso para qualquer usuário logado
      *
      * @var string

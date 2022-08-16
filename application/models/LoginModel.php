@@ -23,7 +23,9 @@ class LoginModel extends CI_Model
 
     public function setUsuarioLogado($usuarioId)
     {
-        $usr                               = User::findOrFail($usuarioId);
+        $this->load->model('UsuarioModel');
+
+        $usr                               = $this->UsuarioModel->getUsuario($usuarioId);
         $this->session->dadosUsuarioLogado = serialize($usr);
         $this->session->usuarioEstaLogado  = true;
         return $usr;
@@ -32,14 +34,14 @@ class LoginModel extends CI_Model
     public function efetuarLogin($usuario, $senha)
     {
         $this->load->model('UsuarioModel');
-
         $usr = $this->UsuarioModel->checarLoginValido($usuario, $senha);
+
         if (!$usr)
         {
             throw new LoginError('Usuário ou senha não conferem.');
         }
 
-        return $this->setUsuarioLogado($usr->id);
+        return $this->setUsuarioLogado($usr['id']);
     }
 
     public function usuarioEstaLogado()

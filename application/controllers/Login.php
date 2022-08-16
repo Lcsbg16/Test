@@ -9,6 +9,7 @@ class Login extends BaseController
 
     public function index()
     {
+
         if ($this->input->post('username'))
         {
             try
