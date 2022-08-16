@@ -1,11 +1,8 @@
 <?php
 
-use App\Models\Dao\User;
-
 /**
  * Gerenciador de login
  *
- * Esta classe tem o objetivo de gerenciar o login do usuários, atualmente pelo CAS. Futuramente ele deve comportar diferentes fontes de autenticação
  */
 class LoginModel extends CI_Model
 {
