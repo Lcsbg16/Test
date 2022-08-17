@@ -96,7 +96,7 @@
                 </li>
                 <li class="nav-item  active ">
                     <a class="nav-link  active " href="{$BASE_URL}grafico">
-                        <i class="ni ni-chart-bar-32 text-primary"></i> Gr&aacute;ficos
+                        <i class="ni ni-chart-bar-32 text-primary text-orange"></i> Gr&aacute;ficos
                     </a>
                 </li>
             </ul>
