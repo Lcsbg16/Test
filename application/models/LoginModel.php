@@ -13,10 +13,7 @@ class LoginModel extends CI_Model
      */
     public function getDadosUsuarioLogado()
     {
-        if ($user = unserialize($this->session->dadosUsuarioLogado))
-        {
-            $user->refresh();
-        }
+        $user = unserialize($this->session->dadosUsuarioLogado);
 
         return $user;
     }

@@ -5,9 +5,15 @@ class UsuarioModel extends CI_Model
 
     public function getUsuario($user_id)
     {
-        $this->db->where('id', $user_id)
+        $usuario = $this->db->where('id', $user_id)
                 ->get('usuario')
                 ->row_array();
+
+        // Grupos
+        // TODO: Terminar de implementar
+        $usuario['grupos'] = [];
+
+        return $usuario;
     }
 
     public function atualizarSenhaUsuario($usuarioId, $senha)
