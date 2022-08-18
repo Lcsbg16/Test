@@ -10,16 +10,19 @@
         <link href="{$BASE_URL}/assets/temas/argon/assets/img/brand/favicon.png" rel="icon" type="image/png">
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
-        <!-- Icons -->
-        <link href="{$BASE_URL}/assets/temas/argon/assets/js/plugins/nucleo/css/nucleo.css" rel="stylesheet" />
-        <link href="{$BASE_URL}/assets/temas/argon/assets/js/plugins/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" />
-        <!-- CSS Files -->
-        <link href="{$BASE_URL}/assets/temas/argon/assets/css/argon-dashboard.css?v=1.1.1" rel="stylesheet" />
+
         {if isset($css_files)}
             {foreach from=$css_files item=file}
                 <link type="text/css" rel="stylesheet" href="{$file}" />
             {/foreach}
         {/if}
+
+        <!-- Icons -->
+        <link href="{$BASE_URL}/assets/temas/argon/assets/js/plugins/nucleo/css/nucleo.css" rel="stylesheet" />
+        <link href="{$BASE_URL}/assets/temas/argon/assets/js/plugins/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" />
+        <!-- CSS Files -->
+        <link href="{$BASE_URL}/assets/temas/argon/assets/css/argon-dashboard.css?v=1.1.1" rel="stylesheet" />
+
 
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 
