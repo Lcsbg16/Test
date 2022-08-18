@@ -90,7 +90,7 @@
             <!-- Navigation -->
             <ul class="navbar-nav">
                 <li class="nav-item  active ">
-                    <a class="nav-link  active " href="{$BASE_URL}/assets/temas/argon/index.html">
+                    <a class="nav-link  active " href="{$BASE_URL}">
                         <i class="ni ni-tv-2 text-primary"></i> Painel de Controle
                     </a>
                 </li>
