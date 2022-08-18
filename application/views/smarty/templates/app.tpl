@@ -15,6 +15,11 @@
         <link href="{$BASE_URL}/assets/temas/argon/assets/js/plugins/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" />
         <!-- CSS Files -->
         <link href="{$BASE_URL}/assets/temas/argon/assets/css/argon-dashboard.css?v=1.1.1" rel="stylesheet" />
+        {if isset($css_files)}
+            {foreach from=$css_files item=file}
+                <link type="text/css" rel="stylesheet" href="{$file}" />
+            {/foreach}
+        {/if}
 
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 
@@ -25,8 +30,14 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.pt-BR.min.js"></script>
 
+
+
         <link href="{$BASE_URL}/assets/css/app.css" rel="stylesheet" />
         <script src="{$BASE_URL}/assets/js/app.js"></script>
+
+        <script>
+            var BASE_URL = "{$BASE_URL}";
+        </script>
     </head>
 
     <body class="{$body_class|default:''}">
@@ -45,7 +56,11 @@
     <!--   Argon JS   -->
     <script src="{$BASE_URL}/assets/temas/argon/assets/js/argon-dashboard.min.js?v=1.1.1"></script>
 
-
+    {if isset($js_files)}
+        {foreach from=$js_files item=file}
+            <script src="{$file}"></script>
+        {/foreach}
+    {/if}
 </body>
 
 </html>

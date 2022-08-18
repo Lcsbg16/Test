@@ -24,7 +24,7 @@ abstract class BasePrivateController extends BaseController
      *
      * @var string
      */
-    protected $permissao_acesso = 'GERAL';
+    protected $permissaoAcesso = 'GERAL';
 
     /**
      *  Ações a serem liberadas como públicas
@@ -60,7 +60,7 @@ abstract class BasePrivateController extends BaseController
 
     private function _checaPermissaoAcesso()
     {
-        if (!$this->checaPermissaoUsuarioLogado($this->permissao_acesso))
+        if (!$this->checaPermissaoUsuarioLogado($this->permissaoAcesso))
         {
             echo $this->loadSmartyView(
                     'mensagem_erro', array('mensagem_erro' => "Você não possui acesso a este recurso. Caso tenha dúvidas quanto a isso, por favor contate o administrador."), true
