@@ -92,6 +92,11 @@
                         <i class="ni ni-app text-primary"></i> Cadastro de Locais
                     </a>
                 </li>
+                <li class="nav-item  active ">
+                    <a class="nav-link  active " href="{$BASE_URL}AdminEstacoes/">
+                        <i class="ni ni-app text-primary"></i> Cadastro de Esta&ccedil;&otilde;es
+                    </a>
+                </li>
             </ul>
             <!-- Divider -->
             <hr class="my-3">
