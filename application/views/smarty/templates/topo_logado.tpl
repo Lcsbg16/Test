@@ -29,11 +29,11 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
                     <div class=" dropdown-header noti-title">
-                        <h6 class="text-overflow m-0">Welcome!</h6>
+                        <h6 class="text-overflow m-0">Bem-vindo!</h6>
                     </div>
-                    <a href="{$BASE_URL}/assets/temas/argon/examples/profile.html" class="dropdown-item">
+                    <a href="javascript:alert('Funcionalidade em desenvolvimento.')" class="dropdown-item">
                         <i class="ni ni-single-02"></i>
-                        <span>Meu perfil</span>
+                        <span>Meu Perfil</span>
                     </a>
                     <a href="{$BASE_URL}/assets/temas/argon/examples/profile.html" class="dropdown-item">
                         <i class="ni ni-support-16"></i>
@@ -42,7 +42,7 @@
                     <div class="dropdown-divider"></div>
                     <a href="{$BASE_URL}TelaInicial/logout/" class="dropdown-item">
                         <i class="ni ni-user-run"></i>
-                        <span>Logout</span>
+                        <span>Sair</span>
                     </a>
                 </div>
             </li>

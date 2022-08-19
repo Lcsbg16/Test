@@ -6,7 +6,7 @@
         {include file="topo_logado.tpl"}
 
         <!-- Header -->
-        <div class="header bg-gradient-primary pb-6 pt-5 pt-md-1">
+        <div class="header bg-gradient-primary pb-6 pt-5 pt-md-1 d-none d-sm-block">
             {*<div class="container-fluid">
             <div class="header-body">
             <!-- Card stats -->

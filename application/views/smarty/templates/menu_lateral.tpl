@@ -6,27 +6,16 @@
         </button>
         <!-- Brand -->
         <a class="navbar-brand pt-0" href="{$BASE_URL}/assets/temas/argon/index.html">
-            <img src="{$BASE_URL}/assets/temas/argon/assets/img/brand/blue.png" class="navbar-brand-img" alt="...">
+            <img src="{$BASE_URL}/assets/temas/argon/assets/img/brand/blue.png" class="navbar-brand-img d-none d-sm-block" alt="...">
+            <img src="{$BASE_URL}/assets/temas/argon/assets/img/brand/blue-xs.png" class="navbar-brand-img d-block d-sm-none" alt="...">
         </a>
         <!-- User -->
         <ul class="nav align-items-center d-md-none">
             <li class="nav-item dropdown">
-                <a class="nav-link nav-link-icon" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="ni ni-bell-55"></i>
-                </a>
-                <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right" aria-labelledby="navbar-default_dropdown_1">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                </div>
-            </li>
-            <li class="nav-item dropdown">
                 <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <div class="media align-items-center">
                         <span class="avatar avatar-sm rounded-circle">
-                            <img alt="Image placeholder" src="{$BASE_URL}/assets/temas/argon/assets/img/theme/team-1-800x800.jpg
-                                 ">
+                            {$usuario_logado.nome|substr:0:1}
                         </span>
                     </div>
                 </a>
@@ -34,26 +23,19 @@
                     <div class=" dropdown-header noti-title">
                         <h6 class="text-overflow m-0">Welcome!</h6>
                     </div>
-                    <a href="{$BASE_URL}/assets/temas/argon/examples/profile.html" class="dropdown-item">
+                    <a href="javascript:alert('Funcionalidade em desenvolvimento.')" class="dropdown-item">
                         <i class="ni ni-single-02"></i>
-                        <span>My profile</span>
+                        <span>Meu Perfil</span>
                     </a>
-                    <a href="{$BASE_URL}/assets/temas/argon/examples/profile.html" class="dropdown-item">
-                        <i class="ni ni-settings-gear-65"></i>
-                        <span>Settings</span>
-                    </a>
-                    <a href="{$BASE_URL}/assets/temas/argon/examples/profile.html" class="dropdown-item">
-                        <i class="ni ni-calendar-grid-58"></i>
-                        <span>Activity</span>
-                    </a>
+
                     <a href="{$BASE_URL}/assets/temas/argon/examples/profile.html" class="dropdown-item">
                         <i class="ni ni-support-16"></i>
-                        <span>Support</span>
+                        <span>Suporte</span>
                     </a>
                     <div class="dropdown-divider"></div>
                     <a href="{$BASE_URL}TelaInicial/logout/" class="dropdown-item">
                         <i class="ni ni-user-run"></i>
-                        <span>Logout</span>
+                        <span>Sair</span>
                     </a>
                 </div>
             </li>
@@ -104,7 +86,23 @@
             <hr class="my-3">
             <!-- Heading -->
             <h6 class="navbar-heading text-muted">Cadastros</h6>
+            <ul class="navbar-nav ">
+                <li class="nav-item  active ">
+                    <a class="nav-link  active " href="{$BASE_URL}AdminLocais/">
+                        <i class="ni ni-app text-primary"></i> Cadastro de Locais
+                    </a>
+                </li>
+            </ul>
+            <!-- Divider -->
+            <hr class="my-3">
+            <!-- Heading -->
+
             <ul class="navbar-nav mb-md-3">
+                <li class="nav-item  active ">
+                    <a class="nav-link  active " href="{$BASE_URL}AdminBairros/">
+                        <i class="ni ni-app text-primary"></i> Cadastro de Bairros
+                    </a>
+                </li>
                 <li class="nav-item  active ">
                     <a class="nav-link  active " href="{$BASE_URL}AdminUsuarios/">
                         <i class="ni ni-app text-primary"></i> Cadastro de Usu&aacute;rios
@@ -117,7 +115,7 @@
             <h6 class="navbar-heading text-muted">Usu&aacute;rio</h6>
             <ul class="navbar-nav mb-md-3">
                 <li class="nav-item">
-                    <a class="nav-link " href="{$BASE_URL}/assets/temas/argon/examples/profile.html">
+                    <a class="nav-link " href="javascript:alert('Funcionalidade em desenvolvimento.')">
                         <i class="ni ni-single-02 text-yellow"></i> Meu Perfil
                     </a>
                 </li>
