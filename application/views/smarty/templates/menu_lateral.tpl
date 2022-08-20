@@ -5,7 +5,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <!-- Brand -->
-        <a class="navbar-brand pt-0" href="{$BASE_URL}/assets/temas/argon/index.html">
+        <a class="navbar-brand pt-0" href="{$BASE_URL}">
             <img src="{$BASE_URL}/assets/temas/argon/assets/img/brand/blue.png" class="navbar-brand-img d-none d-sm-block" alt="...">
             <img src="{$BASE_URL}/assets/temas/argon/assets/img/brand/blue-xs.png" class="navbar-brand-img d-block d-sm-none" alt="...">
         </a>
