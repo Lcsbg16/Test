@@ -30,6 +30,7 @@ class AdminUsuarios extends BaseCrudController
             // Nomes dos campos
             $crud->display_as('email', 'E-mail');
             $crud->display_as('username', 'Usuário');
+            $crud->display_as('_estacoes', 'Acesso às Estações');
 
             $crud->display_as('_grupos', 'Grupos de Acesso');
 
@@ -50,6 +51,7 @@ class AdminUsuarios extends BaseCrudController
 
             // Relacionamentos
             $crud->set_relation_n_n('_grupos', 'usuario_possui_grupo', 'grupo', 'usuario_id', 'grupo_usuarios_id', 'nome');
+            $crud->set_relation_n_n('_estacoes', 'usuario_acessa_estacao', 'estacao', 'usuario_id', 'estacao_id', 'descricao', 'ordem');
 
             $this->_crud_output($crud);
         }
