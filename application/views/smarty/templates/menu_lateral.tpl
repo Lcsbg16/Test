@@ -21,7 +21,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
                     <div class=" dropdown-header noti-title">
-                        <h6 class="text-overflow m-0">Welcome!</h6>
+                        <h6 class="text-overflow m-0">Bem-vindo!</h6>
                     </div>
                     <a href="javascript:alert('Funcionalidade em desenvolvimento.')" class="dropdown-item">
                         <i class="ni ni-single-02"></i>
@@ -46,8 +46,9 @@
             <div class="navbar-collapse-header d-md-none">
                 <div class="row">
                     <div class="col-6 collapse-brand">
-                        <a href="{$BASE_URL}/assets/temas/argon/index.html">
-                            <img src="{$BASE_URL}/assets/temas/argon/assets/img/brand/blue.png">
+                        <a href="{$BASE_URL}">
+                            <img src="{$BASE_URL}/assets/temas/argon/assets/img/brand/blue.png" class="d-none d-sm-block" alt="...">
+                            <img src="{$BASE_URL}/assets/temas/argon/assets/img/brand/blue-xs.png" class="d-block d-sm-none" alt="...">
                         </a>
                     </div>
                     <div class="col-6 collapse-close">
@@ -74,6 +75,11 @@
                 <li class="nav-item  active ">
                     <a class="nav-link  active " href="{$BASE_URL}">
                         <i class="ni ni-tv-2 text-primary"></i> Painel de Controle
+                    </a>
+                </li>
+                <li class="nav-item  active ">
+                    <a class="nav-link  active " href="{$BASE_URL}#">
+                        <i class="ni ni-map-big text-primary text-yellow"></i> Mapa de Esta&ccedil;&otilde;es
                     </a>
                 </li>
                 <li class="nav-item  active ">

@@ -30,16 +30,17 @@ class AdminLocais extends BaseCrudController
         $crud->display_as('numero', 'Número');
         $crud->display_as('cep', 'CEP');
         $crud->display_as('bairro_id', 'Bairro');
+        $crud->display_as('_grupos', 'Grupos de Usuários com Acesso');
 
         // Tipos de campos
         // Configurações da listagems
         $crud->columns('descricao', 'bairro_id');
 
-        // Callbacks de campo
-        // Incluir aqui uma callback para o campo de bairro em cascata
-        //$crud->callback_edit_field('senha', array($this, 'show_password_field'));
         // Relacionamentos
         $crud->set_relation('bairro_id', 'bairro', 'nome');
+
+        // Relacionamentos
+        $crud->set_relation_n_n('_grupos', 'grupo_acessa_endereco', 'grupo', 'endereco_id', 'grupo_id', 'nome');
 
         $this->_crud_output($crud);
     }
