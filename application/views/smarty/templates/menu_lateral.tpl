@@ -73,7 +73,7 @@
             <!-- Navigation -->
             <ul class="navbar-nav">
                 <li class="nav-item  active ">
-                    <a class="nav-link  active " href="{$BASE_URL}">
+                    <a class="nav-link  active " href="{$BASE_URL}Dashboard">
                         <i class="ni ni-tv-2 text-primary"></i> Painel de Controle
                     </a>
                 </li>
@@ -93,14 +93,14 @@
             <!-- Heading -->
             <h6 class="navbar-heading text-muted">Cadastros</h6>
             <ul class="navbar-nav ">
-                <li class="nav-item  active ">
-                    <a class="nav-link  active " href="{$BASE_URL}AdminLocais/">
-                        <i class="ni ni-app text-primary"></i> Cadastro de Locais
-                    </a>
-                </li>
+                {* <li class="nav-item  active ">
+                <a class="nav-link  active " href="{$BASE_URL}AdminLocais/">
+                <i class="ni ni-app text-primary"></i> Locais
+                </a>
+                </li> *}
                 <li class="nav-item  active ">
                     <a class="nav-link  active " href="{$BASE_URL}AdminEstacoes/">
-                        <i class="ni ni-app text-primary"></i> Cadastro de Esta&ccedil;&otilde;es
+                        <i class="ni ni-app text-primary"></i> Esta&ccedil;&otilde;es
                     </a>
                 </li>
             </ul>
@@ -109,14 +109,19 @@
             <!-- Heading -->
 
             <ul class="navbar-nav mb-md-3">
+                {* <li class="nav-item  active ">
+                <a class="nav-link  active " href="{$BASE_URL}AdminBairros/">
+                <i class="ni ni-app text-primary"></i> Bairros
+                </a>
+                </li>*}
                 <li class="nav-item  active ">
-                    <a class="nav-link  active " href="{$BASE_URL}AdminBairros/">
-                        <i class="ni ni-app text-primary"></i> Cadastro de Bairros
+                    <a class="nav-link  active " href="{$BASE_URL}AdminUsuarios/">
+                        <i class="ni ni-app text-primary"></i> Usu&aacute;rios
                     </a>
                 </li>
                 <li class="nav-item  active ">
-                    <a class="nav-link  active " href="{$BASE_URL}AdminUsuarios/">
-                        <i class="ni ni-app text-primary"></i> Cadastro de Usu&aacute;rios
+                    <a class="nav-link  active " href="{$BASE_URL}AdminGrupos/">
+                        <i class="ni ni-app text-primary"></i> Grupos de Usu&aacute;rios
                     </a>
                 </li>
             </ul>

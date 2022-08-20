@@ -37,9 +37,10 @@ class AdminEstacoes extends BaseCrudController
         $crud->display_as('descricao', 'Descrição');
         $crud->display_as('_grupos', 'Grupos de Usuários com Acesso (Adicional ao controle de acesso por locais)');
         $crud->display_as('_coordenadas', 'Coordenadas');
+        $crud->display_as('endereco', 'Endereço Completo');
 
         // Campos
-        $crud->fields('endereco_id', 'identificador', 'descricao', '_coordenadas', 'ativa', '_grupos', 'obs', 'latitude', 'longitude');
+        $crud->fields('identificador', 'descricao', 'endereco', 'ativa', '_grupos', 'obs', 'latitude', 'longitude');
 
         // Tipos de campos
         $crud->field_type('ativa', 'true_false', ['Inativa', 'Ativa']);
@@ -49,8 +50,7 @@ class AdminEstacoes extends BaseCrudController
         $crud->unset_texteditor('obs');
 
         // Callbacks de campo
-        $crud->callback_field('_coordenadas', array($this, 'callbackFieldCoordenadas'));
-
+        //$crud->callback_field('_coordenadas', array($this, 'callbackFieldCoordenadas'));
         // Relacionamentos
         $crud->set_relation('endereco_id', 'endereco', 'descricao');
         $crud->set_relation_n_n('_grupos', 'grupo_acessa_estacao', 'grupo', 'estacao_id', 'grupo_id', 'nome');

@@ -12,17 +12,23 @@ require_once 'BaseModel.php';
 class PermissoesModel extends BaseModel
 {
 
-    public function checaPermissaoGrupos($permissao, $idsGrupo)
+    public function checaPermissaoGrupos($permissao, $idGrupos)
     {
-        if (empty($grupos))
+        if (empty($idsGrupo))
         {
             return false;
         }
 
-        return $this->db->from('grupo_possui_permissao')
+        $this->db->cache_on();
+
+        $resultado = $this->db->from('grupo_possui_permissao')
                         ->where_in('grupo_usuarios_id', $idsGrupo)
                         ->where('(\'' . addslashes($permissao) . '\' LIKE permissao)')
                         ->count_all_results() > 0;
+
+        $this->db->cache_off();
+
+        return $resultado;
     }
 
 }
