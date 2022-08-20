@@ -59,7 +59,7 @@ class AdminUsuarios extends BaseCrudController
         }
     }
 
-    function encrypt_password_callback($post_array, $primary_key = null)
+    public function encrypt_password_callback($post_array, $primary_key = null)
     {
         $this->load->helper('security');
 
@@ -75,7 +75,7 @@ class AdminUsuarios extends BaseCrudController
         return $post_array;
     }
 
-    function show_password_field($value)
+    public function show_password_field($value)
     {
         if ($this->grocery_crud->getState() == 'read')
         {

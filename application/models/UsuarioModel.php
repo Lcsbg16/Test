@@ -1,6 +1,8 @@
 <?php
 
-class UsuarioModel extends CI_Model
+require_once 'BaseModel.php';
+
+class UsuarioModel extends BaseModel
 {
 
     public function getUsuario($user_id)

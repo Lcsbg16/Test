@@ -1,6 +1,8 @@
 <?php
 
-class MenusModel extends CI_Model
+require_once 'BaseModel.php';
+
+class MenusModel extends BaseModel
 {
 
     public function getMenus()

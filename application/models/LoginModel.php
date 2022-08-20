@@ -1,10 +1,12 @@
 <?php
 
+require_once 'BaseModel.php';
+
 /**
  * Gerenciador de login
  *
  */
-class LoginModel extends CI_Model
+class LoginModel extends BaseModel
 {
 
     /**

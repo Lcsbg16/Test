@@ -4,11 +4,12 @@ if (!defined('BASEPATH'))
 {
     exit('No direct script access allowed');
 }
+require_once 'BaseModel.php';
 
 /**
  * Modelo para manipulação de permissões
  */
-class PermissoesModel extends CI_Model
+class PermissoesModel extends BaseModel
 {
 
     public function checaPermissaoGrupos($permissao, $idsGrupo)
