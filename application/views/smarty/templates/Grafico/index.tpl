@@ -129,5 +129,3 @@
     {/literal}
 
 {/block}
-
-
