@@ -8,7 +8,8 @@
         <nav class="navbar navbar-top navbar-horizontal navbar-expand-md navbar-dark">
             <div class="container px-4">
                 <a class="navbar-brand" href="{$BASE_URL}assets/temas/argon/index.html">
-                    <img src="{$BASE_URL}assets/temas/argon/assets/img/brand/white.png" />
+                    <img src="{$BASE_URL}/assets/temas/argon/assets/img/brand/white.png" class="d-none d-sm-block" >
+                    <img src="{$BASE_URL}/assets/temas/argon/assets/img/brand/white-xs.png" class="d-block d-sm-none" >
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse-main" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -19,7 +20,8 @@
                         <div class="row">
                             <div class="col-6 collapse-brand">
                                 <a href="{$BASE_URL}assets/temas/argon/index.html">
-                                    <img src="{$BASE_URL}assets/temas/argon/assets/img/brand/blue.png">
+                                    <img src="{$BASE_URL}/assets/temas/argon/assets/img/brand/blue.png" class="d-none d-sm-block" >
+                                    <img src="{$BASE_URL}/assets/temas/argon/assets/img/brand/blue-xs.png" class="d-block d-sm-none" >
                                 </a>
                             </div>
                             <div class="col-6 collapse-close">
