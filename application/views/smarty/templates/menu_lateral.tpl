@@ -78,7 +78,7 @@
                     </a>
                 </li>
                 <li class="nav-item  active ">
-                    <a class="nav-link  active " href="{$BASE_URL}#">
+                    <a class="nav-link  active " href="{$BASE_URL}Estacoes/mapa">
                         <i class="ni ni-map-big text-primary text-yellow"></i> Mapa de Esta&ccedil;&otilde;es
                     </a>
                 </li>
