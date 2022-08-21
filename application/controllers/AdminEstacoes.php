@@ -41,7 +41,7 @@ class AdminEstacoes extends BaseCrudController
         $crud->display_as('_usuarios', 'Usuários com Acesso');
 
         // Campos
-        $crud->fields('identificador', 'descricao', 'endereco', 'ativa', '_usuarios', '_grupos', 'obs', 'latitude', 'longitude');
+        $crud->fields('identificador', 'descricao', 'endereco', '_coordenadas', 'ativa', '_usuarios', '_grupos', 'obs', 'latitude', 'longitude');
 
         // Tipos de campos
         $crud->field_type('ativa', 'true_false', ['Inativa', 'Ativa']);
@@ -51,14 +51,19 @@ class AdminEstacoes extends BaseCrudController
         $crud->unset_texteditor('obs');
 
         // Callbacks de campo
-        //$crud->callback_field('_coordenadas', array($this, 'callbackFieldCoordenadas'));
+        $crud->callback_field('_coordenadas', array($this, 'callbackFieldCoordenadas'));
+
         // Relacionamentos
         $crud->set_relation('endereco_id', 'endereco', 'descricao');
         $crud->set_relation_n_n('_grupos', 'grupo_acessa_estacao', 'grupo', 'estacao_id', 'grupo_id', 'nome');
         $crud->set_relation_n_n('_usuarios', 'usuario_acessa_estacao', 'usuario', 'estacao_id', 'usuario_id', 'nome', 'ordem');
 
         // Configurações da listagem
-        $crud->columns('identificador', 'descricao', 'endereco_id', 'ativa');
+        $crud->columns('identificador', 'descricao', 'endereco', 'ativa');
+
+        // Callbacks de processamento
+        $crud->callback_before_insert(array($this, 'callbackBeforeProcess'));
+        $crud->callback_before_update(array($this, 'callbackBeforeProcess'));
 
         $this->_crud_output($crud);
     }
@@ -82,8 +87,8 @@ class AdminEstacoes extends BaseCrudController
 
     public function callbackBeforeProcess($postArray, $primaryKey)
     {
-        $postArray['latitude']  = $this->input->post('latitude');
-        $postArray['longitude'] = $this->input->post('longitude');
+        $postArray['latitude']  = $this->input->post('latitude') ? $this->input->post('latitude') : NULL;
+        $postArray['longitude'] = $this->input->post('longitude') ? $this->input->post('longitude') : NULL;
 
         return $postArray;
     }

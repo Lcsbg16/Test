@@ -43,8 +43,8 @@ class AdminUsuarios extends BaseCrudController
             $crud->columns('username', 'nome', '_grupos');
 
             // Callbacks de processamento
-            $crud->callback_before_insert(array($this, 'encrypt_password_callback'));
-            $crud->callback_before_update(array($this, 'encrypt_password_callback'));
+            $crud->callback_before_insert(array($this, 'callbackBeforeProcess'));
+            $crud->callback_before_update(array($this, 'callbackBeforeProcess'));
 
             // Callbacks de campo
             $crud->callback_edit_field('senha', array($this, 'show_password_field'));
@@ -61,13 +61,15 @@ class AdminUsuarios extends BaseCrudController
         }
     }
 
-    public function encrypt_password_callback($post_array, $primary_key = null)
+    public function callbackBeforeProcess($post_array, $primary_key = null)
     {
         $this->load->helper('security');
 
+        $post_array['username'] = strtolower($post_array['username']);
+
         if (!empty($post_array['senha']))
         {
-            $post_array['senha'] = do_hash($post_array['senha'], 'sha1');
+            $post_array['senha'] = do_hash($post_array ['senha'], 'sha1');
         }
         else
         {
