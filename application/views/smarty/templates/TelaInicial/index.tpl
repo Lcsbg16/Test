@@ -5,7 +5,7 @@
             <div class="col">
                 <div class="card shadow">
                     <div class="card-header border-0">
-                        <h3>Seja bem vindo!</h3>
+                        <h3>Seja bem-vindo!</h3>
                     </div>
                     <div class="card-body">
                         <div class="row">
