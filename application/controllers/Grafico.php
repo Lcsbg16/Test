@@ -10,8 +10,8 @@ class Grafico extends BaseController
     public function index()
     {
         $variaveisView = [];
-        
-        $this->loadSmartyView('grafico/visualizar', $variaveisView);
+
+        $this->loadSmartyView('Grafico/index', $variaveisView);
     }
 
 }
