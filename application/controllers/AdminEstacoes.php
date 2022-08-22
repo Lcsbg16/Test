@@ -73,8 +73,8 @@ class AdminEstacoes extends BaseCrudController
         if ($primaryKey)
         {
             $estacao   = $this->EstacoesModel->getEstacao($primaryKey);
-            $latitude  = strtr($estacao['latitude'], ['.' => '', ',' => '.']);
-            $longitude = strtr($estacao['longitude'], ['.' => '', ',' => '.']);
+            $latitude  = $estacao['latitude'];
+            $longitude = $estacao['longitude'];
         }
         else
         {
@@ -87,8 +87,8 @@ class AdminEstacoes extends BaseCrudController
 
     public function callbackBeforeProcess($postArray, $primaryKey)
     {
-        $postArray['latitude']  = $this->input->post('latitude') ? $this->input->post('latitude') : NULL;
-        $postArray['longitude'] = $this->input->post('longitude') ? $this->input->post('longitude') : NULL;
+        $postArray['latitude']  = $this->input->post('latitude') ? strtr($this->input->post('latitude'), ['.' => '', ',' => '.']) : NULL;
+        $postArray['longitude'] = $this->input->post('longitude') ? strtr($this->input->post('longitude'), ['.' => '', ',' => '.']) : NULL;
 
         return $postArray;
     }

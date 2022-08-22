@@ -1,9 +1,9 @@
 <div class="row">
     <div class="col-sm-4">
-        <input id="field-latitude" class="form-control" name="latitude" type="text" value="{$latitude|number_format}">
+        <input id="field-latitude" class="form-control" name="latitude" type="text" value="{$latitude|strtr:'.':','}">
     </div>
     <div class="col-sm-4">
-        <input id="field-longitude" class="form-control" name="longitude" type="text" value="{$longitude|number_format}">
+        <input id="field-longitude" class="form-control" name="longitude" type="text" value="{$longitude|strtr:'.':','}">
     </div>
     <div class="col-sm-4">
         <button class="btn btn-default" type="button" onclick="alert('Em desenvolvimento!')">Selecionar no Mapa</button>
