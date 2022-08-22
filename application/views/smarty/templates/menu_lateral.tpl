@@ -137,8 +137,12 @@
             <h6 class="navbar-heading text-muted">Relat&oacute;rios</h6>
             <ul class="navbar-nav ">
                 <li class="nav-item  active ">
+                    <a class="nav-link  active " href="{$BASE_URL}AdminLeituras/">
+                        <i class="ni ni-collection text-green"></i> Leituras
+                    </a>
+                <li class="nav-item  active ">
                     <a class="nav-link  active " href="{$BASE_URL}RelatorioOcorrencias/">
-                        <i class="ni ni-collection text-primary"></i> Ocorr&ecirc;ncias
+                        <i class="ni ni-collection text-green"></i> Ocorr&ecirc;ncias
                     </a>
                 </li>
             </ul>

@@ -16,7 +16,9 @@
                             <div class="col">
                                 <label>Esta&ccedil;&atilde;o</label>
                                 <select class="form-control form-control-sm">
-                                    <option>Estação A1</option>
+                                    {foreach $estacoes as $eAtual}
+                                        <option value="{$eAtual.id}">{$eAtual.descricao}</option>
+                                    {/foreach}
                                 </select>
                             </div>
                             <div class="col">

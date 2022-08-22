@@ -14,4 +14,11 @@ class EstacoesModel extends BaseModel
         return $estacao;
     }
 
+    public function getEstacoes()
+    {
+        return $this->db->order_by('descricao')
+                        ->get('estacao')
+                        ->result_array();
+    }
+
 }

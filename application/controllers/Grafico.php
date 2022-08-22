@@ -9,7 +9,11 @@ class Grafico extends BasePrivateController
 
     public function index()
     {
+        $this->load->model('EstacoesModel');
+
         $variaveisView = [];
+
+        $variaveisView['estacoes'] = $this->EstacoesModel->getEstacoes();
 
         $this->loadSmartyView('Grafico/index', $variaveisView);
     }

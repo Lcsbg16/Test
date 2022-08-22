@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\Dao\User;
-
 if (!defined('BASEPATH'))
 {
     exit('No direct script access allowed');
@@ -10,65 +8,11 @@ if (!defined('BASEPATH'))
 /**
  * Classe base para os controllers do sistema
  *
- * @property EmailUtil emailutil
- * @property PaginaConteudoModel $PaginaConteudoModel
- * @property TokenTrocaSenhaModel $TokenTrocaSenhaModel
- * @property FiltroBuscaProdutos $FiltroBuscaProdutos
- * @property LogGeralModel $LogGeralModel
- * @property NotificacaoSubject $NotificacaoSubject
- * @property GrupoCategoriaProdutoModel $GrupoCategoriaProdutoModel
- * @property SiteExternoModel $SiteExternoModel
+ * @property EstacoesModel $EstacoesModel
+ * @property LoginModel $LoginModel 
  */
 abstract class BaseController extends CI_Controller
 {
-
-    /**
-     *
-     * @var NegociacoesModel
-     */
-    public $NegociacoesModel;
-
-    /**
-     *
-     * @var LoginModel
-     */
-    public $LoginModel;
-
-    /**
-     *
-     * @var ProdutosModel
-     */
-    public $ProdutosModel;
-
-    /**
-     *
-     * @var UsuarioModel
-     */
-    public $UsuarioModel;
-
-    /**
-     *
-     * @var LocalidadeModel
-     */
-    public $LocalidadeModel;
-
-    /**
-     *
-     * @var CategoriaProdutoModel
-     */
-    public $CategoriaProdutoModel;
-
-    /**
-     *
-     * @var FiltroBuscaProdutos
-     */
-    public $FiltroBuscaProdutos;
-
-    /**
-     *
-     * @var PerguntaProdutoModel
-     */
-    public $PerguntaProdutoModel;
 
     /**
      *
