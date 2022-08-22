@@ -40,6 +40,7 @@ class AdminOcorrencias extends BaseCrudController
 
         // Tipos de campos
         $crud->unset_texteditor('descricao');
+
         if ($crud->getStateCategory() != 'create')
         {
             $crud->field_type('datahora_cadastro', 'readonly');
@@ -59,7 +60,10 @@ class AdminOcorrencias extends BaseCrudController
 
         // Relacionamentos
         $crud->set_relation('tipo_ocorrencia_id', 'tipo_ocorrencia', 'nome');
-        $crud->set_relation('usuario_id', 'usuario', 'nome');
+        if ($crud->getStateCategory() != 'create')
+        {
+            $crud->set_relation('usuario_id', 'usuario', 'nome');
+        }
 
         // Callbacks de processamento
         $crud->callback_before_insert([$this, 'callbackBeforeInsert']);
