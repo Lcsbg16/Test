@@ -73,8 +73,8 @@ class AdminEstacoes extends BaseCrudController
         if ($primaryKey)
         {
             $estacao   = $this->EstacoesModel->getEstacao($primaryKey);
-            $latitude  = $estacao['latitude'];
-            $longitude = $estacao['longitude'];
+            $latitude  = strtr($estacao['latitude'], ['.' => '', ',' => '.']);
+            $longitude = strtr($estacao['longitude'], ['.' => '', ',' => '.']);
         }
         else
         {
