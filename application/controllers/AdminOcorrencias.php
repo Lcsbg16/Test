@@ -24,7 +24,7 @@ class AdminOcorrencias extends BaseCrudController
         }
         else
         {
-            $crud->set_subject('Ocorrências');
+            $crud->set_subject('Minhas Ocorrências');
         }
 
         // Validações
@@ -57,6 +57,7 @@ class AdminOcorrencias extends BaseCrudController
         $crud->unset_delete();
         $crud->unset_edit();
         $crud->unset_clone();
+        $crud->order_by('datahora_ocorrido', 'desc');
 
         // Relacionamentos
         $crud->set_relation('tipo_ocorrencia_id', 'tipo_ocorrencia', 'nome');
@@ -68,7 +69,18 @@ class AdminOcorrencias extends BaseCrudController
         // Callbacks de processamento
         $crud->callback_before_insert([$this, 'callbackBeforeInsert']);
 
+        // Filtros
+        $this->adicionaFiltros($crud);
+
         $this->_crud_output($crud);
+    }
+
+    protected function adicionaFiltros($crud)
+    {
+        $usuario = $this->getDadosUsuarioLogado();
+        $crud->where('usuario_id', $usuario['id']);
+
+        return $crud;
     }
 
     public function callbackBeforeInsert($postArray)

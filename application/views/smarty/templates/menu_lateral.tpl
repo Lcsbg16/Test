@@ -134,6 +134,17 @@
             <!-- Divider -->
             <hr class="my-3">
             <!-- Heading -->
+            <h6 class="navbar-heading text-muted">Relat&oacute;rios</h6>
+            <ul class="navbar-nav ">
+                <li class="nav-item  active ">
+                    <a class="nav-link  active " href="{$BASE_URL}RelatorioOcorrencias/">
+                        <i class="ni ni-collection text-primary"></i> Ocorr&ecirc;ncias
+                    </a>
+                </li>
+            </ul>
+            <!-- Divider -->
+            <hr class="my-3">
+            <!-- Heading -->
             <h6 class="navbar-heading text-muted">Usu&aacute;rio</h6>
             <ul class="navbar-nav mb-md-3">
                 <li class="nav-item">
