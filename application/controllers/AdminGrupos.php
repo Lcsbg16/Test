@@ -25,7 +25,7 @@ class AdminGrupos extends BaseCrudController
 
         // Nomes dos campos
         $crud->display_as('_locais', 'Acesso aos Locais');
-        $crud->display_as('_estacoes', 'Acesso às Estações (Adicional ao acesso por local)');
+        $crud->display_as('_estacoes', 'Acesso às Estações');
 
         // Configurações da listagems
         $crud->columns('nome');

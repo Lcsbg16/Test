@@ -44,7 +44,7 @@
                                     <option>Temperatura</option>
                                     <option>Volume de Chuva</option>
                                     <option>Volume de Chuva Acumulada</option>
-                                    <option>Umidade do Ar</option>
+                                    <option selected>Umidade do Ar</option>
                                 </select>
                             </div>
 
@@ -129,5 +129,6 @@
     {/literal}
 
 {/block}
+
 
 

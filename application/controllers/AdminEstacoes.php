@@ -35,7 +35,7 @@ class AdminEstacoes extends BaseCrudController
         // Nomes dos campos
         $crud->display_as('endereco_id', 'Local');
         $crud->display_as('descricao', 'Descrição');
-        $crud->display_as('_grupos', 'Grupos de Usuários com Acesso (Adicional ao controle de acesso por locais)');
+        $crud->display_as('_grupos', 'Grupos de Usuários com Acesso');
         $crud->display_as('_coordenadas', 'Coordenadas');
         $crud->display_as('endereco', 'Endereço Completo');
         $crud->display_as('_usuarios', 'Usuários com Acesso');
@@ -85,7 +85,7 @@ class AdminEstacoes extends BaseCrudController
         return $this->loadSmartyView('campos/coordenadas', ['latitude' => $latitude, 'longitude' => $longitude], true);
     }
 
-    public function callbackBeforeProcess($postArray, $primaryKey)
+    public function callbackBeforeProcess($postArray, $primaryKey = NULL)
     {
         $postArray['latitude']  = $this->input->post('latitude') ? strtr($this->input->post('latitude'), ['.' => '', ',' => '.']) : NULL;
         $postArray['longitude'] = $this->input->post('longitude') ? strtr($this->input->post('longitude'), ['.' => '', ',' => '.']) : NULL;
