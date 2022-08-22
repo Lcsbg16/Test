@@ -2,9 +2,9 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-require_once 'BaseController.php';
+require_once 'BasePrivateController.php';
 
-class Grafico extends BaseController
+class Grafico extends BasePrivateController
 {
 
     public function index()
