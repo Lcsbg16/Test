@@ -84,7 +84,13 @@
                 </li>
                 <li class="nav-item  active ">
                     <a class="nav-link  active " href="{$BASE_URL}grafico">
-                        <i class="ni ni-chart-bar-32 text-primary text-orange"></i> Gr&aacute;ficos
+                        <i class="ni ni-chart-bar-32 text-primary text-green"></i> Gr&aacute;ficos
+                    </a>
+                </li>
+
+                <li class="nav-item  active ">
+                    <a class="nav-link  active " href="{$BASE_URL}AdminOcorrencias/index/add">
+                        <i class="ni ni-square-pin text-primary text-orange"></i> Reportar Ocorr&ecirc;ncia
                     </a>
                 </li>
             </ul>
