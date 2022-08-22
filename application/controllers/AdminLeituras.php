@@ -21,11 +21,8 @@ class AdminLeituras extends BaseCrudController
 
         // Validações
         // Nomes dos campos
-        $crud->display_as('descricao', 'Descrição');
-        $crud->display_as('numero', 'Número');
-        $crud->display_as('cep', 'CEP');
-        $crud->display_as('bairro_id', 'Bairro');
-        $crud->display_as('_grupos', 'Grupos de Usuários com Acesso');
+        $crud->display_as('datahora', 'Data/hora');
+        $crud->display_as('estacao_id', 'Estação');
 
         // Tipos de campos
         // Configurações da listagems
@@ -35,7 +32,7 @@ class AdminLeituras extends BaseCrudController
         $crud->unset_delete();
 
         // Relacionamentos
-        $crud->set_relation('estacao_id', 'estacao', 'descricao');
+        $crud->set_relation('estacao_id', 'estacao', 'identificador');
 
         $this->_crud_output($crud);
     }

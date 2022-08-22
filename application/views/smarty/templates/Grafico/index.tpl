@@ -17,7 +17,7 @@
                                 <label>Esta&ccedil;&atilde;o</label>
                                 <select class="form-control form-control-sm">
                                     {foreach $estacoes as $eAtual}
-                                        <option value="{$eAtual.id}">{$eAtual.descricao}</option>
+                                        <option value="{$eAtual.id}">{$eAtual.descricao} ({$eAtual.identificador})</option>
                                     {/foreach}
                                 </select>
                             </div>
