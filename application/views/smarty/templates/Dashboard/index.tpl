@@ -84,7 +84,7 @@
 {/block}
 {block name = "conteudo_logado"}
 
-    <div class="container-fluid container-fluid mt--7">
+    <div class="container-fluid container-fluid mt--8">
 
         <!-- Tabelas -->
         <div class="row mt-5">
