@@ -8,9 +8,6 @@
         <div class="row">
             <div class="col">
                 <div class="card shadow">
-                    <div class="card-header">
-                        <h3>Estat&iacute;sticas</h3>
-                    </div>
                     <div class="card-body">
                         <div class="row my-3">
                             <div class="col">
@@ -66,7 +63,7 @@
                 <div class="row my-12">
                     <div class="col-md-12 py-1">
                         <div class="card">
-                            <div class="card-body" style="height: 400px">
+                            <div class="card-body" style="height: 500px">
                                 <canvas id="grafico"></canvas>
                             </div>
                         </div>

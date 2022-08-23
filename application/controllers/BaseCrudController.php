@@ -54,7 +54,8 @@ abstract class BaseCrudController extends BasePrivateController
             $screen_output->screen_title = $crud->getSubject();
         }
 
-        $view_variables = array_merge($view_variables, $this->gerarVariaveisViewPadrao());
+        $view_variables                  = array_merge($view_variables, $this->gerarVariaveisViewPadrao());
+        $view_variables['titulo_pagina'] = $crud->getSubject();
 
         foreach ($view_variables as $current_var => $current_value)
         {

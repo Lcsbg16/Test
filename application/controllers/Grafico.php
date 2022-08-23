@@ -13,7 +13,8 @@ class Grafico extends BasePrivateController
 
         $variaveisView = [];
 
-        $variaveisView['estacoes'] = $this->EstacoesModel->getEstacoes();
+        $variaveisView['estacoes']      = $this->EstacoesModel->getEstacoes();
+        $variaveisView['titulo_pagina'] = 'Estatísticas';
 
         $this->loadSmartyView('Grafico/index', $variaveisView);
     }

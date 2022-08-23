@@ -11,6 +11,8 @@ class TelaInicial extends BasePrivateController
     {
         $variaveisView = [];
 
+        $variaveisView['titulo_pagina'] = 'Home';
+
         $this->loadSmartyView('TelaInicial/index', $variaveisView);
     }
 

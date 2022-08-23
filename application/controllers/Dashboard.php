@@ -11,6 +11,8 @@ class Dashboard extends BasePrivateController
     {
         $variaveisView = [];
 
+        $variaveisView['titulo_pagina'] = 'Painel de Controle';
+
         $this->loadSmartyView('Dashboard/index', $variaveisView);
     }
 
