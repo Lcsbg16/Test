@@ -1,6 +1,90 @@
 {extends file = 'app_logado.tpl'}
+{assign var=header_especial value=true}
+{block name='conteudo_header'}
+    <!-- estatisticas_gerais -->
+    <div class="container-fluid">
+        <div class="header-body">
+            <!-- Card stats -->
+            <div class="row">
+                <div class="col-xl-3 col-lg-6">
+                    <div class="card card-stats mb-4 mb-xl-0">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Esta&ccedil;&otilde;es</h5>
+                                    <span class="h2 font-weight-bold mb-0">3</span>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="icon icon-shape bg-gradient-gray text-white rounded-circle shadow">
+                                        <i class="fas fa-chart-bar"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-6">
+                    <div class="card card-stats mb-4 mb-xl-0">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Temperatura M&eacute;dia</h5>
+                                    <span class="h2 font-weight-bold mb-0">22&deg;C</span>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
+                                        <i class="fas fa-chart-pie"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-6">
+                    <div class="card card-stats mb-4 mb-xl-0">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Temperatura M&iacute;nima</h5>
+                                    <span class="h2 font-weight-bold mb-0">20&deg;C</span>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="icon icon-shape bg-green text-white rounded-circle shadow">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-6">
+                    <div class="card card-stats mb-4 mb-xl-0">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Temperatura M&aacute;xima</h5>
+                                    <span class="h2 font-weight-bold mb-0">23&deg;C</span>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="icon icon-shape bg-red text-white rounded-circle shadow">
+                                        <i class="fas fa-percent"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /estatisticas_gerais -->
+{/block}
 {block name = "conteudo_logado"}
-    <div class="container-fluid mt-3">
+
+    <div class="container-fluid container-fluid mt--7">
 
         <!-- Tabelas -->
         <div class="row mt-5">
