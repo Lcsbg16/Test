@@ -4,15 +4,15 @@
 
         <!-- Tabelas -->
         <div class="row mt-5">
-            <div class="col-xl-8 mb-5 mb-xl-0">
+            <div class="col-xl-5 mb-5 mb-xl-0">
                 <div class="card shadow">
                     <div class="card-header border-0">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h3 class="mb-0">Page visits</h3>
+                                <h3 class="mb-0">Eventos</h3>
                             </div>
                             <div class="col text-right">
-                                <a href="#!" class="btn btn-sm btn-primary">See all</a>
+                                <a href="#!" class="btn btn-sm btn-primary">Ver todos</a>
                             </div>
                         </div>
                     </div>
@@ -21,97 +21,63 @@
                         <table class="table align-items-center table-flush">
                             <thead class="thead-light">
                                 <tr>
-                                    <th scope="col">Page name</th>
-                                    <th scope="col">Visitors</th>
-                                    <th scope="col">Unique users</th>
-                                    <th scope="col">Bounce rate</th>
+                                    <th scope="col">Data</th>
+                                    <th scope="col">Esta&ccedil;&atilde;o</th>
+                                    <th scope="col">Evento</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <th scope="row">
-                                        /argon/
+                                        22/08/2022 05:00
                                     </th>
                                     <td>
-                                        4,569
+                                        est001
                                     </td>
                                     <td>
-                                        340
+                                        <i class="fas fa-arrow-up text-success mr-3"></i>  Novamente online!
                                     </td>
-                                    <td>
-                                        <i class="fas fa-arrow-up text-success mr-3"></i> 46,53%
-                                    </td>
+
                                 </tr>
                                 <tr>
                                     <th scope="row">
-                                        /argon/index.html
+                                        22/08/2022 02:00
                                     </th>
                                     <td>
-                                        3,985
+                                        est003
                                     </td>
                                     <td>
-                                        319
+                                        <i class="fas fa-arrow-down text-danger mr-3"></i> Atraso no recebimento!
                                     </td>
-                                    <td>
-                                        <i class="fas fa-arrow-down text-warning mr-3"></i> 46,53%
-                                    </td>
+
                                 </tr>
                                 <tr>
                                     <th scope="row">
-                                        /argon/charts.html
+                                        21/08/2022 23:00
                                     </th>
                                     <td>
-                                        3,513
+                                        est001
                                     </td>
                                     <td>
-                                        294
+                                        <i class="fas fa-arrow-down text-danger mr-3"></i> Atraso no recebimento!
                                     </td>
-                                    <td>
-                                        <i class="fas fa-arrow-down text-warning mr-3"></i> 36,49%
-                                    </td>
+
                                 </tr>
-                                <tr>
-                                    <th scope="row">
-                                        /argon/tables.html
-                                    </th>
-                                    <td>
-                                        2,050
-                                    </td>
-                                    <td>
-                                        147
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-up text-success mr-3"></i> 50,87%
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        /argon/profile.html
-                                    </th>
-                                    <td>
-                                        1,795
-                                    </td>
-                                    <td>
-                                        190
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-down text-danger mr-3"></i> 46,53%
-                                    </td>
-                                </tr>
+
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            <div class="col-xl-4">
+            <div class="col-xl-7">
                 <div class="card shadow">
                     <div class="card-header border-0">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h3 class="mb-0">Social traffic</h3>
+                                <h3 class="mb-0">Ocorr&ecirc;ncias</h3>
                             </div>
                             <div class="col text-right">
-                                <a href="#!" class="btn btn-sm btn-primary">See all</a>
+                                <a href="{$BASE_URL}RelatorioOcorrencias" class="btn btn-sm btn-primary">Ver todas</a>
                             </div>
                         </div>
                     </div>
@@ -120,102 +86,29 @@
                         <table class="table align-items-center table-flush">
                             <thead class="thead-light">
                                 <tr>
-                                    <th scope="col">Referral</th>
-                                    <th scope="col">Visitors</th>
-                                    <th scope="col"></th>
+                                    <th scope="col">Tipo</th>
+                                    <th scope="col">Data/hora do ocorrido</th>
+                                    <th scope="col">Endere&ccedil;o</th>
+                                    <th scope="col">Descri&ccedil;&atilde;o</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th scope="row">
-                                        Facebook
-                                    </th>
-                                    <td>
-                                        1,480
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <span class="mr-2">60%</span>
-                                            <div>
-                                                <div class="progress">
-                                                    <div class="progress-bar bg-gradient-danger" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        Facebook
-                                    </th>
-                                    <td>
-                                        5,480
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <span class="mr-2">70%</span>
-                                            <div>
-                                                <div class="progress">
-                                                    <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%;"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        Google
-                                    </th>
-                                    <td>
-                                        4,807
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <span class="mr-2">80%</span>
-                                            <div>
-                                                <div class="progress">
-                                                    <div class="progress-bar bg-gradient-primary" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%;"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        Instagram
-                                    </th>
-                                    <td>
-                                        3,678
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <span class="mr-2">75%</span>
-                                            <div>
-                                                <div class="progress">
-                                                    <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        twitter
-                                    </th>
-                                    <td>
-                                        2,645
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <span class="mr-2">30%</span>
-                                            <div>
-                                                <div class="progress">
-                                                    <div class="progress-bar bg-gradient-warning" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%;"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
+                                {foreach $ocorrencias as $oAtual}
+                                    <tr>
+                                        <th scope="row">
+                                            <a href="{$oAtual.url}">{$oAtual.tipo_ocorrencia}</a>
+                                        </th>
+                                        <td>
+                                            <a href="{$oAtual.url}">{$oAtual.datahora_ocorrido|date_format:'%d/%m/%Y %H:%M'}</a>
+                                        </td>
+                                        <td title="{$oAtual.endereco}">
+                                            <a href="{$oAtual.url}">{$oAtual.endereco|truncate:30}</a>
+                                        </td>
+                                        <td>
+                                            <a href="{$oAtual.url}">{$oAtual.descricao|truncate:30}</a>
+                                        </td>
+                                    </tr>
+                                {/foreach}
                             </tbody>
                         </table>
                     </div>
