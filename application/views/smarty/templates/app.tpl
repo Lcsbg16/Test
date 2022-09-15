@@ -19,7 +19,7 @@
 
         <!-- Icons -->
         <link href="{$BASE_URL}/assets/temas/argon/assets/js/plugins/nucleo/css/nucleo.css" rel="stylesheet" />
-        <link href="{$BASE_URL}/assets/temas/argon/assets/js/plugins/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" />
+        <!--<link href="{$BASE_URL}/assets/temas/argon/assets/js/plugins/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" />-->
         <!-- CSS Files -->
         <link href="{$BASE_URL}/assets/temas/argon/assets/css/argon-dashboard.css?v=1.1.1" rel="stylesheet" />
 
@@ -29,6 +29,8 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.pt-BR.min.js"></script>
+
+        <script src="https://kit.fontawesome.com/7731e1bde2.js" crossorigin="anonymous"></script>
 
         <link href="{$BASE_URL}/assets/css/app.css" rel="stylesheet" />
         <script src="{$BASE_URL}/assets/js/app.js"></script>

@@ -7,7 +7,7 @@
             <!-- Card stats -->
             <div class="row">
                 <div class="col-xl-3 col-lg-6">
-                    <div class="card card-stats mb-4 mb-xl-0">
+                    <div class="card card-stats mb-4 mb-xl-4">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col">
@@ -16,7 +16,7 @@
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-gradient-gray text-white rounded-circle shadow">
-                                        <i class="fas fa-chart-bar"></i>
+                                        <i class="fas fa-fan"></i>
                                     </div>
                                 </div>
                             </div>
@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-6">
-                    <div class="card card-stats mb-4 mb-xl-0">
+                    <div class="card card-stats mb-4 mb-xl-4">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col">
@@ -33,8 +33,8 @@
                                     <span class="h2 font-weight-bold mb-0">22&deg;C</span>
                                 </div>
                                 <div class="col-auto">
-                                    <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
-                                        <i class="fas fa-chart-pie"></i>
+                                    <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
+                                        <i class="fas fa-temperature-half"></i>
                                     </div>
                                 </div>
                             </div>
@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-6">
-                    <div class="card card-stats mb-4 mb-xl-0">
+                    <div class="card card-stats mb-4 mb-xl-4">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col">
@@ -50,8 +50,8 @@
                                     <span class="h2 font-weight-bold mb-0">20&deg;C</span>
                                 </div>
                                 <div class="col-auto">
-                                    <div class="icon icon-shape bg-green text-white rounded-circle shadow">
-                                        <i class="fas fa-users"></i>
+                                    <div class="icon icon-shape bg-blue text-white rounded-circle shadow">
+                                        <i class="fas fa-temperature-empty"></i>
                                     </div>
                                 </div>
                             </div>
@@ -60,7 +60,7 @@
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-6">
-                    <div class="card card-stats mb-4 mb-xl-0">
+                    <div class="card card-stats mb-4 mb-xl-4">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col">
@@ -68,8 +68,79 @@
                                     <span class="h2 font-weight-bold mb-0">23&deg;C</span>
                                 </div>
                                 <div class="col-auto">
+                                    <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                                        <i class="fas fa-temperature-full"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-6">
+                    <div class="card card-stats mb-4 mb-xl-4">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Volume Min. Chuva</h5>
+                                    <span class="h2 font-weight-bold mb-0">10mm</span>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="icon icon-shape bg-gradient-blue text-white rounded-circle shadow">
+                                        <i class="fas fa-cloud-rain"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-6">
+                    <div class="card card-stats mb-4 mb-xl-4">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Volume M&aacute;x. Chuva</h5>
+                                    <span class="h2 font-weight-bold mb-0">30mm</span>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="icon icon-shape bg-gradient-gray text-white rounded-circle shadow">
+                                        <i class="fas fa-cloud-rain"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-6">
+                    <div class="card card-stats mb-4 mb-xl-4">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Vel. M&iacute;nima do Vento</h5>
+                                    <span class="h2 font-weight-bold mb-0">20 km/h</span>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="icon icon-shape bg-green text-white rounded-circle shadow">
+                                        <i class="fas fa-wind"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-6">
+                    <div class="card card-stats mb-4 mb-xl-4">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Vel. M&aacute;xima do Vento</h5>
+                                    <span class="h2 font-weight-bold mb-0">80 km/h</span>
+                                </div>
+                                <div class="col-auto">
                                     <div class="icon icon-shape bg-red text-white rounded-circle shadow">
-                                        <i class="fas fa-percent"></i>
+                                        <i class="fas fa-wind"></i>
                                     </div>
                                 </div>
                             </div>
@@ -84,11 +155,11 @@
 {/block}
 {block name = "conteudo_logado"}
 
-    <div class="container-fluid container-fluid mt--8">
+    <div class="container-fluid container-fluid mt--9">
 
         <!-- Tabelas -->
         <div class="row mt-5">
-            <div class="col-xl-5 mb-5 mb-xl-0">
+            <div class="col-xl-5 mb-5 mb-xl-4">
                 <div class="card shadow">
                     <div class="card-header border-0">
                         <div class="row align-items-center">
