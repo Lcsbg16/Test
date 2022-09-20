@@ -10,9 +10,12 @@ class Estacoes extends BasePrivateController
 
     public function mapa()
     {
+        $this->load->model('EstacoesModel');
+
         $variaveisView = [];
 
         $variaveisView['titulo_pagina'] = 'Mapa de Estações';
+        $variaveisView['estacoes']      = $this->EstacoesModel->getEstacoes(true);
 
         $this->loadSmartyView('Estacoes/mapa', $variaveisView);
     }
