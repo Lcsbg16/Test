@@ -16,6 +16,8 @@
   "dependencies": {
     "bootstrap": "^4.0",
     "Chart.js": "chartjs/Chart.js#^3.9.1",
-    "leaflet": "^1.8.0"
+    "leaflet": "^1.8.0",
+    "jquery-ui": "^1.12.1",
+    "jquery": "^3.6.1"
   }
 }

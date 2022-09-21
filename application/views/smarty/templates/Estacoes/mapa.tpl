@@ -37,7 +37,7 @@
     {if $estacoes}
         <script>
             $(function () {
-                var map = L.map('map').setView([51.505, -0.09], 13);
+                var map = L.map('map').setView([-22.368461, -41.774747], 13);
             {literal}
                     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         maxZoom: 19,
