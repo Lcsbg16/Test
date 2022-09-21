@@ -82,7 +82,7 @@
                     if (coordenadas != null)
                     {
                         var marker = L.marker(coordenadas).addTo(map);
-                        marker.bindPopup("<h3>{$eAtual.descricao|escape:'quotes'} ({$eAtual.identificador|escape:'quotes'})</h3><br><strong>Endere&ccedil;o:</strong> {$eAtual.endereco|default:'-'|escape:'quotes'}<br><strong>Coordendas:</strong> " + coordenadas);
+                        marker.bindPopup("<h3>{$eAtual.descricao|escape:'quotes'} ({$eAtual.identificador|escape:'quotes'})</h3><br><strong>Endere&ccedil;o:</strong> {$eAtual.endereco|default:'-'|escape:'quotes'}<br><strong>Coordendas:</strong> " + coordenadas + '<br><br><a class="btn btn-default" href="{$BASE_URL}AdminEstacoes/index/edit/{$eAtual.id}" target="_blank">Editar Esta&ccedil;&atilde;o</a>&nbsp;<a class="btn btn-warning" href="javascript:alert(\'Ainda não implementado.\')" >Ver Resultados</a>');
                         estacoes.push(marker);
                     }
                 {/if}
