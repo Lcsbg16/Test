@@ -15,7 +15,7 @@ crossorigin=""></script>
 </style>
 {* /leaflet *}
 <div id="map_picker_dialog" title="Selecionar Localiza&ccedil;&atilde;o" >
-    <input type="text" class="form-control" placeholder="Buscar endere&ccedil;o">
+    <!--<input type="text" class="form-control" placeholder="Buscar endere&ccedil;o">-->
     <div id="map_picker"></div>
 </div>
 <div class="row">
