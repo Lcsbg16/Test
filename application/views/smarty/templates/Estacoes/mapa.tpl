@@ -50,35 +50,36 @@
                 {if ($eAtual.latitude and $eAtual.longitude) or $eAtual.endereco}
                     {if !$eAtual.latitude or !$eAtual.longitude}
                     var coordenadas = null;
-                    $.ajax({
+                        {*
+                        $.ajax({
                         url: 'https://nominatim.openstreetmap.org/ui/search.html',
                         type: 'GET',
                         async: false,
                         cache: false,
                         timeout: 30000,
                         data: {
-                            'q': '{$eAtual.endereco|escape:'quotes'}'
+                        'q': '{$eAtual.endereco|escape:'quotes'}'
                         },
                         dataType: 'json',
                         crossDomain: true,
                         headers: {
-                            'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Origin': '*',
                         },
                         beforeSend: function (xhr) {
-                            xhr.setRequestHeader("Authorization", "Basic " + btoa(""));
+                        xhr.setRequestHeader("Authorization", "Basic " + btoa(""));
                         },
                         fail: function () {
-                            console.log('Falha ao buscar coordenadas pelo endereço.')
+                        console.log('Falha ao buscar coordenadas pelo endereço.')
                         },
                         done: function (data) {
-                            var coordenadas = [data[0].lat, data[0].lon];
-                            console.log('Endereço encontrado: ' + coordenadas);
+                        var coordenadas = [data[0].lat, data[0].lon];
+                        console.log('Endereço encontrado: ' + coordenadas);
                         }
-                    });
+                        });
+                        *}
                     {else}
                     coordenadas = [Number('{$eAtual.latitude}'), Number('{$eAtual.longitude}')];
                     {/if}
-
                     if (coordenadas != null)
                     {
                         var marker = L.marker(coordenadas).addTo(map);
