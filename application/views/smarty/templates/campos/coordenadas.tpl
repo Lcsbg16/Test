@@ -56,7 +56,7 @@ crossorigin=""></script>
             map.remove();
         }
 
-        map = L.map('map_picker').setView([{$latitude|default:'-22.368461'}, {$longitude|default:'-41.774747'}], 13);
+        map = L.map('map_picker').setView([-22.368461, -41.774747], 13);
     {literal}
             L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
