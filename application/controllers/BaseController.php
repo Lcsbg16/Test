@@ -9,7 +9,8 @@ if (!defined('BASEPATH'))
  * Classe base para os controllers do sistema
  *
  * @property EstacoesModel $EstacoesModel
- * @property LoginModel $LoginModel 
+ * @property LoginModel $LoginModel
+ * @property OcorrenciasModel $OcorrenciasModel
  */
 abstract class BaseController extends CI_Controller
 {

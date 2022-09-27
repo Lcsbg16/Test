@@ -26,4 +26,14 @@ class EstacoesModel extends BaseModel
                         ->result_array();
     }
 
+    public function getContagemEstacoes($somenteAtivas = TRUE)
+    {
+        if ($somenteAtivas)
+        {
+            $this->db->where('ativa', TRUE);
+        }
+
+        return $this->db->count_all_results('estacao');
+    }
+
 }
