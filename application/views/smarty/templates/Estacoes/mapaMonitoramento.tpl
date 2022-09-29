@@ -51,13 +51,22 @@
                         maxZoom: 19,
                         attribution: '© OpenStreetMap'
                     }).addTo(map);
-            {/literal}
-
                     var estacoes = null;
                     function onEachFeature(feature, layer) {
                         var popupContent = '';
                         if (feature.properties) {
+                            console.log(feature.properties);
                             popupContent += feature.properties.estacao.descricao + ' (' + feature.properties.estacao.identificador + ')';
+                            popupContent += '<br><br><strong>&Uacute;ltima leitura:</strong> ' + feature.properties.ultimaLeitura.datahora_formatada
+                            popupContent += "\
+                        <br><strong>Temperatura:</strong> " + feature.properties.ultimaLeitura.temperatura + "\
+                        <br><strong>Umidade do ar:</strong> " + feature.properties.ultimaLeitura.umidade_ar + "\
+                        <br><strong>Velocidade do vento:</strong> " + feature.properties.ultimaLeitura.velocidade_vento + "\
+                        <br><strong>Direção do vento:</strong> " + feature.properties.ultimaLeitura.direcao_vento + "\
+                        <br><strong>Volume de chuva:</strong> " + feature.properties.ultimaLeitura.volume_chuva + "\
+                        <br><strong>Volume acumulado de chuva:</strong> " + feature.properties.ultimaLeitura.volume_acc_chuva + "\
+                            ";
+            {/literal}
                         }
 
                         layer.bindPopup(popupContent);
@@ -91,7 +100,6 @@
                                     }
                                 }).addTo(map);
                                 console.log(estacoes);
-
                                 map.fitBounds(estacoes.getBounds());
                             })
                             .fail(function (jqXHR, textStatus, errorThrown) {
