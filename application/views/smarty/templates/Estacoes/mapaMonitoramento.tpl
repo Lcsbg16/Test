@@ -62,7 +62,7 @@
                         <br><strong>Temperatura:</strong> " + feature.properties.ultimaLeitura.temperatura + "\
                         <br><strong>Umidade do ar:</strong> " + feature.properties.ultimaLeitura.umidade_ar + "\
                         <br><strong>Velocidade do vento:</strong> " + feature.properties.ultimaLeitura.velocidade_vento + "\
-                        <br><strong>Direção do vento:</strong> " + feature.properties.ultimaLeitura.direcao_vento + "\
+                        <br><strong>Direção do vento:</strong> " + feature.properties.ultimaLeitura.dir_vento + "\
                         <br><strong>Volume de chuva:</strong> " + feature.properties.ultimaLeitura.volume_chuva + "\
                         <br><strong>Volume acumulado de chuva:</strong> " + feature.properties.ultimaLeitura.volume_acc_chuva + "\
                             ";
