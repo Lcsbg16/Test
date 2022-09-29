@@ -20,4 +20,25 @@ class Estacoes extends BasePrivateController
         $this->loadSmartyView('Estacoes/mapa', $variaveisView);
     }
 
+    public function mapaMonitoramento()
+    {
+        $this->load->model('EstacoesModel');
+
+        $variaveisView = [];
+
+        $variaveisView['titulo_pagina'] = 'Mapa de Monitoramento';
+        $variaveisView['estacoes']      = $this->EstacoesModel->getEstacoes(true);
+
+        $this->loadSmartyView('Estacoes/mapaMonitoramento', $variaveisView);
+    }
+
+    public function getEstacoesGeoJson($idCamada = NULL)
+    {
+        $this->load->model('EstacoesModel');
+
+        $estacoes = $this->EstacoesModel->getEstacoesGeoJson($idCamada);
+
+        $this->jsonOutput($estacoes);
+    }
+
 }

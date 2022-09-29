@@ -126,6 +126,12 @@ abstract class BaseController extends CI_Controller
         $this->emailutil->enviarEmail($assunto, $destinatario, $mensagemFinal);
     }
 
+    public function jsonOutput($output)
+    {
+        header('Content-type: application/json');
+        $this->load->view('json_output', ['output' => $output]);
+    }
+
 }
 
 class ViolacaoDeSeguranca extends Exception

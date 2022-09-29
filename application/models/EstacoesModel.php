@@ -36,4 +36,39 @@ class EstacoesModel extends BaseModel
         return $this->db->count_all_results('estacao');
     }
 
+    public function getEstacoesGeoJson($camada = NULL)
+    {
+        $estacoesBD = $this->getEstacoes();
+
+        $estacoes = [];
+        $cores    = ['#4DB600', '#FF0000', '#FFAA00', '#FCFF22', '#D200DF'];
+        foreach ($estacoesBD as $eAtual)
+        {
+            if ($eAtual['latitude'] && $eAtual['longitude'])
+            {
+                $estacoes[] = [
+                    'type'       => 'Feature',
+                    'geometry'   => [
+                        'type'        => 'Point',
+                        'coordinates' => [
+                            floatval($eAtual['longitude']),
+                            floatval($eAtual['latitude'])
+                        ]
+                    ],
+                    'properties' => [
+                        'estacao'       => $eAtual,
+                        'ultimaLeitura' => [],
+                        'camada'        => [
+                            'cor' => $cores[array_rand($cores)]
+                        ]
+                    ],
+                    'id'         => $eAtual['id']
+                ];
+            }
+        }
+        $geojson = ['type' => 'FeatureCollection', 'features' => $estacoes];
+
+        return $geojson;
+    }
+
 }
