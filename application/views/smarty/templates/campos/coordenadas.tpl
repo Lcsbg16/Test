@@ -36,6 +36,7 @@ crossorigin=""></script>
     var map = null;
     var map_picker_dialog = null;
     var popup = L.popup();
+    var marker = null;
 
     function selecionarLocalizacaoMapa(lat, lon)
     {
@@ -63,6 +64,17 @@ crossorigin=""></script>
                 attribution: '© OpenStreetMap'
             }).addTo(map);
     {/literal}
+
+            // Adicionando marcado atual e centralizando mapa
+            if ($('#field-latitude').val() != '' && $('#field-longitude').val() != '')
+            {
+                lat = Number($('#field-latitude').val().replace(',', '.'));
+                lon = Number($('#field-longitude').val().replace(',', '.'));
+
+                marker = L.marker([lat, lon]).addTo(map);
+                var group = new L.featureGroup([marker]);
+                map.fitBounds(group.getBounds());
+            }
 
             function onMapClick(e) {
                 popup
