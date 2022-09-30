@@ -57,13 +57,12 @@ crossorigin=""></script>
             map.remove();
         }
 
-        map = L.map('map_picker').setView([-22.368461, -41.774747], 13);
+        map = L.map('map_picker').setView([-22.368461, -41.774747], 5);
     {literal}
             L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '© OpenStreetMap'
             }).addTo(map);
-    {/literal}
 
             // Adicionando marcado atual e centralizando mapa
             if ($('#field-latitude').val() != '' && $('#field-longitude').val() != '')
@@ -73,8 +72,9 @@ crossorigin=""></script>
 
                 marker = L.marker([lat, lon]).addTo(map);
                 var group = new L.featureGroup([marker]);
-                map.fitBounds(group.getBounds());
+                map.fitBounds(group.getBounds(), {padding: [50, 50]});
             }
+    {/literal}
 
             function onMapClick(e) {
                 popup
