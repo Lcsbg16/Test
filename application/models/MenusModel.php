@@ -18,16 +18,35 @@ class MenusModel extends BaseModel
         $principal->adicionarFilho(new MenuItem('Gráficos', base_url('grafico'), 'chart-bar-32', 'green'));
         $principal->adicionarFilho(new MenuItem('Reportar Ocorrência', base_url('AdminOcorrencias/index/add'), 'square-pin', 'orange'));
 
-        $cadastros = new MenuItem('Cadastros', '');
-        $cadastros->adicionarFilho(new MenuItem('Estações', base_url('AdminEstacoes')));
-        $cadastros->adicionarFilho(new MenuItem('-', ''));
+        if ($this->LoginModel->checaPermissaoUsuarioLogado('ADMIN'))
+        {
+            $cadastros = new MenuItem('Cadastros', '');
+            $cadastros->adicionarFilho(new MenuItem('Estações', base_url('AdminEstacoes')));
+            $cadastros->adicionarFilho(new MenuItem('-', ''));
+            $cadastros->adicionarFilho(new MenuItem('Usuários', base_url('AdminUsuarios')));
+            $cadastros->adicionarFilho(new MenuItem('Grupos de Usuários', base_url('AdminGrupos')));
+
+            $relatorios = new MenuItem('Relatórios', '');
+            $relatorios->adicionarFilho(new MenuItem('Leituras', base_url('AdminLeituras'), 'collection', 'green'));
+            $relatorios->adicionarFilho(new MenuItem('Ocorrências', base_url('RelatorioOcorrencias'), 'collection', 'green'));
+        }
+
+        $usuario = new MenuItem('Usuário', '');
+        $usuario->adicionarFilho(new MenuItem('Meu Perfil', "javascript:alert('Funcionalidade em desenvolvimento.')", 'single-02', 'yellow'));
 
         $menus = array(
             'lateral' => [
-                $principal,
-                $cadastros
+                $principal
             ]
         );
+
+        if ($this->LoginModel->checaPermissaoUsuarioLogado('ADMIN'))
+        {
+            $menus['lateral'][] = $cadastros;
+            $menus['lateral'][] = $relatorios;
+        }
+
+        $menus['lateral'][] = $usuario;
 
         return $menus;
     }

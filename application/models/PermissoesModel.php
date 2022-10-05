@@ -14,7 +14,7 @@ class PermissoesModel extends BaseModel
 
     public function checaPermissaoGrupos($permissao, $idGrupos)
     {
-        if (empty($idsGrupo))
+        if (empty($idGrupos))
         {
             return false;
         }
@@ -22,10 +22,11 @@ class PermissoesModel extends BaseModel
         $this->db->cache_on();
 
         $resultado = $this->db->from('grupo_possui_permissao')
-                        ->where_in('grupo_usuarios_id', $idsGrupo)
+                        ->where_in('grupo_usuarios_id', $idGrupos)
                         ->where('(\'' . addslashes($permissao) . '\' LIKE permissao)')
                         ->count_all_results() > 0;
 
+        //echo $this->db->last_query();
         $this->db->cache_off();
 
         return $resultado;

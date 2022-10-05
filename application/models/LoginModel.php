@@ -59,9 +59,11 @@ class LoginModel extends BaseModel
         $ci = & get_instance();
 
         $ci->load->model('PermissoesModel');
+        $ci->load->model('UsuarioModel');
+
         $dados_usuario = $this->getDadosUsuarioLogado();
 
-        $grupos = $dados_usuario['grupos'];
+        $grupos = $this->UsuarioModel->getGruposUsuario($dados_usuario['id']);
 
         return $permissao == 'GERAL' || $ci->PermissoesModel->checaPermissaoGrupos($permissao, $grupos);
     }
