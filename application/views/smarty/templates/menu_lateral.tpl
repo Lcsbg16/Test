@@ -71,52 +71,37 @@
             </div>
             </form>*}
             <!-- Navigation -->
-            <ul class="navbar-nav">
-                <li class="nav-item  active ">
-                    <a class="nav-link  active " href="{$BASE_URL}Dashboard">
-                        <i class="ni ni-tv-2 text-primary"></i> Painel de Controle
-                    </a>
-                </li>
-                <li class="nav-item  active ">
-                    <a class="nav-link  active " href="{$BASE_URL}Estacoes/mapa">
-                        <i class="ni ni-map-big text-primary text-yellow"></i> Mapa de Esta&ccedil;&otilde;es
-                    </a>
-                </li>
-                <li class="nav-item  active ">
-                    <a class="nav-link  active " href="{$BASE_URL}Estacoes/mapaMonitoramento">
-                        <i class="ni ni-map-big text-primary text-orange"></i> Mapa de Monitoramento
-                    </a>
-                </li>
-                <li class="nav-item  active ">
-                    <a class="nav-link  active " href="{$BASE_URL}grafico">
-                        <i class="ni ni-chart-bar-32 text-primary text-green"></i> Gr&aacute;ficos
-                    </a>
-                </li>
+            {foreach $menus.lateral as $mAtual}
+                {if $mAtual->getTitulo()}
+                    <!-- Divider -->
+                    <hr class="my-3">
+                    <!-- Heading -->
+                    <h6 class="navbar-heading text-muted">{$mAtual->getTitulo()}</h6>
+                {/if}
 
-                <li class="nav-item  active ">
-                    <a class="nav-link  active " href="{$BASE_URL}AdminOcorrencias/index/add">
-                        <i class="ni ni-square-pin text-primary text-orange"></i> Reportar Ocorr&ecirc;ncia
-                    </a>
-                </li>
-            </ul>
-            <!-- Divider -->
-            <hr class="my-3">
-            <!-- Heading -->
-            <h6 class="navbar-heading text-muted">Cadastros</h6>
-            <ul class="navbar-nav ">
-                {* <li class="nav-item  active ">
-                <a class="nav-link  active " href="{$BASE_URL}AdminLocais/">
-                <i class="ni ni-app text-primary"></i> Locais
-                </a>
-                </li> *}
-                <li class="nav-item  active ">
-                    <a class="nav-link  active " href="{$BASE_URL}AdminEstacoes/">
-                        <i class="ni ni-app text-primary"></i> Esta&ccedil;&otilde;es
-                    </a>
-                </li>
-            </ul>
-            <!-- Divider -->
-            <hr class="my-3">
+                <ul class="navbar-nav">
+                    {foreach from=$mAtual->getFilhos() item=fAtual}
+                        {if $fAtual->getTitulo() != '-'}
+                            <li class="nav-item  active ">
+                                {if $fAtual->getUrl()}
+                                    <a class="nav-link  active " href="{$fAtual->getUrl()}">
+                                    {/if}
+                                    <i class="ni ni-{$fAtual->getIcone()|default:'app'} text-primary {if $fAtual->getCor()}text-{$fAtual->getCor()}{/if}"></i> {$fAtual->getTitulo()}
+                                    {if $fAtual->getUrl()}
+                                    </a>
+                                {/if}
+                            </li>
+                        {else}
+                        </ul>
+                        <!-- Divider -->
+                        <hr class="my-3">
+                        <ul class="navbar-nav">
+                        {/if}
+                    {/foreach}
+                </ul>
+            {/foreach}
+
+
             <!-- Heading -->
 
             <ul class="navbar-nav mb-md-3">

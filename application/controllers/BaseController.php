@@ -45,11 +45,11 @@ abstract class BaseController extends CI_Controller
 
         $this->load->model('MenusModel');
 
-        $view_variables['site_menu']      = $this->MenusModel->getMenus();
-        $view_variables['usuario_logado'] = $this->LoginModel->getDadosUsuarioLogado();
-        $view_variables['selected_menu']  = $this->getSelectedMenu();
-        $view_variables['flashdata']      = $this->session->flashdata();
-        $view_variables['alertas']        = $this->alertas;
+        $view_variables['menus']            = $this->MenusModel->getMenus();
+        $view_variables['usuario_logado']   = $this->LoginModel->getDadosUsuarioLogado();
+        $view_variables['menu_selecionado'] = $this->getSelectedMenu();
+        $view_variables['flashdata']        = $this->session->flashdata();
+        $view_variables['alertas']          = $this->alertas;
 
         return $view_variables;
     }
