@@ -1,23 +1,23 @@
 {
-  "name": "sistema-de-telemetria",
-  "description": "",
-  "main": "",
-  "license": "MIT",
-  "homepage": "",
-  "private": true,
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "assets/bower_components",
-    "test",
-    "tests"
-  ],
-  "dependencies": {
-    "bootstrap": "^4.0",
-    "Chart.js": "chartjs/Chart.js#^3.9.1",
-    "leaflet": "^1.8.0",
-    "jquery-ui": "^1.12.1",
-    "jquery": "^3.6.1"
-  }
+    "name": "sistema-de-telemetria",
+    "description": "",
+    "main": "",
+    "license": "MIT",
+    "homepage": "",
+    "private": true,
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "assets/bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "bootstrap": "^4.0",
+        "Chart.js": "chartjs/Chart.js#^3.9.1",
+        "leaflet": "^1.8.0",
+        "jquery-ui": "^1.12.1",
+        "jquery": "^2.2.4"
+    }
 }

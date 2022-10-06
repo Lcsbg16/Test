@@ -38,6 +38,9 @@ abstract class BaseCrudController extends BasePrivateController
         {
             $this->_crud = $crud;
         }
+
+        $crud->unset_jquery();
+
         $screen_output = $this->_setViewVariables($crud, $view_variables);
         $this->_loadDefaultView($screen_output);
     }
