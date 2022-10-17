@@ -10,12 +10,20 @@ crossorigin=""></script>
 <style>
     #map_picker{
         width: 100%;
-        height: 300px;
+        height: 600px;
     }
 </style>
+{* Leaflet.Control.Search *}
+
+<link rel="stylesheet" href="{$BASE_URL}assets/bower_components/leaflet-search/dist/leaflet-search.min.css">
+<script src="{$BASE_URL}assets/bower_components/leaflet-search/dist/leaflet-search.min.js"></script>
+
+{* /Leaflet.Control.Search *}
+
 {* /leaflet *}
+
 <div id="map_picker_dialog" title="Selecionar Localiza&ccedil;&atilde;o" >
-    <!--<input type="text" class="form-control" placeholder="Buscar endere&ccedil;o">-->
+    {* <input type="text" class="form-control" placeholder="Buscar endere&ccedil;o"> *}
     <div id="map_picker"></div>
 </div>
 <div class="row">
@@ -74,7 +82,6 @@ crossorigin=""></script>
                 var group = new L.featureGroup([marker]);
                 map.fitBounds(group.getBounds(), {padding: [50, 50]});
             }
-    {/literal}
 
             function onMapClick(e) {
                 popup
@@ -84,13 +91,27 @@ crossorigin=""></script>
             }
 
             map.on('click', onMapClick);
+
+            map.addControl(new L.Control.Search({
+                url: 'https://nominatim.openstreetmap.org/search?format=json&q={s}',
+                jsonpParam: 'json_callback',
+                propertyName: 'display_name',
+                propertyLoc: ['lat', 'lon'],
+                marker: L.circleMarker([0, 0], {radius: 30}),
+                autoCollapse: true,
+                autoType: false,
+                minLength: 2
+            }));
+
         }
+
+    {/literal}
 
         $(function () {
             map_picker_dialog = $("#map_picker_dialog").dialog({
                 autoOpen: false,
-                height: 500,
-                width: 600,
+                height: 700,
+                width: 800,
                 modal: true,
                 buttons: {
                     'Cancelar': function () {
