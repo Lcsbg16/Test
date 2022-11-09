@@ -11,12 +11,14 @@ class Dashboard extends BasePrivateController
     {
         $this->load->model('OcorrenciasModel');
         $this->load->model('EstacoesModel');
+        $this->load->model('LeiturasModel');
 
         $variaveisView = [];
 
-        $variaveisView['titulo_pagina'] = 'Painel de Controle';
-        $variaveisView['ocorrencias']   = $this->OcorrenciasModel->getOcorrencias(5);
-        $variaveisView['qtde_estacoes'] = $this->EstacoesModel->getContagemEstacoes();
+        $variaveisView['titulo_pagina']     = 'Painel de Controle';
+        $variaveisView['ocorrencias']       = $this->OcorrenciasModel->getOcorrencias(5);
+        $variaveisView['qtde_estacoes']     = $this->EstacoesModel->getContagemEstacoes();
+        $variaveisView['temperatura_media'] = $this->LeiturasModel->getUltimaTemperaturaMedia();
 
         $this->loadSmartyView('Dashboard/index', $variaveisView);
     }

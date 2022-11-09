@@ -30,7 +30,7 @@
                             <div class="row">
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Temperatura M&eacute;dia</h5>
-                                    <span class="h2 font-weight-bold mb-0">22&deg;C</span>
+                                    <span class="h2 font-weight-bold mb-0">{$temperatura_media|number_format:1:","}&deg;C</span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
