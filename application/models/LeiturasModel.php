@@ -29,5 +29,43 @@ class LeiturasModel extends BaseModel
 
         return $linha['temperatura_media'];
     }
+    
+    public function getTemperaturaMinima(){
+        $this->db->from('leitura L')
+                ->select("
+                    MIN(
+                        (
+                            SELECT
+                                    temperatura
+                            FROM
+                                    leitura L1
+                        )
+                    )
+                    AS temperatura_minima
+                ");
+        $linha = $this->db->get()->row_array();
+
+        return $linha['temperatura_minima'];
+    }
+                            
+    public function getTemperaturaMaxima(){
+        $this->db->from('leitura L')
+                ->select("
+                    MIN(
+                        (
+                            SELECT
+                                    temperatura
+                            FROM
+                                    leitura L1
+                        )
+                    )
+                    AS temperatura_maxima
+                ");
+        $linha = $this->db->get()->row_array();
+
+        return $linha['temperatura_maxima'];
+    }
+    
+    
 
 }

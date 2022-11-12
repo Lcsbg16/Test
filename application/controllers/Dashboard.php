@@ -19,6 +19,9 @@ class Dashboard extends BasePrivateController
         $variaveisView['ocorrencias']       = $this->OcorrenciasModel->getOcorrencias(5);
         $variaveisView['qtde_estacoes']     = $this->EstacoesModel->getContagemEstacoes();
         $variaveisView['temperatura_media'] = $this->LeiturasModel->getUltimaTemperaturaMedia();
+        
+        $variaveisView['temperatura_minima'] = $this->LeiturasModel->getTemperaturaMinima();
+        $variaveisView['temperatura_minima'] = $this->LeiturasModel->getTemperaturaMaxima();
 
         $this->loadSmartyView('Dashboard/index', $variaveisView);
     }
