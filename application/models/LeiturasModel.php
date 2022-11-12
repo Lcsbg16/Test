@@ -30,4 +30,38 @@ class LeiturasModel extends BaseModel
         return $linha['temperatura_media'];
     }
 
+    public function getVelocidadeMinima(){
+        $this->db->from("Leitura L")
+                ->select("
+                    MIN(
+                        (
+                            SELECT
+                                velocidade_vento
+                            FROM
+                                leitura L
+                        )
+                    )
+                    AS velocidade_minima
+                    ");
+                $linha = $this->db->get()->row_array();
+
+                return $linha["velocidade_minima"];
+    }
+    public function getVelocidadeMaxima(){
+        $this->db->from("Leitura L")
+                ->select("
+                    MAX(
+                        (
+                            SELECT
+                                velocidade_vento
+                            FROM
+                                leitura L
+                        )
+                    )
+                    AS velocidade_maxima
+                    ");
+                $linha = $this->db->get()->row_array();
+
+                return $linha["velocidade_minima"];
+    }
 }
