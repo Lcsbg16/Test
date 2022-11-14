@@ -83,7 +83,7 @@
                             <div class="row">
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Volume Min. Chuva</h5>
-                                    <span class="h2 font-weight-bold mb-0">{$vol_chuva_min}mm</span>
+                                    <span class="h2 font-weight-bold mb-0">{$vol_chuva_min|number_format:1:","}mm</span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-gradient-blue text-white rounded-circle shadow">
@@ -101,7 +101,7 @@
                             <div class="row">
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Volume M&aacute;x. Chuva</h5>
-                                    <span class="h2 font-weight-bold mb-0">{$vol_chuva_max}mm</span>
+                                    <span class="h2 font-weight-bold mb-0">{$vol_chuva_max|number_format:1:","}mm</span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-gradient-gray text-white rounded-circle shadow">
