@@ -31,14 +31,20 @@ class LeiturasModel extends BaseModel
     }
 
     public function getVelocidadeMinima(){
-        $this->db->from("Leitura L")
+        $this->db->from("leitura L")
                 ->select("
                     MIN(
                         (
                             SELECT
                                 velocidade_vento
                             FROM
-                                leitura L
+                                leitura L1
+                            WHERE
+                                L1.estacao_id = L.id
+                                AND datahora >= '" . date('Y-m-d') . " 00:00:00'
+                            ORDER BY
+                                datahora DESC
+                            LIMIT 1
                         )
                     )
                     AS velocidade_minima
@@ -55,7 +61,13 @@ class LeiturasModel extends BaseModel
                             SELECT
                                 velocidade_vento
                             FROM
-                                leitura L
+                                leitura L1
+                            WHERE
+                                L1.estacao_id = L.id
+                                AND datahora >= '" . date('Y-m-d') . " 00:00:00'
+                            ORDER BY
+                                datahora DESC
+                            LIMIT 1
                         )
                     )
                     AS velocidade_maxima
