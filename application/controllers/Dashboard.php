@@ -21,7 +21,7 @@ class Dashboard extends BasePrivateController
         $variaveisView['temperatura_media'] = $this->LeiturasModel->getUltimaTemperaturaMedia();
         
         $variaveisView['temperatura_minima'] = $this->LeiturasModel->getTemperaturaMinima();
-        $variaveisView['temperatura_minima'] = $this->LeiturasModel->getTemperaturaMaxima();
+        $variaveisView['temperatura_maxima'] = $this->LeiturasModel->getTemperaturaMaxima();
 
         $this->loadSmartyView('Dashboard/index', $variaveisView);
     }

@@ -39,6 +39,12 @@ class LeiturasModel extends BaseModel
                                     temperatura
                             FROM
                                     leitura L1
+                            WHERE
+                                    L1.estacao_id = E.id
+                                    AND datahora >= '" . date('Y-m-d') . " 00:00:00'
+                            ORDER BY
+                                    datahora DESC
+                            LIMIT 1
                         )
                     )
                     AS temperatura_minima
@@ -51,12 +57,18 @@ class LeiturasModel extends BaseModel
     public function getTemperaturaMaxima(){
         $this->db->from('leitura L')
                 ->select("
-                    MIN(
+                    MAX(
                         (
                             SELECT
                                     temperatura
                             FROM
                                     leitura L1
+                            WHERE
+                                    L1.estacao_id = E.id
+                                    AND datahora >= '" . date('Y-m-d') . " 00:00:00'
+                            ORDER BY
+                                    datahora DESC
+                            LIMIT 1
                         )
                     )
                     AS temperatura_maxima
