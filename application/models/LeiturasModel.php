@@ -30,4 +30,10 @@ class LeiturasModel extends BaseModel
         return $linha['temperatura_media'];
     }
 
+    public function getUltimasLeituras()
+    {
+        $this->db->select('L.*')
+                ->from('leitura L');
+    }
+
 }
