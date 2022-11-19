@@ -30,7 +30,13 @@
                             <div class="row">
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Temperatura M&eacute;dia</h5>
-                                    <span class="h2 font-weight-bold mb-0">{$temperatura_media|number_format:1:","}&deg;C</span>
+                                    <span class="h2 font-weight-bold mb-0">
+                                        {if $temperatura_media === NULL}
+                                            -
+                                        {else}
+                                            {$temperatura_media|number_format:1:","}&deg;C
+                                        {/if}                    
+                                    </span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
@@ -83,7 +89,13 @@
                             <div class="row">
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Volume Min. Chuva</h5>
-                                    <span class="h2 font-weight-bold mb-0">{$vol_chuva_min|number_format:1:","}mm</span>
+                                    <span class="h2 font-weight-bold mb-0">
+                                        {if $vol_chuva_min === NULL}
+                                            -
+                                        {else}
+                                            {$vol_chuva_min|number_format:1:","}mm
+                                        {/if}     
+                                    </span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-gradient-blue text-white rounded-circle shadow">
@@ -101,7 +113,13 @@
                             <div class="row">
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Volume M&aacute;x. Chuva</h5>
-                                    <span class="h2 font-weight-bold mb-0">{$vol_chuva_max|number_format:1:","}mm</span>
+                                    <span class="h2 font-weight-bold mb-0">
+                                        {if $vol_chuva_max === NULL}
+                                            -
+                                        {else}
+                                            {$vol_chuva_max|number_format:1:","}mm
+                                        {/if}                                         
+                                    </span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-gradient-gray text-white rounded-circle shadow">
