@@ -31,7 +31,7 @@ class LeiturasModel extends BaseModel
     }
     
     public function getTemperaturaMinima(){
-        $this->db->from('leitura L')
+        $this->db->from('estacao E')
                 ->select("
                     MIN(
                         (
@@ -55,7 +55,7 @@ class LeiturasModel extends BaseModel
     }
                             
     public function getTemperaturaMaxima(){
-        $this->db->from('leitura L')
+        $this->db->from('estacao E')
                 ->select("
                     MAX(
                         (
