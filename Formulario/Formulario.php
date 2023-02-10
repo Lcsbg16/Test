@@ -1,14 +1,21 @@
 <?php
     include_once("Conexao.php");
-    $result_pessoa = "SELECT * FROM pessoa WHERE id='6'"; 
-    $resultado_pessoa = mysqli_query($conn, $result_pessoa);
-    $row_pessoa = mysqli_fetch_assoc($resultado_pessoa);
 
-    
+    if(isset($_GET["id"]))
+    {
+        $result_pessoa = "SELECT * FROM pessoa p WHERE p.id=".intval($_GET['id']);
+        $resultado_pessoa = mysqli_query($conn, $result_pessoa);       
+        if(mysqli_num_rows($resultado_pessoa) <= 0) 
+        {
+            die('Pessoa não encontrada!');
+        }
+        else
+        {
+            $pessoa = mysqli_fetch_assoc($resultado_pessoa);
+        }
+    }
 
-?>
-
-<!DOCTYPE html>
+?><!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -19,22 +26,24 @@
     
 </head>
 <body>
+    <br>
     <div class="container">
-        <form >
+        <form action="save.php" method="POST">
             <div class="form-group">
                 <label for="nome"> Primeiro Nome:</label><br>
-                <input type="text" id="nome" name="nome" class="form-control" value = "<?php echo $row_pessoa['nome'] ?>"><br>
+                <input type="text" id="nome" name="nome" class="form-control" value = "<?=isset($pessoa)?$pessoa['nome']:''?>"><br>
             </div>
             
 
             <div class="form-group">
                 <label for="tipo">Pessoa</label><br>
+
                 <?php
                     $opcoes = ["Pessoa Física" => "PF", "Pessoa Jurídica" => "PJ"];
                 ?>
                     <select name="tipo_pessoa" class = "form-control">
                         <?php foreach($opcoes as $label => $valor): ?>
-                            <option value="<?=$valor?>" <?=$valor == $row_pessoa['tipo_pessoa'] ? "selected":""?>><?=$label?></option>
+                            <option value="<?=$valor?>" <?=$valor == isset($pessoa)?$pessoa['tipo_pessoa']:''?>><?=$label?></option>
                         <?php endforeach;?>
                     </select>
 
@@ -42,31 +51,29 @@
 
             
            
-
             <div class="form-group">
-                <label for="cpf"> CPF: </label><br>
-                <input type="text" id="cpf" name="cpf" class="form-control" value = "<?php echo $row_pessoa['cpf'] ?>" ><br>
-                
+                <label for="cpf">CPF</label><br>
+                <input type="text" name="cpf" class="form-control" id="cpf" value="<?=isset($pessoa)?$pessoa['cpf']:''?>"><br>
             </div>
             
             <div class="form-group">
                 <label for="data"> Data </label><br>
-                <input type="date" class="form-control" name = "data" value = "<?php echo $row_pessoa['data_nascimento'] ?>"><br>
+                <input type="date" class = "form-control" name = "data_nascimento" id = "data_nascimento" value="<?=isset($pessoa)?$pessoa['data_nascimento']:''?>"><br>
             </div>
             
             <div class="form-group">
                 <label for="endereco"> Endereço </label><br>
-                <input type="text" class="form-control" name = "endereco" value = "<?php echo $row_pessoa['endereco'] ?>"><br>
+                <input type="text" class="form-control" name = "endereco" value = "<?=isset($pessoa)?$pessoa['endereco']:''?>"><br>
             </div>
             
             <div class="form-group">
                 <label for="bairro"> Bairro </label><br>
-                <input type="text" class="form-control" name = "bairro" value = "<?php echo $row_pessoa['bairro'] ?>"><br>
+                <input type="text" name="bairro" class="form-control" id="bairro" value="<?=isset($pessoa)?$pessoa['bairro']:''?>"><br>
             </div>
             
             <div class="form-group">
                 <label for="cep"> CEP </label><br>
-                <input type="text" class="form-control" name = "cep" value = "<?php echo $row_pessoa['cep'] ?>"><br>
+                <input type="text" class="form-control" name = "cep" value ="<?=isset($pessoa)?$pessoa['cep']:''?>"><br>
             </div>
 
             
@@ -90,40 +97,43 @@
                 ?>
                     <select name="estado" class = "form-control">
                         <?php foreach($opcoes as $label => $valor): ?>
-                            <option value="<?=$valor?>" <?=$valor == $row_pessoa['estado'] ? "selected":""?>><?=$label?></option>
+                            <option value="<?=$valor?>" <?=$valor == isset($pessoa)?$pessoa['estado']:''?>><?=$label?></option>
                         <?php endforeach;?>
                     </select>
             </div>
             
             <div class="form-group">
-                <label for="cidade"> Cidade </label><br>
-                <input type="cidade" class="form-control" name = "cidade" value = "<?php echo $row_pessoa['cidade'] ?>"><br>
+                <br><label for="cidade"> Cidade </label><br>
+                <input type="cidade" class="form-control" name = "cidade" value ="<?=isset($pessoa)?$pessoa['cidade']:''?>"><br>
             </div>
             
             <div class="form-group">
                 <label for="telefone"> Telefone </label><br>
-                <input type="text" class="form-control" name = "telefone" value = "<?php echo $row_pessoa['telefone'] ?>"><br>
+                <input type="text" class="form-control" name = "telefone" value ="<?=isset($pessoa)?$pessoa['telefone']:''?>"><br>
             </div>
             
 
             <div class="form-group">
                 <label for="celular"> Celular </label><br>
-                <input type="text" class="form-control" name = "celular" value = "<?php echo $row_pessoa['celular'] ?>"><br>
+                <input type="text" class="form-control" name="celular" value ="<?=isset($pessoa)?$pessoa['celular']:''?>"><br>
             </div>
             
 
             <div class="form-group">
                 <label for="inscricao"> Inscrição Estadual </label><br>
-                <input type="text" class="form-control" name = "inscricao" value = "<?php echo $row_pessoa['inscricao'] ?>"><br>
+                <input type="text" class="form-control" name="inscricao" value ="<?=isset($pessoa)?$pessoa['inscricao']:''?>"><br>
             </div>
             
             <div class="form-group">
                 <label for="observacao"> Observações </label><br>
-                <textarea name="xpto" id="" cols="30" rows="5" class = "form-control"><?=$row_pessoa['observacao'] ?></textarea><br>
+                <textarea name="observacao" id="" cols="30" rows="5" class = "form-control"><?=isset($pessoa)?$pessoa['observacao']:''?></textarea><br>
             </div>
             
-            <div>
-                <button type="salvar" class="btn btn-primary">Salvar</button>
+            
+            <input type="hidden" name="id" id="id" value ="<?=isset($pessoa)?$pessoa['id']:''?>">  
+
+            <div class="form-group">
+                <button type="salvar" class="btn btn-primary" name="salvar" id="salvar">Salvar</button>
             </div>
            
         </form>
