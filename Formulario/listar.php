@@ -1,7 +1,13 @@
-<?php 
-    include_once("conexao.php");
+<?php
+include_once("conexao.php");
+if(isset($_POST['search'])) {
+    $search = $_POST['search'];
+    $result_pessoa = "SELECT * from pessoa WHERE nome LIKE '%$search%' OR cpf LIKE '%$search%'";
+} else {
     $result_pessoa = "SELECT * from pessoa";
-    $resultado_pessoa = mysqli_query($conn,$result_pessoa);
+}
+$resultado_pessoa = mysqli_query($conn, $result_pessoa);
+
 ?>
 
 <!DOCTYPE html>
@@ -13,16 +19,25 @@
     <title>Listagem</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <style>
-            .box-search{
-                display:flex;
-                justify-content: center;
-                margin-bottom: 15px;
+            body{
+                text-align: center;
             }
-        
+            .search-box {
+                display: flex;
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
+            .box-search{
+                width: 600px;
+                margin-left: 60%;
+                margin-right: 50%;
+            }
     </style>
 </head>
 <body>
     <div class="box-search">
+        
         <input type="search" class="form-control w-25" placeholder="Pesquisa" id="pesquisar">
         <button onclick="searchData()"  class="btn btn-primary">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi        bi-search-heart" viewBox="0 0 16 16">
@@ -30,7 +45,9 @@
                 <path d="M13 6.5a6.471 6.471 0 0 1-1.258 3.844c.04.03.078.062.115.098l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1.007 1.007 0 0 1-.1-.115h.002A6.5 6.5 0 1 1 13 6.5ZM6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11Z"/>
             </svg>
         </button>
-        <table class="table table-striped table-dark">
+        </div>
+        <div>
+        <table class="table table-striped table-dark" >
             <thead class="dark">
                 <tr>
                     <th scope="col">ID</th>
@@ -41,6 +58,7 @@
             </thead>
             <tbody>
                 <?php
+               
                     while($pessoa=mysqli_fetch_assoc($resultado_pessoa)){
                         echo "<tr>";
                         echo "<td>".$pessoa['id']."</td>";
@@ -64,6 +82,7 @@
                         </td>";
 
                     }
+                
                     
                 ?>
                 <tr>
@@ -88,17 +107,23 @@
             </tbody>
         </table>
     </div>
+</body>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
         <script src="js/personalizado.js"></script>
         <script>
             var search = document.getElementById('pesquisar');
+            search.addEventListener("keydown",function(event){
+                if(event.key === "Enter"){
+                    searchData();
+                }
+            });
             function searchData(){  //Joga o valor digitado no input
                 window.location = 'listar.php?search='+search.value;
             }  
         </script>
-</body>
+
 
 
 
