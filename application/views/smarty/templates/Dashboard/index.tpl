@@ -30,7 +30,13 @@
                             <div class="row">
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Temperatura M&eacute;dia</h5>
-                                    <span class="h2 font-weight-bold mb-0">{$temperatura_media|number_format:1:","}&deg;C</span>
+                                    <span class="h2 font-weight-bold mb-0">
+                                        {if $temperatura_media === NULL}
+                                            -
+                                        {else}
+                                            {$temperatura_media|number_format:1:","}&deg;C
+                                        {/if}
+                                    </span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
@@ -47,7 +53,7 @@
                             <div class="row">
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Temperatura M&iacute;nima</h5>
-                                    <span class="h2 font-weight-bold mb-0">20&deg;C</span>
+                                    <span class="h2 font-weight-bold mb-0">{$temperatura_minima|number_format:1:","}&deg;C</span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-blue text-white rounded-circle shadow">
@@ -65,7 +71,7 @@
                             <div class="row">
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Temperatura M&aacute;xima</h5>
-                                    <span class="h2 font-weight-bold mb-0">23&deg;C</span>
+                                    <span class="h2 font-weight-bold mb-0">{$temperatura_maxima|number_format:1:","}&deg;C</span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
@@ -83,7 +89,13 @@
                             <div class="row">
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Volume Min. Chuva</h5>
-                                    <span class="h2 font-weight-bold mb-0">10mm</span>
+                                    <span class="h2 font-weight-bold mb-0">
+                                        {if $vol_chuva_min === NULL}
+                                            -
+                                        {else}
+                                            {$vol_chuva_min|number_format:1:","}mm
+                                        {/if}
+                                    </span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-gradient-blue text-white rounded-circle shadow">
@@ -101,7 +113,13 @@
                             <div class="row">
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Volume M&aacute;x. Chuva</h5>
-                                    <span class="h2 font-weight-bold mb-0">30mm</span>
+                                    <span class="h2 font-weight-bold mb-0">
+                                        {if $vol_chuva_max === NULL}
+                                            -
+                                        {else}
+                                            {$vol_chuva_max|number_format:1:","}mm
+                                        {/if}
+                                    </span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-gradient-gray text-white rounded-circle shadow">
@@ -135,7 +153,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">Vel. M&aacute;xima do Vento</h5>
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Vel. M&aacute;x. do Vento</h5>
                                     <span class="h2 font-weight-bold mb-0">{$velocidade_maxima}</span>
                                 </div>
                                 <div class="col-auto">
