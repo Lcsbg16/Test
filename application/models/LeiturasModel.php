@@ -4,7 +4,8 @@ require_once 'BaseModel.php';
 
 class LeiturasModel extends BaseModel
 {
-        public function getUltimaTemperaturaMedia()
+
+    public function getUltimaTemperaturaMedia()
     {
         $this->db->from('estacao E')
                 ->select("
@@ -27,8 +28,6 @@ class LeiturasModel extends BaseModel
         $linha = $this->db->get()->row_array();
         return $linha['temperatura_media'];
     }
-    
-
 
     public function getVolumeChuvaMinimo()
     {
@@ -54,10 +53,10 @@ class LeiturasModel extends BaseModel
         return $linha['vol_chuva_min'];
     }
 
-
-    public function getVolumeChuvaMaxima(){
+    public function getVolumeChuvaMaxima()
+    {
         $this->db->from('estacao E')
-        ->select("
+                ->select("
             MAX(
                 (
                     SELECT
