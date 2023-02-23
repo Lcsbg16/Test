@@ -20,6 +20,9 @@ class Dashboard extends BasePrivateController
         $variaveisView['qtde_estacoes']     = $this->EstacoesModel->getContagemEstacoes();
         $variaveisView['temperatura_media'] = $this->LeiturasModel->getUltimaTemperaturaMedia();
         
+        $variaveisView['vol_chuva_min'] = $this->LeiturasModel->getVolumeChuvaMinimo();
+        $variaveisView['vol_chuva_max'] = $this->LeiturasModel->getVolumeChuvaMaxima();
+        
         $variaveisView['temperatura_minima'] = $this->LeiturasModel->getTemperaturaMinima();
         $variaveisView['temperatura_maxima'] = $this->LeiturasModel->getTemperaturaMaxima();
 
