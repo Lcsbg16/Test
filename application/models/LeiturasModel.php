@@ -32,7 +32,7 @@ class LeiturasModel extends BaseModel
 
     public function getTemperaturaMinima()
     {
-        $this->db->from('leitura L')
+        $this->db->from('estacao E')
                 ->select("
                     MIN(
                         (
@@ -41,7 +41,8 @@ class LeiturasModel extends BaseModel
                             FROM
                                     leitura L1
                             WHERE
-                                    datahora >= '" . date('Y-m-d') . " 00:00:00'
+                                    L1.estacao_id = E.id
+                                    AND datahora >= '" . date('Y-m-d') . " 00:00:00'
                             ORDER BY
                                     datahora DESC
                             LIMIT 1
@@ -56,7 +57,7 @@ class LeiturasModel extends BaseModel
 
     public function getTemperaturaMaxima()
     {
-        $this->db->from('leitura L')
+        $this->db->from('estacao E')
                 ->select("
                     MAX(
                         (
@@ -65,7 +66,8 @@ class LeiturasModel extends BaseModel
                             FROM
                                     leitura L1
                             WHERE
-                                    datahora >= '" . date('Y-m-d') . " 00:00:00'
+                                L1.estacao_id = E.id
+                                AND datahora >= '" . date('Y-m-d') . " 00:00:00'
                             ORDER BY
                                     datahora DESC
                             LIMIT 1
