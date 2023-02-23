@@ -35,7 +35,7 @@
                                             -
                                         {else}
                                             {$temperatura_media|number_format:1:","}&deg;C
-                                        {/if}                    
+                                        {/if}
                                     </span>
                                 </div>
                                 <div class="col-auto">
@@ -69,7 +69,7 @@
                                     </div>
                                 </div>
                             </div>
- 
+
                         </div>
                     </div>
                 </div>
@@ -110,7 +110,7 @@
                                             -
                                         {else}
                                             {$vol_chuva_min|number_format:1:","}mm
-                                        {/if}     
+                                        {/if}
                                     </span>
                                 </div>
                                 <div class="col-auto">
@@ -134,7 +134,7 @@
                                             -
                                         {else}
                                             {$vol_chuva_max|number_format:1:","}mm
-                                        {/if}                                         
+                                        {/if}
                                     </span>
                                 </div>
                                 <div class="col-auto">
@@ -152,7 +152,7 @@
                             <div class="row">
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Vel. M&iacute;nima do Vento</h5>
-                                    <span class="h2 font-weight-bold mb-0">20 km/h</span>
+                                    <span class="h2 font-weight-bold mb-0">{$velocidade_minima}/h</span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-green text-white rounded-circle shadow">
@@ -169,8 +169,8 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">Vel. M&aacute;xima do Vento</h5>
-                                    <span class="h2 font-weight-bold mb-0">80 km/h</span>
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Vel. M&aacute;x. do Vento</h5>
+                                    <span class="h2 font-weight-bold mb-0">{$velocidade_maxima}</span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-red text-white rounded-circle shadow">
