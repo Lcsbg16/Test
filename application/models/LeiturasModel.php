@@ -31,7 +31,7 @@ class LeiturasModel extends BaseModel
 
     public function getVolumeChuvaMinimo()
     {
-        $this->db->from('estacao E')
+        $this->db->from("estacao E")
                 ->select("
                     MIN(
                         (
@@ -142,12 +142,12 @@ class LeiturasModel extends BaseModel
                             SELECT
                                 velocidade_vento
                             FROM
-                                    leitura L1
+                                leitura L1
                             WHERE
                                 L1.estacao_id = E.id
                                 AND datahora >= '" . date('Y-m-d') . " 00:00:00'
                             ORDER BY
-                                    datahora DESC
+                                datahora DESC
                             LIMIT 1
                         )
                     )
