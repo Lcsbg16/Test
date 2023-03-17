@@ -152,7 +152,13 @@
                             <div class="row">
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Vel. M&iacute;nima do Vento</h5>
-                                    <span class="h2 font-weight-bold mb-0">{$velocidade_minima|number_format:1:","} km/h</span>
+                                    <span class="h2 font-weight-bold mb-0">
+                                        {$velocidade_minima == NULL}
+                                            -
+                                        {else}
+                                            {$velocidade_minima|number_format:1:","} km/h
+                                        {/if}
+                                    </span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-green text-white rounded-circle shadow">
@@ -170,7 +176,13 @@
                             <div class="row">
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Vel. M&aacute;x. do Vento</h5>
-                                    <span class="h2 font-weight-bold mb-0">{$velocidade_maxima|number_format:1:","} km/h</span>
+                                    <span class="h2 font-weight-bold mb-0">
+                                        {$velocidade_maxima == NULL}
+                                            -
+                                        {else}
+                                            {$velocidade_maxima|number_format:1:","} km/h
+                                        {/if}
+                                    </span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-red text-white rounded-circle shadow">

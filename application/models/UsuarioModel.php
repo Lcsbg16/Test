@@ -35,7 +35,7 @@ class UsuarioModel extends BaseModel
 
     public function atualizarSenhaUsuario($usuarioId, $senha)
     {
-        throw new Exception('Não implementado!');
+        $dados = 
     }
 
     public function checarLoginValido($usuario, $senha)
