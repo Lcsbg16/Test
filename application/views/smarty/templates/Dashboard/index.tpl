@@ -153,10 +153,10 @@
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Vel. M&iacute;nima do Vento</h5>
                                     <span class="h2 font-weight-bold mb-0">
-                                        {$velocidade_minima == NULL}
+                                        {if $velocidade_minima == NULL}
                                             -
                                         {else}
-                                            {$velocidade_minima|number_format:1:","} km/h
+                                            {$velocidade_minima|number_format:1:","}km/h
                                         {/if}
                                     </span>
                                 </div>
@@ -177,7 +177,7 @@
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Vel. M&aacute;x. do Vento</h5>
                                     <span class="h2 font-weight-bold mb-0">
-                                        {$velocidade_maxima == NULL}
+                                        {if $velocidade_maxima == NULL}
                                             -
                                         {else}
                                             {$velocidade_maxima|number_format:1:","} km/h

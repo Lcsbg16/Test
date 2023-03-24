@@ -32,7 +32,7 @@ class MenusModel extends BaseModel
         }
 
         $usuario = new MenuItem('Usuário', '');
-        $usuario->adicionarFilho(new MenuItem('Meu Perfil', "javascript:alert('Funcionalidade em desenvolvimento.')", 'single-02', 'yellow'));
+        $usuario->adicionarFilho(new MenuItem('Meu Perfil', base_url('Usuario/perfil'), 'single-02', 'yellow'));
 
         $menus = array(
             'lateral' => [

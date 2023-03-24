@@ -33,10 +33,13 @@ class UsuarioModel extends BaseModel
         return $idGrupos;
     }
 
+
     public function atualizarSenhaUsuario($usuarioId, $senha)
     {
-        $dados = 
+        $dados = ['senha'=>sha1($senha)];  //criptografia
+        return $this->db->update('usuario', $dados, ['id' => $usuarioId]); // id deve ser igual a usuarioId
     }
+
 
     public function checarLoginValido($usuario, $senha)
     {

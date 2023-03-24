@@ -11,7 +11,6 @@ class AdminOcorrencias extends BaseCrudController
     public function index()
     {
 
-
         $crud = new AppGroceryCRUD();
 
         // Configurações gerais do cadastro

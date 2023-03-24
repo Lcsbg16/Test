@@ -32,3 +32,5 @@ define('APPLICATION_TITLE', 'Sistema de Telemetria');
  */
 define("WEBSITE_BASE_URL", "http://localhost/telemetria-web-master/");
 
+error_reporting(E_ALL & E_DEPRECATED);
+

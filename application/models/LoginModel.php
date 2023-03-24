@@ -75,7 +75,12 @@ class LoginModel extends BaseModel
         return $permissao == 'GERAL' || $ci->PermissoesModel->checaPermissaoGrupos($permissao, $grupos);
     }
 
+    
+
 }
+
+   
+
 
 class LoginError extends Exception
 {

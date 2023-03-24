@@ -23,7 +23,7 @@
                     <div class=" dropdown-header noti-title">
                         <h6 class="text-overflow m-0">Bem-vindo!</h6>
                     </div>
-                    <a href="javascript:alert('Funcionalidade em desenvolvimento.')" class="dropdown-item">
+                    <a href="{$BASE_URL}Usuario/perfil" class="dropdown-item">
                         <i class="ni ni-single-02"></i>
                         <span>Meu Perfil</span>
                     </a>
