@@ -54,7 +54,7 @@ class LeiturasModel extends BaseModel
                 break;
                 
                 default:
-                throw new Exception('É necessário informar o tipo de informação desejada.');         
+                    throw new Exception('É necessário informar o tipo de informação desejada.');            
             }
 
             switch($escala)
@@ -103,6 +103,84 @@ class LeiturasModel extends BaseModel
 
     }
 
+    public function getUltimasLeituras(FiltrosLeitura $filtros = NULL, $tempoLimite = 2440)
+    {
+        $this->db->from('leitura');
+        if($filtros)
+        {
+            $estacoes       = $filtros->getEstacoes();
+            $dataInicial    = $filtros->getDataInicial();
+            $dataFinal      = $filtros->getDataFinal();
+            $tipoInformacao = $filtros->getTipoInformacao();
+            
+            if(!$tipoInformacao)
+            {
+                throw new Exception('É necessário informar o tipo de informação desejada.');
+            }
+
+            if($estacoes)
+            {
+                $this->db->where_in('estacao_id',$estacoes);
+            }
+
+            if($dataInicial)
+            {
+                $this->db->where('datahora >=', $dataInicial);
+            }
+
+            if($dataFinal)
+            {
+                $this->db->where('datahora <=', $dataFinal);
+            }
+
+            switch($tipoInformacao)
+            {
+                case FiltrosLeitura::TIPO_VELOCIDADE_VENTO:
+                     $colunaTipoInformacao = 'velocidade_vento';
+                break;
+
+                case FiltrosLeitura::TIPO_TEMPERATURA:
+                     $colunaTipoInformacao = 'temperatura'; 
+                break;
+                
+                case FiltrosLeitura::TIPO_VOLUME_CHUVA:
+                     $colunaTipoInformacao = 'volume_chuva'; 
+                break;
+
+                case FiltrosLeitura::TIPO_UMIDADE_AR:
+                     $colunaTipoInformacao = 'umidade_ar'; 
+                break;    
+                
+                case FiltrosLeitura::TIPO_VOLUME_ACC_CHUVA:
+                     $colunaTipoInformacao = 'volume_acc_chuva'; 
+                break;
+                
+                default:
+                    throw new Exception('É necessário informar o tipo de informação desejada.');            
+            }
+
+            $this->db->from('estacao E')
+            ->select("
+
+                    (
+                        SELECT
+                                {$colunaTipoInformacao}
+                        FROM
+                                leitura L1
+                        WHERE
+                                L1.estacao_id = E.id
+                                AND datahora >= DATE_SUB(now(), INTERVAL {$tempoLimite} MINUTE)
+                        ORDER BY
+                                datahora DESC
+                        LIMIT 1
+                )
+                AS valor
+            ");
+            $resultado = $this->db->get()->result_array();
+            return $resultado;
+        } 
+
+    }
     
     public function getUltimaTemperaturaMedia()
     {
@@ -152,6 +230,8 @@ class LeiturasModel extends BaseModel
         return $linha['vol_chuva_min'];
     }
 
+
+
     public function getVolumeChuvaMaxima()
     {
         $this->db->from('estacao E')
@@ -176,11 +256,7 @@ class LeiturasModel extends BaseModel
         return $linha['vol_chuva_max'];
     }
 
-    public function getUltimasLeituras()
-    {
-        $this->db->select('L.*')
-                ->from('leitura L');
-    }
+
 
     public function getTemperaturaMinima()
     {

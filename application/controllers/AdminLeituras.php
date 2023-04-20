@@ -50,7 +50,22 @@ class AdminLeituras extends BaseCrudController
         $filtros->setDirecao(FiltrosLeitura::DIRECAO_ASC);
         $leituras = $this->LeiturasModel->calcularEstatisticasPorPeriodo($filtros);
         
+        //var_dump($leituras);
+    }
+
+    public function testUltimasLeituras()
+    {
+        $this->load->model('LeiturasModel');
+
+        $filtros = new FiltrosLeitura();
+        $filtros->setEstacoes(['2']);
+        $filtros->setDataInicial('2023-04-19');
+        //$filtros->setDataFinal('2023-03-21');
+        $filtros->setTipoInformacao(FiltrosLeitura::TIPO_VELOCIDADE_VENTO);
+        $leituras = $this->LeiturasModel->getUltimasLeituras($filtros);
+        
         var_dump($leituras);
     }
 
+    
 }
