@@ -11,4 +11,9 @@ require_once 'BaseController.php';
 class Usuario extends BaseController
 {
 
+    public function perfil()
+    {
+
+    }
+
 }

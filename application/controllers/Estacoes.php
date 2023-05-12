@@ -8,8 +8,6 @@ require_once 'BasePrivateController.php';
 class Estacoes extends BasePrivateController
 {
 
-
-
     public function mapa()
     {
         $this->load->model('EstacoesModel');
