@@ -2,10 +2,13 @@
 {block name = "conteudo_logado"}
 
     
-
     {*<script src="{$BASE_URL}assets/js/grafico.js"></script>*}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     {*<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>*}
+    <link rel="stylesheet" href="{$BASE_URL}/assets/chosen/bootstrap-multiselect.css"/>
+    <script type="text/javascript" src="{$BASE_URL}/assets/chosen/bootstrap-multiselect.js"></script>
+    
+    
     <div class="container-fluid mt-3">
         <div class="row">
             <div class="col">
@@ -14,7 +17,7 @@
                         <div class="row my-3">
                             <div class="col">
                                 <label>Esta&ccedil;&atilde;o</label>
-                                <select class="form-control form-control-sm change_controler" id="estacao_selecionada"> <!-- Id indica qual estação foi selecionada --> 
+                                <select class="form-control form-control-sm change_controler" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada --> 
                                     {foreach $estacoes as $eAtual}
                                         <option value="{$eAtual.id}" id="estacao_descricao"> {$eAtual.descricao} ({$eAtual.identificador})</option>
                                     {/foreach}
@@ -75,10 +78,23 @@
             </div>
         </div>
     </div>
+    
+    <script type="text/javascript">
+
+$(document).ready(function(){
+            $("#estacao_selecionada").multiselect({
+                includeSelectAllOption: true,
+                buttonWidth: '180px'
+              
+            });
+        });
+     
+     
+     </script>
 
     {literal}
+    
         <script> 
-
         //Funções de tratativa de dados: 
     function GetTipoDados(){
             let info_selecionada = $( "#info_selecionada" ).val(); //Guarda esse valor numa variavel
@@ -108,16 +124,29 @@
 
 
      function GetEstacao(){ //função que pega a descriçao da estação selecionada
-            let estacao = $( "#estacao_selecionada" ).val(); //Guarda esse valor numa variavel
-            let select = document.getElementById("estacao_selecionada");
-            let descricao = select.options[select.selectedIndex].text;
-            
+     let estacao = $( "#estacao_selecionada" ).val(); //Guarda esse valor numa variavel
+         
             let estacao_infos = new Array(); //Array com a estação selecionada e sua descrição 
                 estacao_infos.push(estacao); //estacao_infos[0] == ID da estação
-                estacao_infos.push(descricao); //estacao_infos[1] == Descrição da estação 
-            
-                return estacao_infos; }
 
+
+                if (estacao !== null) {
+                    var selectedOptions = [];
+                    estacao.forEach(function(value) {
+                    var selectedOption = $('#estacao_selecionada option[value="' + value + '"]'); //obj de seleção
+                        var descricao = selectedOption.text(); //valor de descriçao da estação
+                        selectedOptions.push(descricao);
+                    });
+            
+            resultado = [estacao, selectedOptions]  //estação = indice // selectedOption = texto da estação
+            return resultado;
+               }
+               else {
+                    GerarGrafico(0,0, "Nenhuma estação selecionada", 0);
+                      throw new Error('Necessário informar a estação'); 
+                return;
+    }
+}
 
 //função que organiza o padrão da data para ser compativel com o banco de dados
      function GetData(){  
@@ -155,16 +184,15 @@
 
             return escala; }
 
-    function HandleAjax() {
-           
+
+    function HandleAjax()
+     {
             let escala; 
             let tipo_dados; 
             let datas = GetData(); 
-            let estacao = GetEstacao();       
-
+            try {estacao = GetEstacao();} catch (e) {console.log(e.message); return;}
             try{ escala = GetEscala();} catch(e) {console.log(e.message)}
             try{ tipo_dados = GetTipoDados();} catch(e) {console.log(e.message)}
-
        
            try {
                 $.ajax({
@@ -172,7 +200,7 @@
                         dataType: "json",
                         method: "POST",
                         data: {
-                            estacao_selecionada: estacao[0],  //Estação [0] é o ID da estação
+                            estacao_selecionada: estacao[0],  //Estação [0] são os IDs da estação
                             data_inicial: datas[0], //data inicial formatada
                             data_final: datas[1], //data final formatada
                             escala: escala,
@@ -187,7 +215,7 @@
                             const valores = Object.values(data).map(function(value) { return value;});
 
                             // Função que gera o grafico, parametros perido para label, valores para montagem e descrição que é o nome da estação
-                            GerarGrafico(periodos, valores, estacao[1], escala); },
+                            GerarGrafico(periodos, valores, OrganizarLabel(estacao[1]), escala); },
                             
                         error: function (req, status, error) 
                         {   console.log(data);
@@ -195,17 +223,17 @@
                         }
                     });
            } catch (error){
-            console.log(error + " - função handleAjax")
+            console.log(error + " - HandleAjax")
            }
             
-            }
+     }
 
 
 //EVENTO DE CHANGE DAS TAGS (ACOPLADO A ESTAÇÃO, TIPO DE INFORMAÇÃO E ESCALA)   
         $('.change_controler').change(function() {       
             HandleAjax();  });
 
-//EVENTO DE CHANGE ACOPLADO À DATA, USANDO A CLASSE DATEPICKER E O EVENTO DATECHANGE - EVITA A DUPLICAÇÃO DO EVENTO NO MOUSEOVER DO CALENDARIO QUE OCORRE AO USAR O CHANGE 
+//EVENTO DE CHANGE ACOPLADO À DATA, USANDO A CLASSE DATEPICKER E O EVENTO DATECHANGE - EVITA A DUPLICAÇÃO DO EVENTO NO MOUSEOVER DO CALENDARIO QUE OCORRE AO USAR O CHANGE PURO
         $('.datepicker').on('changeDate', function() {       
             HandleAjax();  });
             
@@ -217,78 +245,98 @@ var myChart;
 
     function AjeitarLabels(labels, tipo_escala)
     {
-        if(labels.length>0)  //se tiver labels pra tratar
-        {
-            
-            let dataFormatada = [];
-        
+        if(labels.length>0)  //se tiver labels pra tratar //Essa labels é a inferior, onde indica o tipo de dado. Ex: mes (03-2023), hora, dia, etc
+            {        
+                let dataFormatada = [];
                 if (tipo_escala == "ESCALA_MES") 
-                {
+                    {
                         for (let i=0; i<labels.length; i++)
-                        {
-                            let dateArray = labels[i].split("-"); //quebra a data que chega no formato yyyy-mm
-                            let date = new Date(dateArray[0], parseInt(dateArray[1]) - 1); // Cria uma varivel com o ano e o mês (Janeiro = 0)
-                            dataFormatada.push(date.toLocaleString('pt-BR', { month: 'short', year: 'numeric' }).replace(". de ", "/").toUpperCase());  // Formata a data para exibir o mês por extenso e o ano numerico
-                        // let dataFinal2 = dataFormatada[i];
-
-                        }   
-                        return dataFormatada;
-            } else if (tipo_escala == "ESCALA_DIA") 
-                {
-            
-                    for (let i=0; i<labels.length; i++)
-                        {
-                            let dateArray = labels[i].split("-"); //quebra a data que chega no formato yyyy-mm
-                            let date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]); // Cria uma varivel com o ano e o mês (Janeiro = 0)
-                            dataFormatada.push(date.toLocaleString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric' }));  // Formata a data para exibir o mês por extenso e o ano numerico
-                        }    
-                
-                        return dataFormatada;
-
-            
-                } else if(tipo_escala == "ESCALA_HORA")
-                {
-                    let result = [];
-                    for (let i=0; i<labels.length; i++)
-                        {
-                            let dateArray = labels[i].split(/[-\s:]/); //quebra a data que chega no formato yyyy-mm
-                            let date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3]); // Cria uma varivel com o ano e o mês (Janeiro = 0)
-                            dataFormatada.push(date.toLocaleString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(", ", "-"));  // Formata a data para exibir o mês por extenso e o ano numerico
-                            result[i]= dataFormatada[i].split('-');
-                        }    
-                    return result;
-                }  else if(tipo_escala == "ESCALA_SEMANA")
-                {
-                    for (let i=0; i<labels.length; i++)
                             {
-                                let dateArray = labels[i].split('-'); //quebra a data que chega no formato yyyy-semana
-                                let date = new Date(dateArray[0], 0, (dateArray[1] *7)); // qnt dias
-                                
-                                    if(date.getDay() == 0)
-                                    {
-                                        date.setDate(date.getDate() - 6); //se o dia cair no domingo, tirar 6 dias pra chegar na segunda
-                                    } else if (date.getDay() > 1)
-                                    { //se o dia cair entre dia 2 e 5, diminuir até o dia 1    
-                                        while (date.getDay() > 1)
-                                        {
-                                            date.setDate(date.getDate() - 1);
-                                        }
-                                    } else if (date.getDay() == 1) 
-                                    {
-                                        date.setDate(date.getDate()); //se o dia cair na segunda, manter
-                                    }
-                            
-                                dataFormatada.push(date.toLocaleString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric' }));  // Formata a data para exibir o mês por extenso e o ano numerico
-                            
-                            }
-                    return dataFormatada   
-                } 
-                
-        } else //se o valor de labels vier vazio
-        {
-            return;
-        }
+                                let dateArray = labels[i].split("-"); //quebra a data que chega no formato yyyy-mm
+                                let date = new Date(dateArray[0], parseInt(dateArray[1]) - 1); // Cria uma varivel com o ano e o mês (Janeiro = 0)
+                                dataFormatada.push(date.toLocaleString('pt-BR', { month: 'short', year: 'numeric' }).replace(". de ", "/").toUpperCase());  // Formata a data para exibir o mês por extenso e o ano numerico
+                            }   
+                        return dataFormatada;
 
+                    } else if (tipo_escala == "ESCALA_DIA") 
+                        {
+                            for (let i=0; i<labels.length; i++)
+                                {
+                                    let dateArray = labels[i].split("-"); //quebra a data que chega no formato yyyy-mm
+                                    let date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]); // Cria uma varivel com o ano e o mês (Janeiro = 0)
+                                    dataFormatada.push(date.toLocaleString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric' }));  // Formata a data para exibir o mês por extenso e o ano numerico
+                                }    
+                        
+                            return dataFormatada;
+
+                    
+                        } else if(tipo_escala == "ESCALA_HORA")
+                            {
+                                let result = [];
+                                for (let i=0; i<labels.length; i++)
+                                    {
+                                        let dateArray = labels[i].split(/[-\s:]/); //quebra a data que chega no formato yyyy-mm
+                                        let date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3]); // Cria uma varivel com o ano e o mês (Janeiro = 0)
+                                        dataFormatada.push(date.toLocaleString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(", ", "-"));  // Formata a data para exibir o mês por extenso e o ano numerico
+                                        result[i]= dataFormatada[i].split('-');
+                                    }    
+                                return result;
+                            }  else if(tipo_escala == "ESCALA_SEMANA")
+                                {
+                                    for (let i=0; i<labels.length; i++)
+                                            {
+                                                let dateArray = labels[i].split('-'); //quebra a data que chega no formato yyyy-semana
+                                                let date = new Date(dateArray[0], 0, (dateArray[1] *7)); // qnt dias
+                                                
+                                                if(date.getDay() == 0)
+                                                    {
+                                                        date.setDate(date.getDate() - 6); //se o dia cair no domingo, tirar 6 dias pra chegar na segunda
+                                                    } else if (date.getDay() > 1)
+                                                    { //se o dia cair entre dia 2 e 5, diminuir até o dia 1    
+                                                        while (date.getDay() > 1)
+                                                        {
+                                                            date.setDate(date.getDate() - 1);
+                                                        }
+                                                    } else if (date.getDay() == 1) 
+                                                    {
+                                                        date.setDate(date.getDate()); //se o dia cair na segunda, manter
+                                                    }
+                                            
+                                                dataFormatada.push(date.toLocaleString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric' }));  // Formata a data para exibir o mês por extenso e o ano numerico
+                                            
+                                            }
+                                    return dataFormatada   
+                                } 
+                    
+            } 
+        else //se o valor de labels vier vazio
+            {
+                return;
+            }
+
+    }
+
+    function OrganizarLabel(descricao){ //Essa função organiza a label superior do grafico de forma que: Se apenas uma estação for selecionada, na label vai aparecer o nome completo da estação
+        if (descricao.length > 1) 
+            { //Se mais de uma estação for selecionada
+                    const valoresEst = [];
+                    for (let i = 0; i < descricao.length; i++)
+                        {
+                            const estacao = descricao[i];
+                            const match = estacao.match(/est\d+/i);    // Expressão regular encontra o "est + numero"
+                            
+                            if (match) {         
+                                const valorEst = match[0]; // Primeira aparição de "est+numero" 
+                                valoresEst.push(valorEst); // Adicionar o valor à nova lista
+                        }
+                    }
+
+                    return valoresEst; //retorna como argumento
+                }
+            else 
+                {
+                    return descricao; //retorna o nome inteiriço 
+                }
     }
 
     function GerarGrafico (labels_value, data_value, descricao, tipo_escala)
@@ -305,7 +353,7 @@ var myChart;
                         data: {
                             labels: labels_formatada,
                             datasets: [{
-                                    label: descricao,
+                                    label: [descricao.toString()],
                                     data: data_value,
                                     fill: false,
                                     borderColor: "#8B9DC8",
@@ -314,7 +362,12 @@ var myChart;
                         },
                         options: {
                             responsive: true,
-                            maintainAspectRatio: false
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
                         }
                          };
 
@@ -327,9 +380,7 @@ var myChart;
             
             function alterarTipoGrafico(newType) {
                     // Remove the old chart and all its event handles
-                    if (myChart) {
-                        myChart.destroy();
-                    }
+                    if (myChart) { myChart.destroy();}
                     // Chart.js modifies the object you pass in. Pass a copy of the object so we can use the original object later
                     var temp = jQuery.extend(true, {}, config);
                     temp.type = newType;

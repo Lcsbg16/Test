@@ -49,7 +49,7 @@ class AdminLeituras extends BaseCrudController
         $this->load->model('LeiturasModel'); 
 
         $filtros = new FiltrosLeitura(); //New filtro -> contato com o BD
-        $filtros->setEstacoes([$estacao]);
+        $filtros->setEstacoes($estacao);
         $filtros->setDataInicial($dataInicial);
         $filtros->setDataFinal($dataFinal);
         $filtros->setEscala(constant("FiltrosLeitura::$escala"));
