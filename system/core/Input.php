@@ -88,7 +88,7 @@ class CI_Input {
 	protected $_enable_xss = FALSE;
 
 	/**
-	 * Enable CSRF flag
+	 * Enable flag
 	 *
 	 * Enables a CSRF cookie token to be set.
 	 * Set automatically based on config setting.

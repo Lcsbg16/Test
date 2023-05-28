@@ -30,6 +30,6 @@ define('APPLICATION_TITLE', 'Sistema de Telemetria');
 /**
  * URL base da aplicação
  */
-define("WEBSITE_BASE_URL", "http://localhost/mine/telemetria/");
+define("WEBSITE_BASE_URL", "http://localhost/telemetria-web");
 
 error_reporting(E_ALL & E_DEPRECATED);
