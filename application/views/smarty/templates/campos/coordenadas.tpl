@@ -20,6 +20,10 @@ crossorigin=""></script>
 
 {* /Leaflet.Control.Search *}
 
+{* Plugin externo para o leaflet, navegação por lupa, canto superior direito*}
+<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
 {* /leaflet *}
 
 <div id="map_picker_dialog" title="Selecionar Localiza&ccedil;&atilde;o" >
@@ -40,6 +44,36 @@ crossorigin=""></script>
 
 <script>
 
+function pesquisarEndereco()
+{
+     $("#field-endereco").change(function()
+     { //QUANDO MUDANÇA NO ENDEREÇO
+            let enderecoPesquisado = $('#field-endereco').val();
+            $.get(location.protocol + '//nominatim.openstreetmap.org/search?addressdetails=1&format=json&q='+enderecoPesquisado, function(result) //transforma  endereço escrito em lat e longitude
+            { 
+                if(result && result.length > 0)
+                {   
+                    $('.form-group.endereco_form_group').removeClass('has-error');
+                    if (result[0].lat && result[0].lon) 
+                        { 
+                            ajustarEndereco(result[0].lat, result[0].lon, result[0].address); //Ajuste do endereço para um padrão 
+                        }else
+                         {
+                            console.log("Endereço não encontrado, tente selecionar no mapa"); 
+                            $('.form-group.endereco_form_group').addClass('has-error');
+                            return;
+                        }   
+                }
+                else {
+                    console.log("Endereço não encontrado, tente selecionar no mapa"); 
+                    $('.form-group.endereco_form_group').addClass('has-error');
+                    return;
+                }
+
+              
+            });
+        });
+}pesquisarEndereco();          
 
     var map = null;
     var map_picker_dialog = null;
@@ -66,16 +100,17 @@ crossorigin=""></script>
         }
 
         map = L.map('map_picker').setView([-22.368461, -41.774747], 5);
+
     {literal}
             L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '© OpenStreetMap'
             }).addTo(map);
 
-            // Adicionando marcado atual e centralizando mapa
+            // Essa funcção centraliza o mapa de acordo com a lat  e longitudo nos campos
             if ($('#field-latitude').val() != '' && $('#field-longitude').val() != '')
             {
-                lat = Number($('#field-latitude').val().replace(',', '.'));
+                lat = Number($('#field-latitude').val().replace(',', '.')); 
                 lon = Number($('#field-longitude').val().replace(',', '.'));
 
                 marker = L.marker([lat, lon]).addTo(map);
@@ -92,18 +127,59 @@ crossorigin=""></script>
 
             map.on('click', onMapClick);
 
-            map.addControl(new L.Control.Search({
-                url: 'https://nominatim.openstreetmap.org/search?format=json&q={s}',
+
+         ///////ESSA É A BUSCA VIA PLUGIN EXTERNO //////
+           let geocoder = L.Control.geocoder().addTo(map); //adiciona a lupa de pesquisa no mapa 
+            
+            geocoder.on('markgeocode', function(e) { //quando a lupa de geolocalização for usada
+                    onGeocodeResult(e.geocode); //cjama a função de resposta do geocodificador 
+                    });
+
+            
+            function onGeocodeResult(result) // Função de resposta do geocodificador, após a busca
+            { 
+                if (result && result.center) // Verifica se o resultado possui uma localização que tenha sido encontrada
+                    {
+                        ajustarEndereco(result.center.lat, result.center.lng, result.properties.address); //funcão que monta o endereço no formato rua, bairro, cidade, estado, cep, pais
+                    }
+            }
+              
+
+        ///ESSE É O CÓDIGO DA LUPA DE BUSCA ANTIGO:////////////////////////////////////
+         /*   map.addControl(new L.Control.Search({
+                url: 'https://nominatim.openstreetmap.org/search?format=json&q={*s}',
                 jsonpParam: 'json_callback',
                 propertyName: 'display_name',
                 propertyLoc: ['lat', 'lon'],
-                marker: L.circleMarker([0, 0], {radius: 30}),
+                marker: L.circleMarker([0, 0], {radius: 30*}),
                 autoCollapse: true,
                 autoType: false,
                 minLength: 2
-            }));
+            }));*/
 
         }
+    
+        function ajustarEndereco(lat, lng, result) 
+            { //função que organiza o endereço                       
+                        let rua = result.road || result.pedestrian || result.cycleway; // pega a rua 
+                        let bairro = result.suburb || result.neighbourhood || result.village; // pega o bairro 
+                        let cidade = result.city || result.town;; //pega a cidade 
+                        let estado =  result.state; // pega o estado
+                        let cep = result.postcode; //pega o cep
+                        let pais = result.country; // pega o país
+
+                let endereco = [rua, bairro, cidade, estado, cep, pais].filter(Boolean).join(", ");
+                    function settarInfo(lat, lng, endereco) //atualiza as informções de lat e long e endereço nas textboxes
+                    { 
+                            $('#field-latitude').val(lat);
+                            $('#field-longitude').val(lng);
+                            $('#field-endereco').val(endereco);
+                    }
+
+                    settarInfo(lat, lng, endereco);   
+                    return endereco;
+            }
+
 
     {/literal}
 
@@ -114,7 +190,7 @@ crossorigin=""></script>
                 width: 800,
                 modal: true,
                 buttons: {
-                    'Cancelar': function () {
+                    'Prosseguir': function () {
                         map_picker_dialog.dialog("close");
                     }
                 },
@@ -122,9 +198,6 @@ crossorigin=""></script>
 
                 }
             });
-
-
-
 
             $(".button_map_picker").on("click", abrirDialogoMapa);
 

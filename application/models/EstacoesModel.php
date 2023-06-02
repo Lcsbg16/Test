@@ -14,12 +14,17 @@ class EstacoesModel extends BaseModel
         return $estacao;
     }
 
-    public function getEstacoes($somenteAtivas = FALSE)
+    public function getEstacoes($somenteAtivas = FALSE, $estacoesIds = [])
     {
         $this->db->order_by('descricao');
         if ($somenteAtivas)
         {
             $this->db->where('ativa', true);
+        }
+
+        if ($estacoesIds)
+        {
+            $this->db->where_in('id', $estacoesIds);
         }
 
         return $this->db->get('estacao')
