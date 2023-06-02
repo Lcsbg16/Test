@@ -5,6 +5,7 @@ if (!defined('BASEPATH'))
 
 require_once 'BaseController.php';
 
+
 /**
  * Controller padrão de ações de usuário comum
  */
@@ -17,6 +18,7 @@ class Usuario extends BaseController
         $variaveisView['titulo_pagina'] = 'Perfil';
 
         $this->loadSmartyView('Usuario/perfil', $variaveisView);
+
     }
 
     public function salvarPerfil()

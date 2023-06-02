@@ -107,24 +107,36 @@ abstract class BaseController extends CI_Controller
         }
     }
 
-    public function enviarEmail($assunto, $destinatario, $mensagem, $nomeRemetente = NULL, $replyTo = NULL)
+    public function enviarEmail($assunto, $destinatario, $mensagem, $nomeRemetente, $replyTo, $remetente)
     {
-        $this->load->library('EmailUtil');
+        $this->load->library('email');
+        $this->load->library('EmailUtil'); //biblioteca que recebe o email que o usuario digitou
+        $this->load->library('SmartyLib');
+        $this->email->clear(TRUE);
+        $this->email->to($destinatario);
+        $this->email->subject($assunto);
+        $this->email->message($mensagem);
+        $this->email->set_mailtype('html');
+        $this->email->setFrom($remetente); // adiciona o endereço do remetente
+        $this->email->send();
         $this->smartylib->assign('mensagem', $mensagem);
-        $mensagemFinal = $this->smartylib->view('BaseController/email_padrao', [], true);
-
+        $mensagemFinal = $this->smartylib->view('BaseController/enviarEmailEsqueciSenha', [], true);
+    
         if ($nomeRemetente)
         {
-            $this->emailutil->setNomeRemetente($nomeRemetente);
+            $this->EmailUtil->setNomeRemetente($nomeRemetente);
         }
-
+    
         if ($replyTo)
         {
-            $this->emailutil->setReplyTo($replyTo);
+            $this->EmailUtil->setReplyTo($replyTo);
         }
-
-        $this->emailutil->enviarEmail($assunto, $destinatario, $mensagemFinal);
+    
+        $this->EmailUtil->enviarEmail($assunto, $destinatario, $mensagemFinal, $nomeRemetente, $replyTo);
+        //echo "Enviado com sucesso para $email";
     }
+    
+
 
     public function jsonOutput($output)
     {
