@@ -128,12 +128,8 @@ class Login extends BaseController
         $destinatario = $email;
         $nomeRemetente = $usuario;
         $replyTo = $email;
-        echo $mensagem;
         $this->emailutil->enviarEmail($assunto, $destinatario, $mensagem, $nomeRemetente, $replyTo, $email);
         echo "Enviado com sucesso para $email";
     }
-
-
-    
 
 }

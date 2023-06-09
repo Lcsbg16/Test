@@ -14,6 +14,7 @@ require_once 'app_config.inc.php';
   |
   |	http://example.com/
   |
+  |
   | WARNING: You MUST set this value!
   |
   | If it is not set, then CodeIgniter will try to guess the protocol and
