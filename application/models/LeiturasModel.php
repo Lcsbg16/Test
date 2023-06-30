@@ -61,12 +61,12 @@ class LeiturasModel extends BaseModel
             switch ($escala)
             {
                 case FiltrosLeitura::ESCALA_MINUTO:
-                    $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d %H:%i')";
-                    break;
-
+                     $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d %H:%i:00')";
+                break;
+                
                 case FiltrosLeitura::ESCALA_HORA:
-                    $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d %H')";
-                    break;
+                    $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d %H:00:00')";
+                break;  
 
                 case FiltrosLeitura::ESCALA_DIA:
                     $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d')";
