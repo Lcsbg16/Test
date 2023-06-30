@@ -26,11 +26,30 @@ class RelatorioLeituras extends BaseCrudController
             $colunaPeriodo = $classe->getConstant($colunaPeriodo);
             $colunaTipoInformacao = $classe->getConstant($colunaTipoInformacao);    
             
-            $filtros->setEstacoes($estacoes);
-            $filtros->setDataInicial($dataInicial);
-            $filtros->setDataFinal($dataFinal);
-            $filtros->setTipoInformacao($colunaTipoInformacao);
-            $filtros->setEscala($colunaPeriodo);
+            if($estacoes)
+            {
+                $filtros->setEstacoes($estacoes);
+            }
+            
+            if($dataInicial)
+            {
+                $filtros->setDataInicial($dataInicial);
+            }
+            
+            if($dataFinal)
+            {
+                $filtros->setDataFinal($dataFinal);
+            }
+            
+            if($colunaPeriodo)
+            {
+                $filtros->setEscala($colunaPeriodo);
+            }
+
+            if($colunaTipoInformacao)
+            {
+                $filtros->setTipoInformacao($colunaTipoInformacao);
+            }
             $filtros->setDirecao(FiltrosLeitura::DIRECAO_ASC);
             $leituras = $this->LeiturasModel->calcularEstatisticasPorPeriodo($filtros);            
         }
