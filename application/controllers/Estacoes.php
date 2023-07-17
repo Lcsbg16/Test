@@ -41,4 +41,12 @@ class Estacoes extends BasePrivateController
         $this->jsonOutput($estacoes);
     }
 
+    protected $acoesPublicas = ['monitoramentoEstacao'];
+
+    public function monitoramentoEstacao()
+    {
+    $this->load->model('EstacoesModel');
+
+    $this->EstacoesModel->monitorarEstacao(5);
+    }
 }

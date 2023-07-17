@@ -84,5 +84,58 @@ class EstacoesModel extends BaseModel
 
         return $geojson;
     }
+ 
+    public function monitorarEstacao($intervaloTempo)
+    {
+        $estacoes = $this->getEstacoes(); //variavel para armazenar todas as estações Ativas
+        foreach($estacoes as $estacao)
+        {
+            $ultimaLeitura = $this->getUltimaLeitura($estacao['id']);
+            $ultimoEvento = $this->getUltimoEvento($estacao['id']);
+    
+            if (strtotime($ultimaLeitura['datahora_cadastro']) < strtotime('-'.$intervaloTempo.' minutes')) //Verificando se a estação esta sem enviar leituras.
+            {   
+                if ($ultimoEvento['tipo_evento_id'] != 1) //Verificando se o evento anterior também não é down
+                {
+                    $this->inserirEvento($estacao['id'], 1); //Inserindo na tabela evento que a estação esta offline
+                }    
+            }
+            else
+            {
+                if ($ultimoEvento['tipo_evento_id'] != 2) //Verificando se o evento anterior também não é up
+                {
+                    $this->inserirEvento($estacao['id'], 2); //Inserindo na tabela evento que a estação esta online
+                }
+            }
+        }
+    }
+    
+    private function getUltimaLeitura($estacaoId)
+    {
+        return $this->db->where('estacao_id', $estacaoId)
+            ->order_by('datahora_cadastro','desc')
+            ->limit(1)
+            ->get('leitura')
+            ->row_array();
+    }
+    
+    private function getUltimoEvento($estacaoId)
+    {
+        return $this->db->where('estacao_id', $estacaoId)
+            ->order_by('datahora', 'desc')
+            ->limit(1)
+            ->get('evento')
+            ->row_array();
+    }
+    
+    private function inserirEvento($estacaoId, $tipoEventoId)
+    {
+        $data = [
+            'estacao_id' => $estacaoId,
+            'datahora' => date('Y-m-d H:i:s'),
+            'tipo_evento_id' => $tipoEventoId
+        ];
+        $this->db->insert('evento', $data);
+    }
 
 }
