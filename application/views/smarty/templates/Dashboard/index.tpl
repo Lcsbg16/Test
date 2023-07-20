@@ -223,48 +223,30 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th scope="col">Data</th>
-                                    <th scope="col">Esta&ccedil;&atilde;o</th>
+                                    <th scope="col">Estação</th>
                                     <th scope="col">Evento</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th scope="row">
-                                        22/08/2022 05:00
-                                    </th>
-                                    <td>
-                                        est001
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-up text-success mr-3"></i>  Novamente online!
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        22/08/2022 02:00
-                                    </th>
-                                    <td>
-                                        est003
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-down text-danger mr-3"></i> Atraso no recebimento!
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        21/08/2022 23:00
-                                    </th>
-                                    <td>
-                                        est001
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-down text-danger mr-3"></i> Atraso no recebimento!
-                                    </td>
-
-                                </tr>
-
+                                {foreach $eventos as $evento}
+                                    <tr>
+                                        <th scope="row">
+                                            {$evento.datahora|date_format:'%d/%m/%Y %H:%M'}
+                                        </th>
+                                        <td>
+                                            {$evento.estacao_descricao|truncate:30:"...":true}
+                                        </td>
+                                        <td>
+                                            {if $evento.tipo_evento_id == 1}
+                                                <i class="fas fa-arrow-down text-danger mr-3"></i> Atraso no recebimento!
+                                            {elseif $evento.tipo_evento_id == 2}
+                                                <i class="fas fa-arrow-up text-success mr-3"></i> Novamente online!
+                                            {else}
+                                                Tipo de evento desconhecido
+                                            {/if}
+                                        </td>
+                                    </tr>
+                                {/foreach}
                             </tbody>
                         </table>
                     </div>

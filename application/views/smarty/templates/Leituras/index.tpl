@@ -70,22 +70,21 @@
                                         <tbody>
                                             {foreach $leituras as $periodo => $valor}
                                                 <tr>
-<td data-order="{if $smarty.get.escala == "ESCALA_MINUTO"}{substr($periodo, 0, 16)}{elseif $smarty.get.escala == "ESCALA_HORA"}{substr($periodo, 0, 13)}{elseif $smarty.get.escala == "ESCALA_DIA"}{substr($periodo, 0, 10)}{elseif $smarty.get.escala == "ESCALA_SEMANA"}{substr($periodo, 0, 10)}{elseif $smarty.get.escala == "ESCALA_MES"}{substr($periodo, 0, 7)}{elseif $smarty.get.escala == "ESCALA_ANO"}{substr($periodo, 0, 4)}{/if}">
-                {if $smarty.get.escala == "ESCALA_MINUTO"}
-                    {$periodo|date_format:"%d/%m/%Y %H:%M"}
-                {elseif $smarty.get.escala == "ESCALA_HORA"}
-                    {$periodo|date_format:"%d/%m/%Y %H:00"}
-                {elseif $smarty.get.escala == "ESCALA_DIA"}
-                    {$periodo|date_format:"%d/%m/%Y"}
-                {elseif $smarty.get.escala == "ESCALA_SEMANA"}
-                    {$periodo|date_format:"%d/%m/%Y"}
-                {elseif $smarty.get.escala == "ESCALA_MES"}
-                    {$periodo|date_format:"%m/%Y"}
-                {elseif $smarty.get.escala == "ESCALA_ANO"}
-                    {$periodo}
-                {/if}
-            </td>
-
+                                                    <td data-order="{if $smarty.get.escala == "ESCALA_MINUTO"}{substr($periodo, 0, 16)}{elseif $smarty.get.escala == "ESCALA_HORA"}{substr($periodo, 0, 13)}{elseif $smarty.get.escala == "ESCALA_DIA"}{substr($periodo, 0, 10)}{elseif $smarty.get.escala == "ESCALA_SEMANA"}{substr($periodo, 0, 10)}{elseif $smarty.get.escala == "ESCALA_MES"}{substr($periodo, 0, 7)}{elseif $smarty.get.escala == "ESCALA_ANO"}{substr($periodo, 0, 4)}{/if}">
+                                                        {if $smarty.get.escala == "ESCALA_MINUTO"}
+                                                            {$periodo|date_format:"%d/%m/%Y %H:%M"}
+                                                        {elseif $smarty.get.escala == "ESCALA_HORA"}
+                                                            {$periodo|date_format:"%d/%m/%Y %H:00"}
+                                                        {elseif $smarty.get.escala == "ESCALA_DIA"}
+                                                            {$periodo|date_format:"%d/%m/%Y"}
+                                                        {elseif $smarty.get.escala == "ESCALA_SEMANA"}
+                                                            {$periodo|date_format:"%d/%m/%Y"}
+                                                        {elseif $smarty.get.escala == "ESCALA_MES"}
+                                                            {$periodo|date_format:"%m/%Y"}
+                                                        {elseif $smarty.get.escala == "ESCALA_ANO"}
+                                                            {$periodo}
+                                                        {/if}
+                                                    </td>
                                                     <td>
                                                         {$valor|number_format:2:",":"."}
                                                     </td>

@@ -138,4 +138,18 @@ class EstacoesModel extends BaseModel
         $this->db->insert('evento', $data);
     }
 
+    public function getEventos($limit = 0)
+    {
+        $this->db->select('evento.id, evento.datahora, evento.tipo_evento_id, estacao.id AS estacao_id, estacao.descricao AS estacao_descricao')
+            ->from('evento')
+            ->join('estacao', 'evento.estacao_id = estacao.id')
+            ->order_by('evento.datahora', 'desc') 
+            ->limit($limit);
+    
+        $query = $this->db->get();
+        return $query->result();
+
+    }
+    
+    
 }
