@@ -8,6 +8,8 @@ require_once 'BasePrivateController.php';
 class Estacoes extends BasePrivateController
 {
 
+    protected $acoesPublicas = ['monitoramentoEstacao'];
+
     public function mapa()
     {
         $this->load->model('EstacoesModel');
@@ -41,12 +43,10 @@ class Estacoes extends BasePrivateController
         $this->jsonOutput($estacoes);
     }
 
-    protected $acoesPublicas = ['monitoramentoEstacao'];
-
     public function monitoramentoEstacao()
     {
-    $this->load->model('EstacoesModel');
+        $this->load->model('EstacoesModel');
 
-    $this->EstacoesModel->monitorarEstacao(5);
+        $this->EstacoesModel->monitorarEstacao(5);
     }
 }

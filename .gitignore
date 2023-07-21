@@ -37,3 +37,4 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 /assets/bower_components/
 /application/third_party/composer/
 /application/vendor/
+!/composer.lock
