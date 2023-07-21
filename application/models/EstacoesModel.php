@@ -95,14 +95,14 @@ class EstacoesModel extends BaseModel
 
             if (!isset($ultimaLeitura['datahora_cadastro']) || strtotime($ultimaLeitura['datahora_cadastro']) < strtotime('-' . $intervaloTempo . ' minutes')) //Verificando se a estação esta sem enviar leituras.
             {
-                if ($ultimoEvento['tipo_evento_id'] != 1) //Verificando se o evento anterior também não é down
+                if (!isset($ultimoEvento['tipo_evento_id']) || $ultimoEvento['tipo_evento_id'] != 1) //Verificando se o evento anterior também não é down
                 {
                     $this->inserirEvento($estacao['id'], 1); //Inserindo na tabela evento que a estação esta offline
                 }
             }
             else
             {
-                if ($ultimoEvento['tipo_evento_id'] != 2) //Verificando se o evento anterior também não é up
+                if (!isset($ultimoEvento['tipo_evento_id']) || $ultimoEvento['tipo_evento_id'] != 2) //Verificando se o evento anterior também não é up
                 {
                     $this->inserirEvento($estacao['id'], 2); //Inserindo na tabela evento que a estação esta online
                 }
