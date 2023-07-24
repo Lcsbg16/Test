@@ -48,7 +48,7 @@ class AdminLeituras extends BaseCrudController
 
         $this->load->model('LeiturasModel'); 
 
-        $filtros = new FiltrosLeitura(); //New filtro -> contato com o BD
+        $filtros = new FiltrosLeitura(); 
         $filtros->setEstacoes($estacao);
         $filtros->setDataInicial($dataInicial);
         $filtros->setDataFinal($dataFinal);

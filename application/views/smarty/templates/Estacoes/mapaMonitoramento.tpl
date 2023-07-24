@@ -9,11 +9,23 @@
             integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
     crossorigin=""></script>
 
+    <link rel="stylesheet" href="{$BASE_URL}/assets/chosen/bootstrap-multiselect.css"/>
+    <script type="text/javascript" src="{$BASE_URL}/assets/chosen/bootstrap-multiselect.js"></script>
+    
+
     <style>
         #map{
             width: 100%;
             height: 470px;
         }
+        #estacao_selecionada + .btn-group .multiselect { /*ALTERAÇÃO DO CSS DO MULTISELECT BUTTON - SELECIONAR MULTIPLAS ESTAÇÕES*/ 
+       /* Deixando modelo do selecionar camada */
+       font-size: 0.875rem;
+       text-align: left !important;
+       height: calc(1.8125rem + 2px);
+        }
+
+
     </style>
     {* /leaflet *}
 
@@ -27,7 +39,17 @@
                             <option value="">Pluviometria</option>
                         </select>
                     </div>
+                    <div class="card-body">
+                    <label>Esta&ccedil;&atilde;o</label>
+                    <select class="form-control form-control-sm change_controler" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada --> 
+                        {foreach $estacoes as $eAtual}
+                            <option value="{$eAtual.id}" id="estacao_descricao"> {$eAtual.descricao} ({$eAtual.identificador})</option>
+                        {/foreach}
+                      
+                    </select>
                 </div>
+                </div>
+            
                 <div class="card shadow">
                     <div class="card-body">
                         {if $estacoes}
@@ -43,6 +65,19 @@
         </div>
     </div>
     {if $estacoes}
+        <script type="text/javascript">
+
+$(document).ready(function(){
+            $("#estacao_selecionada").multiselect({
+                includeSelectAllOption: true,
+                buttonWidth: '100%'
+              
+            });
+        });
+     
+     
+     </script>
+
         <script>
             $(function () {
                 var map = L.map('map').setView([-22.368461, -41.774747], 13);
@@ -51,6 +86,7 @@
                         maxZoom: 19,
                         attribution: '© OpenStreetMap'
                     }).addTo(map);
+                    
                     var estacoes = null;
                     function onEachFeature(feature, layer) {
                         var popupContent = '';
@@ -71,7 +107,31 @@
 
                         layer.bindPopup(popupContent);
                     }
-                    $.get(BASE_URL + 'Estacoes/getEstacoesGeoJson/').done(
+                   
+                //EVENTO DE CHANGE DAS ESTAÇÕES 
+        $('.change_controler').change(function() { 
+
+        // CORREÇÃO DE BUG: AO DESMARCAR A ESTAÇÃO, O MAP CIRCLER MARKER CONTINUAVA NO MAPA
+        function isCircleMarker(layer) { //ESSA FUNÇÃO VERIFICA SE A CAMADA (LAYER)
+        return layer instanceof L.CircleMarker; //É DO TIPO CIRCLEMARKER
+        }
+
+        // Iterar sobre todas as camadas do mapa e remover os marcadores circleMarker
+        map.eachLayer(function (layer) {
+        if (isCircleMarker(layer)) { //SE FOR DO TIPO, REMOVE. 
+            map.removeLayer(layer); //ISSO É FEITO PARA NÃO APAGAR TODAS AS LAYERS, INCLUINDO A LAYER DO MAPA (MAP)
+        }
+        });   
+        
+            var estacaoIDS = $( "#estacao_selecionada" ).val();
+            if(!estacaoIDS){
+                var url = BASE_URL + 'Estacoes/getEstacoesGeoJson/?ids=';
+            }
+            else {
+                var url = BASE_URL + 'Estacoes/getEstacoesGeoJson/?ids=' + estacaoIDS.join(',');
+
+            }
+                    $.get(url).done(
                             function (data) {
                                 console.log(data);
                                 estacoes = L.geoJSON([data], {
@@ -109,7 +169,7 @@
                                 alert('Houve erros durante o processamento da solicitação.');
                             });
                 });
-
+                });
         </script>
     {/if}
 
