@@ -65,9 +65,7 @@
                     maxZoom: 19,
                     attribution: '© OpenStreetMap'
                 }).addTo(map);
-                
-                var estacoes = null;
-              
+                              
                 return map; 
             
             }
