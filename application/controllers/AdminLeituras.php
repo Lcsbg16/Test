@@ -37,7 +37,7 @@ class AdminLeituras extends BaseCrudController
         $this->_crud_output($crud);
     }
 
-    public function testCaclularEstatiscas() //Gerencia dados do Gráfico 
+    public function getEstatisticasLeiturasJson() //Gerencia dados do Gráfico 
     {   
         $estacao = $this->input->post('estacao_selecionada'); // estação selecionada
         $dataInicial = $this->input->post('data_inicial'); // data inicial 
