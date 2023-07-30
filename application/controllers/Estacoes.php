@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 
 if (!defined('BASEPATH'))
