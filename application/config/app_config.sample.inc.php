@@ -4,11 +4,13 @@
  * Arquivo de configurações
  */
 
+error_reporting(E_ALL & E_DEPRECATED);
+
 ////// Configuração de BD
-define("APP_DB_SERVER", "");
-define("APP_DB_USERNAME", "");
+define("APP_DB_SERVER", "localhost");
+define("APP_DB_USERNAME", "root");
 define("APP_DB_PASSWORD", "");
-define("APP_DB_DATABASE", "");
+define("APP_DB_DATABASE", "telemetria_teste");
 define("APP_DB_PORT", 3306);
 define("DB_DRIVER", 'mysqli');
 
@@ -31,5 +33,3 @@ define('APPLICATION_TITLE', 'Sistema de Telemetria');
  * URL base da aplicação
  */
 define("WEBSITE_BASE_URL", "http://localhost/telemetria-web");
-
-error_reporting(E_ALL & E_DEPRECATED);

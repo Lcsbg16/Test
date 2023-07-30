@@ -85,5 +85,4 @@ abstract class BasePrivateController extends BaseController
     {
         return $this->LoginModel->getDadosUsuarioLogado();
     }
-
 }

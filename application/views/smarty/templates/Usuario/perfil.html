@@ -1,0 +1,25 @@
+<div class="container">
+    <script>
+function validarFormulario()
+{
+    if( $('senha').val() != $('confirmacao_senha').val())
+    {
+        alert('A senha e a confirmação não conferem!')
+        return false;
+    }
+    return true
+}
+</script>
+    <form action="Usuario.php" method="POST">
+        
+        <div class="form-group">
+            <label for="senha">Nova senha</label>
+            <input type="text" id="senha" name="senha" value="<?=isset($usuarioId)?$usuarioId['senha']:''?>">
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary" id="salvar">Salvar</button>
+        </div>
+
+    </form>
+</div>

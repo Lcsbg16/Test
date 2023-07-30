@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 
 require_once 'BaseModel.php';
@@ -84,4 +85,73 @@ class EstacoesModel extends BaseModel
         return $geojson;
     }
 
+ public function monitorarEstacao($intervaloTempo)
+    {
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
+
+        $estacoes = $this->getEstacoes(); //variavel para armazenar todas as estações Ativas
+        foreach ($estacoes as $estacao)
+        {
+            $ultimaLeitura = $this->getUltimaLeitura($estacao['id']);
+            $ultimoEvento  = $this->getUltimoEvento($estacao['id']);
+
+            if (!isset($ultimaLeitura['datahora_cadastro']) || strtotime($ultimaLeitura['datahora_cadastro']) < strtotime('-' . $intervaloTempo . ' minutes')) //Verificando se a estação esta sem enviar leituras.
+            {
+                if (!isset($ultimoEvento['tipo_evento_id']) || $ultimoEvento['tipo_evento_id'] != 1) //Verificando se o evento anterior também não é down
+                {
+                    $this->inserirEvento($estacao['id'], 1); //Inserindo na tabela evento que a estação esta offline
+                }
+            }
+            else
+            {
+                if (!isset($ultimoEvento['tipo_evento_id']) || $ultimoEvento['tipo_evento_id'] != 2) //Verificando se o evento anterior também não é up
+                {
+                    $this->inserirEvento($estacao['id'], 2); //Inserindo na tabela evento que a estação esta online
+                }
+            }
+        }
+        echo 'OK';
+    }
+
+    private function getUltimaLeitura($estacaoId)
+    {
+        return $this->db->where('estacao_id', $estacaoId)
+                        ->order_by('datahora_cadastro', 'desc')
+                        ->limit(1)
+                        ->get('leitura')
+                        ->row_array();
+    }
+
+    private function getUltimoEvento($estacaoId)
+    {
+        return $this->db->where('estacao_id', $estacaoId)
+                        ->order_by('datahora', 'desc')
+                        ->limit(1)
+                        ->get('evento')
+                        ->row_array();
+    }
+
+    private function inserirEvento($estacaoId, $tipoEventoId)
+    {
+        $data = [
+            'estacao_id'     => $estacaoId,
+            'datahora'       => date('Y-m-d H:i:s'),
+            'tipo_evento_id' => $tipoEventoId
+        ];
+        $this->db->insert('evento', $data);
+    }
+
+    public function getEventos($limit = 0)
+    {
+        $this->db->select('evento.id, evento.datahora, evento.tipo_evento_id, estacao.id AS estacao_id, estacao.descricao AS estacao_descricao')
+                ->from('evento')
+                ->join('estacao', 'evento.estacao_id = estacao.id')
+                ->order_by('evento.datahora', 'desc')
+                ->limit($limit);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

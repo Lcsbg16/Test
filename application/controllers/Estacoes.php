@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 
 if (!defined('BASEPATH'))
@@ -44,6 +45,13 @@ class Estacoes extends BasePrivateController
         $estacoes = $this->EstacoesModel->getEstacoesGeoJson($idCamada, $estacoesIds); //segundo argumento: os IDs das estações
 
         $this->jsonOutput($estacoes);
+    }
+	
+	 public function monitoramentoEstacao()
+    {
+        $this->load->model('EstacoesModel');
+
+        $this->EstacoesModel->monitorarEstacao(5);
     }
 
 }

@@ -4,11 +4,12 @@ require_once 'BaseModel.php';
 
 class LeiturasModel extends BaseModel
 {
+
     public function calcularEstatisticasPorPeriodo(FiltrosLeitura $filtros)
     {
 
         $this->db->from('leitura');
-        if($filtros)
+        if ($filtros)
         {
             $estacoes       = $filtros->getEstacoes();
             $dataInicial    = $filtros->getDataInicial();
@@ -16,151 +17,150 @@ class LeiturasModel extends BaseModel
             $escala         = $filtros->getEscala();
             $tipoInformacao = $filtros->getTipoInformacao();
 
-            if($estacoes)
+            if ($estacoes)
             {
-                $this->db->where_in('estacao_id',$estacoes);
+                $this->db->where_in('estacao_id', $estacoes);
             }
 
-            if($dataInicial)
+            if ($dataInicial)
             {
                 $this->db->where('datahora >=', $dataInicial);
             }
 
-            if($dataFinal)
+            if ($dataFinal)
             {
                 $this->db->where('datahora <=', $dataFinal);
             }
 
-            switch($tipoInformacao)
+            switch ($tipoInformacao)
             {
                 case FiltrosLeitura::TIPO_VELOCIDADE_VENTO:
-                     $colunaTipoInformacao = 'velocidade_vento';
-                break;
+                    $colunaTipoInformacao = 'velocidade_vento';
+                    break;
 
                 case FiltrosLeitura::TIPO_TEMPERATURA:
-                     $colunaTipoInformacao = 'temperatura'; 
-                break;
-                
+                    $colunaTipoInformacao = 'temperatura';
+                    break;
+
                 case FiltrosLeitura::TIPO_VOLUME_CHUVA:
-                     $colunaTipoInformacao = 'volume_chuva'; 
-                break;
+                    $colunaTipoInformacao = 'volume_chuva';
+                    break;
 
                 case FiltrosLeitura::TIPO_UMIDADE_AR:
-                     $colunaTipoInformacao = 'umidade_ar'; 
-                break;    
-                
+                    $colunaTipoInformacao = 'umidade_ar';
+                    break;
+
                 case FiltrosLeitura::TIPO_VOLUME_ACC_CHUVA:
-                     $colunaTipoInformacao = 'volume_acc_chuva'; 
-                break;
-                
+                    $colunaTipoInformacao = 'volume_acc_chuva';
+                    break;
+
                 default:
-                    throw new Exception('É necessário informar o tipo de informação desejada.');            
+                    throw new Exception('É necessário informar o tipo de informação desejada.');
             }
 
-            switch($escala)
+            switch ($escala)
             {
                 case FiltrosLeitura::ESCALA_MINUTO:
-                     $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d %H:%i')";
+                     $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d %H:%i:00')";
                 break;
                 
                 case FiltrosLeitura::ESCALA_HORA:
-                    $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d %H')";
+                    $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d %H:00:00')";
                 break;  
 
                 case FiltrosLeitura::ESCALA_DIA:
                     $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d')";
-                break;
+                    break;
 
                 case FiltrosLeitura::ESCALA_SEMANA:
                     $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%V')";
-                break;
-                
+                    break;
+
                 case FiltrosLeitura::ESCALA_MES:
                     $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m')";
-                break;  
-                
+                    break;
+
                 case FiltrosLeitura::ESCALA_ANO:
                     $colunaPeriodo = "DATE_FORMAT(datahora,'%Y')";
-                break;
+                    break;
 
                 default:
-                    throw new Exception('É necessário informar a escala desejada.');            
+                    throw new Exception('É necessário informar a escala desejada.');
             }
-            
-            $this->db->select($colunaPeriodo.' AS periodo, AVG('.$colunaTipoInformacao.') AS valor');
+
+            $this->db->select($colunaPeriodo . ' AS periodo, AVG(' . $colunaTipoInformacao . ') AS valor');
             $this->db->group_by($colunaPeriodo);
-            $this->db->order_by('periodo',$filtros->getDirecao());
+            $this->db->order_by('periodo', $filtros->getDirecao());
             $resultado = $this->db->get();
-            
+
             $resultadoArray = $resultado->result_array();
-            $retorno = [];
-            foreach($resultadoArray as $linha)
+            $retorno        = [];
+            foreach ($resultadoArray as $linha)
             {
                 $retorno[$linha['periodo']] = $linha['valor'];
             }
             return $retorno;
         }
-
     }
 
     public function getUltimasLeituras(FiltrosLeitura $filtros = NULL, $tempoLimite = 2440)
     {
         $this->db->from('leitura');
-        if($filtros)
+        if ($filtros)
         {
             $estacoes       = $filtros->getEstacoes();
             $dataInicial    = $filtros->getDataInicial();
             $dataFinal      = $filtros->getDataFinal();
             $tipoInformacao = $filtros->getTipoInformacao();
-            
-            if(!$tipoInformacao)
+
+            if (!$tipoInformacao)
             {
                 throw new Exception('É necessário informar o tipo de informação desejada.');
             }
 
-            if($estacoes)
+            if ($estacoes)
             {
-                $this->db->where_in('estacao_id',$estacoes);
+                $this->db->where_in('estacao_id', $estacoes);
             }
 
-            if($dataInicial)
+            if ($dataInicial)
             {
                 $this->db->where('datahora >=', $dataInicial);
             }
 
-            if($dataFinal)
+            if ($dataFinal)
             {
                 $this->db->where('datahora <=', $dataFinal);
             }
 
-            switch($tipoInformacao)
+            switch ($tipoInformacao)
             {
                 case FiltrosLeitura::TIPO_VELOCIDADE_VENTO:
-                     $colunaTipoInformacao = 'velocidade_vento';
-                break;
+                    $colunaTipoInformacao = 'velocidade_vento';
+                    break;
 
                 case FiltrosLeitura::TIPO_TEMPERATURA:
-                     $colunaTipoInformacao = 'temperatura'; 
-                break;
-                
+                    $colunaTipoInformacao = 'temperatura';
+                    break;
+
                 case FiltrosLeitura::TIPO_VOLUME_CHUVA:
-                     $colunaTipoInformacao = 'volume_chuva'; 
-                break;
+                    $colunaTipoInformacao = 'volume_chuva';
+                    break;
 
                 case FiltrosLeitura::TIPO_UMIDADE_AR:
-                     $colunaTipoInformacao = 'umidade_ar'; 
-                break;    
-                
+                    $colunaTipoInformacao = 'umidade_ar';
+                    break;
+
                 case FiltrosLeitura::TIPO_VOLUME_ACC_CHUVA:
-                     $colunaTipoInformacao = 'volume_acc_chuva'; 
-                break;
-                
+                    $colunaTipoInformacao = 'volume_acc_chuva';
+                    break;
+
                 default:
-                    throw new Exception('É necessário informar o tipo de informação desejada.');            
+                    throw new Exception('É necessário informar o tipo de informação desejada.');
             }
 
             $this->db->from('estacao E')
-            ->select("
+                    ->select("
 
                     (
                         SELECT
@@ -178,10 +178,9 @@ class LeiturasModel extends BaseModel
             ");
             $resultado = $this->db->get()->result_array();
             return $resultado;
-        } 
-
+        }
     }
-    
+
     public function getUltimaTemperaturaMedia()
     {
         $this->db->from('estacao E')
@@ -230,8 +229,6 @@ class LeiturasModel extends BaseModel
         return $linha['vol_chuva_min'];
     }
 
-
-
     public function getVolumeChuvaMaxima()
     {
         $this->db->from('estacao E')
@@ -255,8 +252,6 @@ class LeiturasModel extends BaseModel
         $linha = $this->db->get()->row_array();
         return $linha['vol_chuva_max'];
     }
-
-
 
     public function getTemperaturaMinima()
     {
@@ -362,28 +357,26 @@ class LeiturasModel extends BaseModel
 
 class FiltrosLeitura
 {
-    const ESCALA_ANO = 'ano';
-    const ESCALA_MES = 'mes';
+
+    const ESCALA_ANO    = 'ano';
+    const ESCALA_MES    = 'mes';
     const ESCALA_SEMANA = 'semana';
-    const ESCALA_DIA = 'dia';
-    const ESCALA_HORA = 'hora';
+    const ESCALA_DIA    = 'dia';
+    const ESCALA_HORA   = 'hora';
     const ESCALA_MINUTO = 'minuto';
-
     const TIPO_VELOCIDADE_VENTO = 'velocidade_vento';
-    const TIPO_TEMPERATURA = 'temperatura';
-    const TIPO_VOLUME_CHUVA = 'volume_chuva';
-    const TIPO_UMIDADE_AR = 'umidade_ar';
+    const TIPO_TEMPERATURA      = 'temperatura';
+    const TIPO_VOLUME_CHUVA     = 'volume_chuva';
+    const TIPO_UMIDADE_AR       = 'umidade_ar';
     const TIPO_VOLUME_ACC_CHUVA = 'volume_acc_chuva';
-
-    const DIRECAO_ASC = 'ASC';
+    const DIRECAO_ASC  = 'ASC';
     const DIRECAO_DESC = 'DESC';
 
     private $estacoes = array();
     private $dataInicial;
     private $dataFinal;
-    private $escala = self::ESCALA_MES;
+    private $escala   = self::ESCALA_MES;
     private $tipoInformacao;
-    
     private $direcao = self::DIRECAO_ASC;
 
     public function getEstacoes()
@@ -404,7 +397,7 @@ class FiltrosLeitura
     public function setDataInicial($dataInicial)
     {
         $this->dataInicial = $dataInicial;
-    }  
+    }
 
     public function getDataFinal()
     {
@@ -414,7 +407,7 @@ class FiltrosLeitura
     public function setDataFinal($dataFinal)
     {
         $this->dataFinal = $dataFinal;
-    }  
+    }
 
     public function getEscala()
     {
@@ -434,7 +427,7 @@ class FiltrosLeitura
     public function setTipoInformacao($tipoInformacao)
     {
         $this->tipoInformacao = $tipoInformacao;
-    }    
+    }
 
     public function getDirecao()
     {
@@ -445,5 +438,5 @@ class FiltrosLeitura
     {
         $this->direcao = $direcao;
     }
-    
+
 }

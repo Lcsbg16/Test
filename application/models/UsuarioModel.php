@@ -33,11 +33,18 @@ class UsuarioModel extends BaseModel
         return $idGrupos;
     }
 
+
     public function atualizarSenhaUsuario($usuarioId, $senha)
     {
-        throw new Exception('Não implementado!');
+        $dados = ['senha'=>sha1($senha)];  //criptografia
+        return $this->db->update('usuario', $dados, ['id' => $usuarioId]); // id deve ser igual a usuarioId
     }
 
+
+    public function esqueciSenha(){
+        
+        return 0;
+    }
     public function checarLoginValido($usuario, $senha)
     {
         return $this->db->where('username', $usuario)
@@ -46,4 +53,28 @@ class UsuarioModel extends BaseModel
                         ->row_array();
     }
 
+    public function updateSenha($usuarioId, $novaSenha)
+    {
+        $dados = array('senha' => sha1($novaSenha));
+        $this->db->where('id',$usuarioId);
+        $this->db->update('usuario',$dados);
+    }
+
+    // public function getTrocaSenhaPorToken($email, $token)
+    // {
+    //     $this->db->select('*'); //selecionar todas as colunas da tabela
+    //     $this->db->where('email',$email);
+    //     $this->db->where('token',$token);
+    //     $this->db->where('expirado >=',date('Y-m-d H:i:s'));
+    //     $query=$this->db->get('troca_de_senha');
+
+    //     if($query->num_rows()>0)
+    //     {
+    //         return $query->row_array();
+    //     } 
+    //     else
+    //     {
+    //         return false;
+    //     }
+    // }
 }

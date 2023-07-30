@@ -37,7 +37,7 @@ class AdminLeituras extends BaseCrudController
         $this->_crud_output($crud);
     }
 
-    public function testCaclularEstatiscas() //Gerencia dados do Gráfico 
+    public function getEstatisticasLeiturasJson() //Gerencia dados do Gráfico 
     {   
         $estacao = $this->input->post('estacao_selecionada'); // estação selecionada
         $dataInicial = $this->input->post('data_inicial'); // data inicial 
@@ -48,7 +48,7 @@ class AdminLeituras extends BaseCrudController
 
         $this->load->model('LeiturasModel'); 
 
-        $filtros = new FiltrosLeitura(); 
+        $filtros = new FiltrosLeitura(); //New filtro -> contato com o BD
         $filtros->setEstacoes($estacao);
         $filtros->setDataInicial($dataInicial);
         $filtros->setDataFinal($dataFinal);
@@ -77,3 +77,4 @@ class AdminLeituras extends BaseCrudController
 
     
 }
+>>>>>>> 06a6e9a99b32fe16073d0fd88915dc8c3589316b

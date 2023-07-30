@@ -1,0 +1,126 @@
+[
+    {
+        "id": "f6f2187d.f17ca8",
+        "type": "tab",
+        "label": "Leitura",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "3cc11d24.ff01a2",
+        "type": "comment",
+        "z": "f6f2187d.f17ca8",
+        "name": "WARNING: please check you have started this container with a volume that is mounted to /data\\n otherwise any flow changes are lost when you redeploy or upgrade the container\\n (e.g. upgrade to a more recent node-red docker image).\\n  If you are using named volumes you can ignore this warning.\\n Double click or see info side panel to learn how to start Node-RED in Docker to save your work",
+        "info": "\nTo start docker with a bind mount volume (-v option), for example:\n\n```\ndocker run -it -p 1880:1880 -v /home/user/node_red_data:/data --name mynodered nodered/node-red\n```\n\nwhere `/home/user/node_red_data` is a directory on your host machine where you want to store your flows.\n\nIf you do not do this then you can experiment and redploy flows, but if you restart or upgrade the container the flows will be disconnected and lost. \n\nThey will still exist in a hidden data volume, which can be recovered using standard docker techniques, but that is much more complex than just starting with a named volume as described above.",
+        "x": 350,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "25fe032f1e8526c8",
+        "type": "mqtt in",
+        "z": "f6f2187d.f17ca8",
+        "name": "MQTT telemetria",
+        "topic": "/prefeituras/macae/estacoes/est002",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "612d62487631aac9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 200,
+        "y": 260,
+        "wires": [
+            [
+                "cf48c435529881f7"
+            ]
+        ]
+    },
+    {
+        "id": "959056301e884b2e",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "cf48c435529881f7",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "func": "/*var dir_vento = msg.payload.varchar;\nvar temperatura = msg.payload.double;\nvar umidade_ar = msg.payload.double;\nvar velocidade_vento = msg.payload.double;\nvar volume_acc_chuva = msg.payload.double;\nvar volume_chuva = msg.payload.double;*/\n \n/*msg.payload = {\n    dir_vento: msg.payload.dir_vento,\n    temperatura: msg.payload.temperatura,\n    umidade_ar: msg.payload.umidade_ar,\n    velocidade_vento: msg.payload.velocidade_vento,\n    volume_acc_chuva: msg.payload.volume_acc_chuva,\n    volume_chuva: msg.payload.volume_chuva\n}*/\n\nmsg.topic = \"INSERT INTO leitura (estacao_id, datahora, dir_vento, temperatura, umidade_ar, velocidade_vento, volume_chuva, datahora_cadastro) VALUES (1, FROM_UNIXTIME(:timestamp),:dir_vento, :temperatura, :umidade_ar, :velocidade_vento, :volume_chuva, now())\";\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 260,
+        "wires": [
+            [
+                "959056301e884b2e",
+                "b94d03bbbca5410c"
+            ]
+        ]
+    },
+    {
+        "id": "b94d03bbbca5410c",
+        "type": "mysql",
+        "z": "f6f2187d.f17ca8",
+        "mydb": "b12a980f73726928",
+        "name": "red node test",
+        "x": 730,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "612d62487631aac9",
+        "type": "mqtt-broker",
+        "name": "MQTT SERVER",
+        "broker": "telemetria.macae.ufrj.br",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "b12a980f73726928",
+        "type": "MySQLdatabase",
+        "name": "",
+        "host": "192.168.1.3",
+        "port": "3306",
+        "db": "new_proj_telelemetria",
+        "tz": "",
+        "charset": "UTF8"
+    }
+]

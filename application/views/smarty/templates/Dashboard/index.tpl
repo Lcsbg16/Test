@@ -152,7 +152,13 @@
                             <div class="row">
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Vel. M&iacute;nima do Vento</h5>
-                                    <span class="h2 font-weight-bold mb-0">{$velocidade_minima|number_format:1:","} km/h</span>
+                                    <span class="h2 font-weight-bold mb-0">
+                                        {if $velocidade_minima == NULL}
+                                            -
+                                        {else}
+                                            {$velocidade_minima|number_format:1:","}km/h
+                                        {/if}
+                                    </span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-green text-white rounded-circle shadow">
@@ -170,7 +176,13 @@
                             <div class="row">
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Vel. M&aacute;x. do Vento</h5>
-                                    <span class="h2 font-weight-bold mb-0">{$velocidade_maxima|number_format:1:","} km/h</span>
+                                    <span class="h2 font-weight-bold mb-0">
+                                        {if $velocidade_maxima == NULL}
+                                            -
+                                        {else}
+                                            {$velocidade_maxima|number_format:1:","} km/h
+                                        {/if}
+                                    </span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-red text-white rounded-circle shadow">
@@ -201,7 +213,7 @@
                                 <h3 class="mb-0">Eventos</h3>
                             </div>
                             <div class="col text-right">
-                                <a href="#!" class="btn btn-sm btn-primary">Ver todos</a>
+                                <a href="{$BASE_URL}AdminEventos" class="btn btn-sm btn-primary">Ver todos</a>
                             </div>
                         </div>
                     </div>
@@ -211,48 +223,30 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th scope="col">Data</th>
-                                    <th scope="col">Esta&ccedil;&atilde;o</th>
+                                    <th scope="col">Estação</th>
                                     <th scope="col">Evento</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th scope="row">
-                                        22/08/2022 05:00
-                                    </th>
-                                    <td>
-                                        est001
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-up text-success mr-3"></i>  Novamente online!
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        22/08/2022 02:00
-                                    </th>
-                                    <td>
-                                        est003
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-down text-danger mr-3"></i> Atraso no recebimento!
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        21/08/2022 23:00
-                                    </th>
-                                    <td>
-                                        est001
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-down text-danger mr-3"></i> Atraso no recebimento!
-                                    </td>
-
-                                </tr>
-
+                                {foreach $eventos as $evento}
+                                    <tr>
+                                        <th scope="row">
+                                            {$evento.datahora|date_format:'%d/%m/%Y %H:%M'}
+                                        </th>
+                                        <td>
+                                            {$evento.estacao_descricao|truncate:30:"...":true}
+                                        </td>
+                                        <td>
+                                            {if $evento.tipo_evento_id == 1}
+                                                <i class="fas fa-arrow-down text-danger mr-3"></i>Offline
+                                            {elseif $evento.tipo_evento_id == 2}
+                                                <i class="fas fa-arrow-up text-success mr-3"></i>Online
+                                            {else}
+                                                Tipo de evento desconhecido
+                                            {/if}
+                                        </td>
+                                    </tr>
+                                {/foreach}
                             </tbody>
                         </table>
                     </div>

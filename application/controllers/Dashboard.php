@@ -28,6 +28,9 @@ class Dashboard extends BasePrivateController
 
         $variaveisView['velocidade_minima'] = $this->LeiturasModel->getVelocidadeMinima();
         $variaveisView['velocidade_maxima'] = $this->LeiturasModel->getVelocidadeMaxima();
+        
+
+        $variaveisView['eventos'] = json_decode(json_encode($this->EstacoesModel->getEventos(4)), true);
         $this->loadSmartyView('Dashboard/index', $variaveisView);
     }
 

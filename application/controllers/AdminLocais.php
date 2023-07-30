@@ -29,7 +29,7 @@ class AdminLocais extends BaseCrudController
         $crud->display_as('descricao', 'Descrição');
         $crud->display_as('numero', 'Número');
         $crud->display_as('cep', 'CEP');
-        $crud->display_as('bairro_id', 'Bairro');
+        $crud->display_as('bairro_id', 'Bairro');       
         $crud->display_as('_grupos', 'Grupos de Usuários com Acesso');
 
         // Tipos de campos

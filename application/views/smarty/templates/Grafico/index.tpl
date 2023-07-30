@@ -196,7 +196,7 @@ $(document).ready(function(){
        
            try {
                 $.ajax({
-                        url: "AdminLeituras/testCaclularEstatiscas",
+                        url: "AdminLeituras/getEstatisticasLeiturasJson",
                         dataType: "json",
                         method: "POST",
                         data: {
