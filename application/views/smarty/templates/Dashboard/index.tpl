@@ -250,7 +250,7 @@
                                 <h3 class="mb-0">Eventos</h3>
                             </div>
                             <div class="col text-right">
-                                <a href="#!" class="btn btn-sm btn-primary">Ver todos</a>
+                                <a href="{$BASE_URL}AdminEventos" class="btn btn-sm btn-primary">Ver todos</a>
                             </div>
                         </div>
                     </div>
@@ -275,9 +275,9 @@
                                         </td>
                                         <td>
                                             {if $evento.tipo_evento_id == 1}
-                                                <i class="fas fa-arrow-down text-danger mr-3"></i> Atraso no recebimento!
+                                                <i class="fas fa-arrow-down text-danger mr-3"></i>Offline
                                             {elseif $evento.tipo_evento_id == 2}
-                                                <i class="fas fa-arrow-up text-success mr-3"></i> Novamente online!
+                                                <i class="fas fa-arrow-up text-success mr-3"></i>Online
                                             {else}
                                                 Tipo de evento desconhecido
                                             {/if}

@@ -37,7 +37,7 @@ class AdminLeituras extends BaseCrudController
         $this->_crud_output($crud);
     }
 
-    public function testCaclularEstatiscas() //Gerencia dados do Gráfico 
+    public function getEstatisticasLeiturasJson() //Gerencia dados do Gráfico 
     {   
         $estacao = $this->input->post('estacao_selecionada'); // estação selecionada
         $dataInicial = $this->input->post('data_inicial'); // data inicial 
@@ -48,7 +48,7 @@ class AdminLeituras extends BaseCrudController
 
         $this->load->model('LeiturasModel'); 
 
-        $filtros = new FiltrosLeitura(); //New filtro -> contato com o BD
+        $filtros = new FiltrosLeitura();
         $filtros->setEstacoes($estacao);
         $filtros->setDataInicial($dataInicial);
         $filtros->setDataFinal($dataFinal);
@@ -61,14 +61,16 @@ class AdminLeituras extends BaseCrudController
     }
 
 
-    public function testUltimasLeituras()
-    {      
-        $filtros->setEstacoes(['1']);
-        $filtros->setDataInicial('2023-04-21');
-        $filtros->setDataFinal('2023-04-22');
-        $filtros->setTipoInformacao(FiltrosLeitura::TIPO_TEMPERATURA);
-        $leituras = $this->LeiturasModel->getUltimasLeituras($filtros);
-        
+    public function getUltimaLeituraRegistrada()
+    {   $estacao = $this->input->post('estacao_selecionada'); // estação selecionada
+        $tipo_dados = $this->input->post('tipo_dados'); // tipo de dados  
+
+        $this->load->model('LeiturasModel'); 
+        $filtros = new FiltrosLeitura(); 
+        $filtros->setEstacoes($estacao);
+        $filtros->setTipoInformacao(constant("FiltrosLeitura::$tipo_dados"));
+        $leituras = $this->LeiturasModel->getUltimaLeituraRegistrada($filtros);
+        print_r(json_encode($leituras));
  
     }
 

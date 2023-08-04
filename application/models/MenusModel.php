@@ -31,6 +31,7 @@ class MenusModel extends BaseModel
             $relatorios->adicionarFilho(new MenuItem('Leituras', base_url('AdminLeituras'), 'collection', 'green'));
             $relatorios->adicionarFilho(new MenuItem('Estatísticas de Leituras', base_url('RelatorioLeituras'), 'collection', 'green'));
             $relatorios->adicionarFilho(new MenuItem('Ocorrências', base_url('RelatorioOcorrencias'), 'collection', 'green'));
+            $relatorios->adicionarFilho(new MenuItem('Eventos', base_url('AdminEventos'), 'collection', 'green'));
         }
 
         $usuario = new MenuItem('Usuário', '');

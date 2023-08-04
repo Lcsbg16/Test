@@ -8,7 +8,7 @@ require_once 'BasePrivateController.php';
 class Estacoes extends BasePrivateController
 {
 
-    protected $acoesPublicas = ['monitoramentoEstacao'];
+
 
     public function mapa()
     {
@@ -34,19 +34,35 @@ class Estacoes extends BasePrivateController
         $this->loadSmartyView('Estacoes/mapaMonitoramento', $variaveisView);
     }
 
-    public function getEstacoesGeoJson($idCamada = NULL)
+    public function monitoramentoIndividual()
     {
         $this->load->model('EstacoesModel');
 
-        $estacoes = $this->EstacoesModel->getEstacoesGeoJson($idCamada);
+        $variaveisView = [];
+
+        $variaveisView['titulo_pagina'] = 'Monitoramento individual de estações';
+        $variaveisView['estacoes']      = $this->EstacoesModel->getEstacoes(true);
+
+        $this->loadSmartyView('Estacoes/monitoramentoIndividual', $variaveisView);
+    }
+
+    public function getEstacoesGeoJson($idCamada = NULL)
+    {
+        $this->load->model('EstacoesModel');
+        $ids = $this->input->get('ids'); // IDs selecionados
+
+    // Separa os IDs das estações em um array
+        $estacoesIds = explode(',', $ids);
+        $estacoes = $this->EstacoesModel->getEstacoesGeoJson($idCamada, $estacoesIds); //segundo argumento: os IDs das estações
 
         $this->jsonOutput($estacoes);
     }
-
-    public function monitoramentoEstacao()
+	
+	 public function monitoramentoEstacao()
     {
         $this->load->model('EstacoesModel');
 
         $this->EstacoesModel->monitorarEstacao(5);
     }
+
 }

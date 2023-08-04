@@ -7,7 +7,14 @@
     {*<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>*}
     <link rel="stylesheet" href="{$BASE_URL}/assets/chosen/bootstrap-multiselect.css"/>
     <script type="text/javascript" src="{$BASE_URL}/assets/chosen/bootstrap-multiselect.js"></script>
-    
+    <style>
+     #estacao_selecionada + .btn-group .multiselect { /*ALTERAÇÃO DO CSS DO MULTISELECT BUTTON - SELECIONAR MULTIPLAS ESTAÇÕES*/ 
+       /* Deixando modelo do selecionar camada */
+       font-size: 0.875rem;
+       text-align: left !important;
+       height: calc(1.8125rem + 2px);
+        }
+    </style>
     
     <div class="container-fluid mt-3">
         <div class="row">
@@ -15,7 +22,7 @@
                 <div class="card shadow">
                     <div class="card-body">
                         <div class="row my-3">
-                            <div class="col">
+                            <div class="col-sm-12 col-md-4 col-xl-2">
                                 <label>Esta&ccedil;&atilde;o</label>
                                 <select class="form-control form-control-sm change_controler" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada --> 
                                     {foreach $estacoes as $eAtual}
@@ -24,15 +31,15 @@
                                   
                                 </select>
                             </div>
-                            <div class="col">
+                            <div class="col-sm-12 col-md-4 col-xl-2">
                                 <label>Data Inicial</label>
                                 <input class="form-control form-control-sm datepicker" value="{'-3 months'|strtotime|date_format:'%d/%m/%Y'}" id="dataInicial">
                             </div>
-                            <div class="col">
+                            <div class="col-sm-12 col-md-4 col-xl-2">
                                 <label>Data Final</label>
                                 <input class="form-control form-control-sm datepicker" value='{$smarty.now|date_format:'%d/%m/%Y'}' id="dataFinal">
                             </div>
-                            <div class="col">
+                            <div class="col-sm-12 col-md-4 col-xl-2">
                                 <label>Escala</label>
                                 <select class="form-control form-control-sm change_controler" id="escala_selecionada" >
                                     <option value="">Selecione</option>
@@ -42,7 +49,7 @@
                                     <option selected>M&ecirc;s</option>
                                 </select>
                             </div>
-                            <div class="col">
+                            <div class="col-sm-12 col-md-4 col-xl-2">
                                 <label>Tipo de Informa&ccedil;&atilde;o</label>
                                 <select class="form-control form-control-sm change_controler" id="info_selecionada" >
                                     <option>Selecione</option>
@@ -53,7 +60,7 @@
                                 </select>
                             </div>
 
-                            <div class="col">
+                            <div class="col-sm-12 col-md-4 col-xl-2">
                                 <label>Tipo de Gr&aacute;fico</label>
                                 <select id="tipoGrafico" class="form-control form-control-sm">
                                     <option value="bar" >Barras</option>
@@ -84,7 +91,7 @@
 $(document).ready(function(){
             $("#estacao_selecionada").multiselect({
                 includeSelectAllOption: true,
-                buttonWidth: '180px'
+                buttonWidth: '100%'
               
             });
         });
@@ -196,7 +203,7 @@ $(document).ready(function(){
        
            try {
                 $.ajax({
-                        url: "AdminLeituras/testCaclularEstatiscas",
+                        url: "AdminLeituras/getEstatisticasLeiturasJson",
                         dataType: "json",
                         method: "POST",
                         data: {
@@ -207,7 +214,7 @@ $(document).ready(function(){
                             tipo_dados: tipo_dados},
 
                         success: function(data) {
-
+        
                             //salva as keys/chaves como os periodos de tempo (no model: o dado vem como 2023=>20.55, ou seja, key = periodo 
                             const periodos = Object.keys(data).map(function(key) { return key;  });
 
@@ -215,7 +222,8 @@ $(document).ready(function(){
                             const valores = Object.values(data).map(function(value) { return value;});
 
                             // Função que gera o grafico, parametros perido para label, valores para montagem e descrição que é o nome da estação
-                            GerarGrafico(periodos, valores, OrganizarLabel(estacao[1]), escala); },
+                            GerarGrafico(periodos, valores, OrganizarLabel(estacao[1]), escala); 
+                        },
                             
                         error: function (req, status, error) 
                         {   console.log(data);
@@ -277,7 +285,7 @@ var myChart;
                                     {
                                         let dateArray = labels[i].split(/[-\s:]/); //quebra a data que chega no formato yyyy-mm
                                         let date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3]); // Cria uma varivel com o ano e o mês (Janeiro = 0)
-                                        dataFormatada.push(date.toLocaleString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(", ", "-"));  // Formata a data para exibir o mês por extenso e o ano numerico
+                                        dataFormatada.push(date.toLocaleString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(", ", "-")); 
                                         result[i]= dataFormatada[i].split('-');
                                     }    
                                 return result;
