@@ -48,7 +48,7 @@ class AdminLeituras extends BaseCrudController
 
         $this->load->model('LeiturasModel');
 
-        $filtros  = new FiltrosLeitura(); //New filtro -> contato com o BD
+        $filtros  = new FiltrosLeitura();
         $filtros->setEstacoes($estacao);
         $filtros->setDataInicial($dataInicial);
         $filtros->setDataFinal($dataFinal);
@@ -56,15 +56,21 @@ class AdminLeituras extends BaseCrudController
         $filtros->setTipoInformacao(constant("FiltrosLeitura::$tipo_dados"));
         $filtros->setDirecao(FiltrosLeitura::DIRECAO_ASC);
         $leituras = $this->LeiturasModel->calcularEstatisticasPorPeriodo($filtros);
-        print_r(json_encode($leituras));
+
+        $this->jsonOutput($leituras);
     }
 
-    public function testUltimasLeituras()
+    public function getUltimaLeituraRegistrada()
     {
-        $filtros->setEstacoes(['1']);
-        $filtros->setDataInicial('2023-04-21');
-        $filtros->setDataFinal('2023-04-22');
-        $filtros->setTipoInformacao(FiltrosLeitura::TIPO_TEMPERATURA);
-        $leituras = $this->LeiturasModel->getUltimasLeituras($filtros);
+        $estacao    = $this->input->post('estacao_selecionada'); // estação selecionada
+        $tipo_dados = $this->input->post('tipo_dados'); // tipo de dados
+
+        $this->load->model('LeiturasModel');
+        $filtros  = new FiltrosLeitura();
+        $filtros->setEstacoes($estacao);
+        $filtros->setTipoInformacao(constant("FiltrosLeitura::$tipo_dados"));
+        $leituras = $this->LeiturasModel->getUltimaLeituraRegistrada($filtros);
+
+        $this->jsonOutput($leituras);
     }
 }

@@ -38,6 +38,10 @@ class LeiturasModel extends BaseModel
                     $colunaTipoInformacao = 'velocidade_vento';
                     break;
 
+                case FiltrosLeitura::TIPO_DIRECAO_VENTO:
+                    $colunaTipoInformacao = 'dir_vento';
+                    break;
+
                 case FiltrosLeitura::TIPO_TEMPERATURA:
                     $colunaTipoInformacao = 'temperatura';
                     break;
@@ -61,12 +65,12 @@ class LeiturasModel extends BaseModel
             switch ($escala)
             {
                 case FiltrosLeitura::ESCALA_MINUTO:
-                    $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d %H:%i:00')";
-                    break;
-
+                     $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d %H:%i:00')";
+                break;
+                
                 case FiltrosLeitura::ESCALA_HORA:
                     $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d %H:00:00')";
-                    break;
+                break;  
 
                 case FiltrosLeitura::ESCALA_DIA:
                     $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d')";
@@ -170,7 +174,7 @@ class LeiturasModel extends BaseModel
                         WHERE
                                 L1.estacao_id = E.id
                                 AND datahora >= DATE_SUB(now(), INTERVAL {$tempoLimite} MINUTE)
-                        ORDER BY
+                        ORDER BY 
                                 datahora DESC
                         LIMIT 1
                 )
@@ -180,6 +184,63 @@ class LeiturasModel extends BaseModel
             return $resultado;
         }
     }
+    
+    public function getUltimaLeituraRegistrada(FiltrosLeitura $filtros = NULL, $tempoLimite = 2440) //Função criada por jaque 31/07. Motivo: retorno de NULL e utilização de data na função getUltimaSleituraS
+    {//Essa função retorna a ultima leitura registrada no banco 
+        $this->db->from('leitura');
+    
+        if ($filtros) {
+            $estacoes = $filtros->getEstacoes();
+            $tipoInformacao = $filtros->getTipoInformacao();
+    
+            if (!$tipoInformacao) {
+                throw new Exception('É necessário informar o tipo de informação desejada.');
+            }
+    
+            if ($estacoes) {
+                $this->db->where_in('estacao_id', $estacoes);
+            }
+    
+            switch ($tipoInformacao) {
+                case FiltrosLeitura::TIPO_VELOCIDADE_VENTO:
+                    $colunaTipoInformacao = 'velocidade_vento';
+                    break;
+
+                case FiltrosLeitura::TIPO_DIRECAO_VENTO:
+                    $colunaTipoInformacao = 'dir_vento';
+                    break;
+    
+                case FiltrosLeitura::TIPO_TEMPERATURA:
+                    $colunaTipoInformacao = 'temperatura';
+                    break;
+    
+                case FiltrosLeitura::TIPO_VOLUME_CHUVA:
+                    $colunaTipoInformacao = 'volume_chuva';
+                    break;
+    
+                case FiltrosLeitura::TIPO_UMIDADE_AR:
+                    $colunaTipoInformacao = 'umidade_ar';
+                    break;
+    
+                case FiltrosLeitura::TIPO_VOLUME_ACC_CHUVA:
+                    $colunaTipoInformacao = 'volume_acc_chuva';
+                    break;
+    
+                default:
+                    throw new Exception('É necessário informar o tipo de informação desejada.');
+            }
+    
+            // Utilize a consulta SQL desejada
+            $this->db->select("COALESCE({$colunaTipoInformacao}, 0) AS 'valor', datahora")
+            ->order_by("datahora", "DESC")
+            ->limit(1);       
+
+    
+            $resultado = $this->db->get()->result_array();
+            return $resultado;
+        }
+    }
+    
 
     public function getUltimaTemperaturaMedia()
     {
@@ -352,31 +413,33 @@ class LeiturasModel extends BaseModel
 
         return $linha["velocidade_maxima"];
     }
+
 }
 
 class FiltrosLeitura
 {
 
-    const ESCALA_ANO            = 'ano';
-    const ESCALA_MES            = 'mes';
-    const ESCALA_SEMANA         = 'semana';
-    const ESCALA_DIA            = 'dia';
-    const ESCALA_HORA           = 'hora';
-    const ESCALA_MINUTO         = 'minuto';
+    const ESCALA_ANO    = 'ano';
+    const ESCALA_MES    = 'mes';
+    const ESCALA_SEMANA = 'semana';
+    const ESCALA_DIA    = 'dia';
+    const ESCALA_HORA   = 'hora';
+    const ESCALA_MINUTO = 'minuto';
     const TIPO_VELOCIDADE_VENTO = 'velocidade_vento';
+    const TIPO_DIRECAO_VENTO = 'dir_vento'; //Jaque 31/07 -> monitoramento individual de estações
     const TIPO_TEMPERATURA      = 'temperatura';
     const TIPO_VOLUME_CHUVA     = 'volume_chuva';
     const TIPO_UMIDADE_AR       = 'umidade_ar';
     const TIPO_VOLUME_ACC_CHUVA = 'volume_acc_chuva';
-    const DIRECAO_ASC           = 'ASC';
-    const DIRECAO_DESC          = 'DESC';
+    const DIRECAO_ASC  = 'ASC';
+    const DIRECAO_DESC = 'DESC';
 
     private $estacoes = array();
     private $dataInicial;
     private $dataFinal;
     private $escala   = self::ESCALA_MES;
     private $tipoInformacao;
-    private $direcao  = self::DIRECAO_ASC;
+    private $direcao = self::DIRECAO_ASC;
 
     public function getEstacoes()
     {
@@ -437,4 +500,5 @@ class FiltrosLeitura
     {
         $this->direcao = $direcao;
     }
+
 }
