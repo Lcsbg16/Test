@@ -47,6 +47,20 @@ class AdminLeituras extends BaseCrudController
         return $value . ' ºC';
     }
 
+    public function adicionarPorcentagem($value, $row)
+    {
+        return $value . ' %';
+    }
+
+    public function adicionarKm($value, $row)
+    {
+        return $value . ' Km/h';
+    }
+
+    public function adicionarMm($value, $row)
+    {
+        return $value . ' mm';
+    }
     public function getEstatisticasLeiturasJson() //Gerencia dados do Gráfico 
     {   
         $estacao = $this->input->post('estacao_selecionada'); // estação selecionada
