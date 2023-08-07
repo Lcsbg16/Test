@@ -61,12 +61,12 @@ class LeiturasModel extends BaseModel
             switch ($escala)
             {
                 case FiltrosLeitura::ESCALA_MINUTO:
-                     $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d %H:%i:00')";
-                break;
-                
+                    $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d %H:%i:00')";
+                    break;
+
                 case FiltrosLeitura::ESCALA_HORA:
                     $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d %H:00:00')";
-                break;  
+                    break;
 
                 case FiltrosLeitura::ESCALA_DIA:
                     $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d')";
@@ -352,32 +352,31 @@ class LeiturasModel extends BaseModel
 
         return $linha["velocidade_maxima"];
     }
-
 }
 
 class FiltrosLeitura
 {
 
-    const ESCALA_ANO    = 'ano';
-    const ESCALA_MES    = 'mes';
-    const ESCALA_SEMANA = 'semana';
-    const ESCALA_DIA    = 'dia';
-    const ESCALA_HORA   = 'hora';
-    const ESCALA_MINUTO = 'minuto';
+    const ESCALA_ANO            = 'ano';
+    const ESCALA_MES            = 'mes';
+    const ESCALA_SEMANA         = 'semana';
+    const ESCALA_DIA            = 'dia';
+    const ESCALA_HORA           = 'hora';
+    const ESCALA_MINUTO         = 'minuto';
     const TIPO_VELOCIDADE_VENTO = 'velocidade_vento';
     const TIPO_TEMPERATURA      = 'temperatura';
     const TIPO_VOLUME_CHUVA     = 'volume_chuva';
     const TIPO_UMIDADE_AR       = 'umidade_ar';
     const TIPO_VOLUME_ACC_CHUVA = 'volume_acc_chuva';
-    const DIRECAO_ASC  = 'ASC';
-    const DIRECAO_DESC = 'DESC';
+    const DIRECAO_ASC           = 'ASC';
+    const DIRECAO_DESC          = 'DESC';
 
     private $estacoes = array();
     private $dataInicial;
     private $dataFinal;
     private $escala   = self::ESCALA_MES;
     private $tipoInformacao;
-    private $direcao = self::DIRECAO_ASC;
+    private $direcao  = self::DIRECAO_ASC;
 
     public function getEstacoes()
     {
@@ -438,5 +437,4 @@ class FiltrosLeitura
     {
         $this->direcao = $direcao;
     }
-
 }
