@@ -11,7 +11,7 @@ class AdminLeituras extends BaseCrudController
     public function index()
     {
 
-        
+
         $crud = new AppGroceryCRUD();
 
         // Configurações gerais do cadastro
@@ -37,18 +37,18 @@ class AdminLeituras extends BaseCrudController
         $this->_crud_output($crud);
     }
 
-    public function getEstatisticasLeiturasJson() //Gerencia dados do Gráfico 
-    {   
-        $estacao = $this->input->post('estacao_selecionada'); // estação selecionada
-        $dataInicial = $this->input->post('data_inicial'); // data inicial 
-        $dataFinal = $this->input->post('data_final'); // data final 
-        $escala = $this->input->post('escala'); // escala escolhida 
-        $tipo_dados = $this->input->post('tipo_dados'); // tipo de dados  
+    public function getEstatisticasLeiturasJson() //Gerencia dados do Gráfico
+    {
+        $estacao     = $this->input->post('estacao_selecionada'); // estação selecionada
+        $dataInicial = $this->input->post('data_inicial'); // data inicial
+        $dataFinal   = $this->input->post('data_final'); // data final
+        $escala      = $this->input->post('escala'); // escala escolhida
+        $tipo_dados  = $this->input->post('tipo_dados'); // tipo de dados
 
 
-        $this->load->model('LeiturasModel'); 
+        $this->load->model('LeiturasModel');
 
-        $filtros = new FiltrosLeitura(); //New filtro -> contato com o BD
+        $filtros  = new FiltrosLeitura(); //New filtro -> contato com o BD
         $filtros->setEstacoes($estacao);
         $filtros->setDataInicial($dataInicial);
         $filtros->setDataFinal($dataFinal);
@@ -57,24 +57,14 @@ class AdminLeituras extends BaseCrudController
         $filtros->setDirecao(FiltrosLeitura::DIRECAO_ASC);
         $leituras = $this->LeiturasModel->calcularEstatisticasPorPeriodo($filtros);
         print_r(json_encode($leituras));
-
     }
 
-
     public function testUltimasLeituras()
-    {      
+    {
         $filtros->setEstacoes(['1']);
         $filtros->setDataInicial('2023-04-21');
         $filtros->setDataFinal('2023-04-22');
         $filtros->setTipoInformacao(FiltrosLeitura::TIPO_TEMPERATURA);
         $leituras = $this->LeiturasModel->getUltimasLeituras($filtros);
-        
- 
     }
-
-
-    
-
-    
 }
->>>>>>> 06a6e9a99b32fe16073d0fd88915dc8c3589316b
