@@ -11,7 +11,7 @@ class AdminLeituras extends BaseCrudController
     public function index()
     {
 
-        
+
         $crud = new AppGroceryCRUD();
 
         // Configurações gerais do cadastro
@@ -23,6 +23,12 @@ class AdminLeituras extends BaseCrudController
         // Nomes dos campos
         $crud->display_as('datahora', 'Data/hora');
         $crud->display_as('estacao_id', 'Estação');
+        $crud->callback_column('temperatura', array($this, 'adicionarGraus'));
+        $crud->callback_column('umidade_ar', array($this, 'adicionarPorcentagem'));
+        $crud->callback_column('velocidade_vento', array($this, 'adicionarKm'));
+        $crud->callback_column('volume_chuva', array($this, 'adicionarMm'));
+        $crud->callback_column('volume_acc_chuva', array($this, 'adicionarMm'));
+        $this->_crud_output($crud);
 
         // Tipos de campos
         // Configurações da listagems
@@ -36,46 +42,25 @@ class AdminLeituras extends BaseCrudController
 
         $this->_crud_output($crud);
     }
+    public function adicionarGraus($value, $row)
+    {
+        return $value . ' ºC';
+    }
 
-    public function getEstatisticasLeiturasJson() //Gerencia dados do Gráfico 
-    {   
-        $estacao = $this->input->post('estacao_selecionada'); // estação selecionada
-        $dataInicial = $this->input->post('data_inicial'); // data inicial 
-        $dataFinal = $this->input->post('data_final'); // data final 
-        $escala = $this->input->post('escala'); // escala escolhida 
-        $tipo_dados = $this->input->post('tipo_dados'); // tipo de dados  
+    public function adicionarPorcentagem($value, $row)
+    {
+        return $value . ' %';
+    }
 
+    public function adicionarKm($value, $row)
+    {
+        return $value . ' km/h';
+    }
 
-        $this->load->model('LeiturasModel'); 
-
-        $filtros = new FiltrosLeitura();
-        $filtros->setEstacoes($estacao);
-        $filtros->setDataInicial($dataInicial);
-        $filtros->setDataFinal($dataFinal);
-        $filtros->setEscala(constant("FiltrosLeitura::$escala"));
-        $filtros->setTipoInformacao(constant("FiltrosLeitura::$tipo_dados"));
-        $filtros->setDirecao(FiltrosLeitura::DIRECAO_ASC);
-        $leituras = $this->LeiturasModel->calcularEstatisticasPorPeriodo($filtros);
-        print_r(json_encode($leituras));
-
+    public function adicionarMm($value, $row)
+    {
+        return $value . ' mm';
     }
 
 
-    public function getUltimaLeituraRegistrada()
-    {   $estacao = $this->input->post('estacao_selecionada'); // estação selecionada
-        $tipo_dados = $this->input->post('tipo_dados'); // tipo de dados  
-
-        $this->load->model('LeiturasModel'); 
-        $filtros = new FiltrosLeitura(); 
-        $filtros->setEstacoes($estacao);
-        $filtros->setTipoInformacao(constant("FiltrosLeitura::$tipo_dados"));
-        $leituras = $this->LeiturasModel->getUltimaLeituraRegistrada($filtros);
-        print_r(json_encode($leituras));
- 
-    }
-
-
-    
-
-    
 }

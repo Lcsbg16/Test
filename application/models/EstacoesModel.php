@@ -5,35 +5,35 @@ require_once 'BaseModel.php';
 class EstacoesModel extends BaseModel
 {
 
-    public function getEstacoesOnline()
-    {
-        $this->db->distinct();
-        $this->db->select('estacao_id');
-        $this->db->where('tipo_evento_id', 2); // 2 indica que a estação está online
-        $query = $this->db->get('evento');
+    // public function getEstacoesOnline()
+    // {
+    //     $this->db->distinct();
+    //     $this->db->select('estacao_id');
+    //     $this->db->where('tipo_evento_id', 2); // 2 indica que a estação está online
+    //     $query = $this->db->get('evento');
 
-        $estacoesOnline = [];
-        foreach ($query->result() as $row) {
-            $estacoesOnline[] = $this->getEstacao($row->estacao_id);
-        }
+    //     $estacoesOnline = [];
+    //     foreach ($query->result() as $row) {
+    //         $estacoesOnline[] = $this->getEstacao($row->estacao_id);
+    //     }
 
-        return $estacoesOnline;
-    }
+    //     return $estacoesOnline;
+    // }
 
-    public function getEstacoesOffline()
-    {
-        $this->db->distinct();
-        $this->db->select('estacao_id');
-        $this->db->where('tipo_evento_id', 1); // 1 indica que a estação está offline
-        $query = $this->db->get('evento');
+    // public function getEstacoesOffline()
+    // {
+    //     $this->db->distinct();
+    //     $this->db->select('estacao_id');
+    //     $this->db->where('tipo_evento_id', 1); // 1 indica que a estação está offline
+    //     $query = $this->db->get('evento');
 
-        $estacoesOffline = [];
-        foreach ($query->result() as $row) {
-            $estacoesOffline[] = $this->getEstacao($row->estacao_id);
-        }
+    //     $estacoesOffline = [];
+    //     foreach ($query->result() as $row) {
+    //         $estacoesOffline[] = $this->getEstacao($row->estacao_id);
+    //     }
 
-        return $estacoesOffline;
-    }
+    //     return $estacoesOffline;
+    // }
 
     public function getEstacao($id)
     {
