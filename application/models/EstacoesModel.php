@@ -44,7 +44,7 @@ class EstacoesModel extends BaseModel
             $this->db->where_in('id', $ids); //se houver estaçõesy
         }
         return $this->db->get('estacao')
-                        ->row_array();
+                        ->result_array();
     }
 
     public function getContagemEstacoes($somenteAtivas = TRUE)
@@ -103,7 +103,7 @@ class EstacoesModel extends BaseModel
 
     public function monitorarEstacao($intervaloTempo)
     {
-        $estacoes = $this->getEstacoes(); //variavel para armazenar todas as estações Ativas
+        $estacoes = $this->getEstacoes(true); //variavel para armazenar todas as estações Ativas
         foreach ($estacoes as $estacao)
         {
             $ultimaLeitura = $this->getUltimaLeitura($estacao['id']);
