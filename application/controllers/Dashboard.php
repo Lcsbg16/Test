@@ -18,6 +18,8 @@ class Dashboard extends BasePrivateController
         $variaveisView['titulo_pagina']     = 'Painel de Controle';
         $variaveisView['ocorrencias']       = $this->OcorrenciasModel->getOcorrencias(5);
         $variaveisView['qtde_estacoes']     = $this->EstacoesModel->getContagemEstacoes();
+        // $variaveisView['estacao_on']     = $this->EstacoesModel->getEstacoesOnline();
+        // $variaveisView['estacao_off']     = $this->EstacoesModel->getEstacoesOffline();
         $variaveisView['temperatura_media'] = $this->LeiturasModel->getUltimaTemperaturaMedia();
         
         $variaveisView['vol_chuva_min'] = $this->LeiturasModel->getVolumeChuvaMinimo();

@@ -15,7 +15,7 @@
                                     <span class="h2 font-weight-bold mb-0">{$qtde_estacoes}</span>
                                 </div>
                                 <div class="col-auto">
-                                    <div class="icon icon-shape bg-gradient-gray text-white rounded-circle shadow">
+                                    <div class="icon icon-shape bg-gradient-gray    text-white rounded-circle shadow">
                                         <i class="fas fa-fan"></i>
                                     </div>
                                 </div>
@@ -24,6 +24,43 @@
                         </div>
                     </div>
                 </div>
+               <!-- <div class="col-xl-3 col-lg-6">
+                    <div class="card card-stats mb-4 mb-xl-4">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Esta&ccedil;&otilde;es Online</h5>
+                                    <span class="h2 font-weight-bold mb-0">{count($estacao_on)}</span>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
+                                        <i class="fas fa-fan"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-6">
+                    <div class="card card-stats mb-4 mb-xl-4">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Esta&ccedil;&otilde;es Offline</h5>
+                                    <span class="h2 font-weight-bold mb-0">{count($estacao_off)}</span>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="icon icon-shape bg-gradient-pink text-white rounded-circle shadow">
+                                        <i class="fas fa-fan"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+
+                
                 <div class="col-xl-3 col-lg-6">
                     <div class="card card-stats mb-4 mb-xl-4">
                         <div class="card-body">
