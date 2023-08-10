@@ -8,7 +8,18 @@ class EstacoesModel extends BaseModel
     public function contaQtdeEstacoesPorUltimoTipoEvento($tipo_evento_id, $somenteAtivas = true)
     {
         $this->db->from('estacao e')
-                ->select('(SELECT tipo_evento_id FROM evento ev WHERE ev.estacao_id = e.id ORDER BY datahora DESC LIMIT 1) as ultimo_tipo_evento_id')
+                ->select('
+                            (
+                                SELECT
+                                    tipo_evento_id
+                                FROM
+                                    evento ev
+                                WHERE
+                                    ev.estacao_id = e.id
+                                ORDER BY
+                                    datahora DESC LIMIT 1
+                            ) as ultimo_tipo_evento_id
+                ')
                 ->having('ultimo_tipo_evento_id', $tipo_evento_id);
 
         if ($somenteAtivas)
