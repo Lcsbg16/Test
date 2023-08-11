@@ -74,13 +74,13 @@
                     var popupContent = '';
                     if (feature.properties) {
                         var url = BASE_URL + 'AdminEstacoes/index/edit/' + feature.properties.estacao.id; //URL PARA O 'EDITAR ESSA ESTAÇÃO'
-
+                        var verUrl = BASE_URL + 'Estacoes/monitoramentoIndividual/' + feature.properties.estacao.id; 
                         popupContent += "\
                     <h3><strong>" + feature.properties.estacao.descricao + ' (' + feature.properties.estacao.identificador + ')' + "</strong></h3>\
                     <br><strong>Endere&ccedil;o:</strong><br>" + feature.properties.estacao.endereco + "\
                     <br><strong>Coordenadas:</strong><br>" + feature.properties.estacao.latitude + ", " + feature.properties.estacao.longitude + "\
                     <br><br><a class='btn btn-default' href="+url+" target='_blank'>Editar Esta&ccedil;&atilde;o</a>&nbsp" + "\
-                    <a class='btn btn-warning' href=javascript:alert(\'Ainda não implementado.\') target='_blank'>Ver Resultados</a>&nbsp" + "\
+                    <a class='btn btn-warning' href="+verUrl+ " target='_blank'>Ver Estação</a>&nbsp" + "\
                         ";
         {/literal}
                     }

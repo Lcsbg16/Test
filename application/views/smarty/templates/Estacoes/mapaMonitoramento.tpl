@@ -25,7 +25,6 @@
        height: calc(1.8125rem + 2px);
         }
 
-
     </style>
     {* /leaflet *}
 
@@ -102,37 +101,37 @@
         }
 
                 function HandleAjax(url, mapa){
-                $.get(url).done(
-                    function (data) {
-                        console.log(data);
-                        estacoes = L.geoJSON([data], {
-                            style: function (feature) {
-                                return feature.properties && feature.properties.style;
-                            },
-                            onEachFeature: onEachFeature,
-                            pointToLayer: function (feature, latlng) {
+                    $.get(url).done(
+                        function (data) {
+                            console.log(data);
+                            estacoes = L.geoJSON([data], {
+                                style: function (feature) {
+                                    return feature.properties && feature.properties.style;
+                                },
+                                onEachFeature: onEachFeature,
+                                pointToLayer: function (feature, latlng) {
 
-                                if (feature.properties.camada.cor)
-                                {
-                                    cor = feature.properties.camada.cor;
-                                } else
-                                {
-                                    cor = '#0700DF';
+                                    if (feature.properties.camada.cor)
+                                    {
+                                        cor = feature.properties.camada.cor;
+                                    } else
+                                    {
+                                        cor = '#0700DF';
+                                    }
+
+                                    return L.circleMarker(latlng, {
+                                        radius: 8,
+                                        fillColor: cor,
+                                        color: '#000',
+                                        weight: 1,
+                                        opacity: 1,
+                                        fillOpacity: 0.8
+                                    });
                                 }
-
-                                return L.circleMarker(latlng, {
-                                    radius: 8,
-                                    fillColor: cor,
-                                    color: '#000',
-                                    weight: 1,
-                                    opacity: 1,
-                                    fillOpacity: 0.8
-                                });
-                            }
-                        }).addTo(mapa);
-                        console.log(estacoes);
-                        mapa.fitBounds(estacoes.getBounds());
-                    })
+                            }).addTo(mapa);
+                            console.log(estacoes);
+                            mapa.fitBounds(estacoes.getBounds());
+                        })
                         .fail(function (jqXHR, textStatus, errorThrown) {
                             console.error(jqXHR);
                             console.error(textStatus);
