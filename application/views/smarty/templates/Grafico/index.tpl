@@ -26,7 +26,9 @@
                                 <label>Esta&ccedil;&atilde;o</label>
                                 <select class="form-control form-control-sm change_controler" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada --> 
                                     {foreach $estacoes as $eAtual}
-                                        <option value="{$eAtual.id}" id="estacao_descricao"> {$eAtual.descricao} ({$eAtual.identificador})</option>
+                                        {if $eAtual.ativa==1}
+                                            <option value="{$eAtual.id}" id="estacao_descricao"> {$eAtual.descricao} ({$eAtual.identificador})</option>
+                                        {/if}
                                     {/foreach}
                                   
                                 </select>
@@ -50,7 +52,7 @@
                                 </select>
                             </div>
                             <div class="col-sm-12 col-md-4 col-xl-2">
-                                <label>Tipo de Informa&ccedil;&atilde;o</label>
+                                <label>Informa&ccedil;&atilde;o</label>
                                 <select class="form-control form-control-sm change_controler" id="info_selecionada" >
                                     <option>Selecione</option>
                                     <option>Temperatura</option>

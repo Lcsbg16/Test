@@ -15,7 +15,7 @@ class EstacoesModel extends BaseModel
     }
 
     public function getEstacoes($somenteAtivas = FALSE, $ids = array()) //alteração para aceitar um array de estações a ser buscadas também
-    {
+    { 
         $this->db->order_by('descricao');
         if ($somenteAtivas)
         {
@@ -40,9 +40,9 @@ class EstacoesModel extends BaseModel
         return $this->db->count_all_results('estacao');
     }
 
-    public function getEstacoesGeoJson($camada = NULL, $id_s)
+    public function getEstacoesGeoJson($camada = NULL, $atividade, $ids)
     {
-        $estacoesBD = $this->getEstacoes(null,$id_s); //getEstações a partir dos ids
+        $estacoesBD = $this->getEstacoes($atividade, $ids); //getEstações a partir dos ids
 
         $estacoes = [];
         $cores    = ['#4DB600', '#FF0000', '#FFAA00', '#FCFF22', '#D200DF'];

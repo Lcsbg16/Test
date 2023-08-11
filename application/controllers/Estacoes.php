@@ -34,14 +34,15 @@ class Estacoes extends BasePrivateController
         $this->loadSmartyView('Estacoes/mapaMonitoramento', $variaveisView);
     }
 
-    public function monitoramentoIndividual()
+    public function monitoramentoIndividual($id_estacao)
     {
         $this->load->model('EstacoesModel');
 
         $variaveisView = [];
 
         $variaveisView['titulo_pagina'] = 'Monitoramento individual de estações';
-        $variaveisView['estacoes']      = $this->EstacoesModel->getEstacoes(true);
+        $variaveisView['estacao']      = $this->EstacoesModel->getEstacao($id_estacao);
+        $variaveisView['eventos'] = json_decode(json_encode($this->EstacoesModel->getEventos(4)), true); //Adicionei ao view de monitoramento individual a variavel $eventos, para controlar os ultimos eventos da estação
 
         $this->loadSmartyView('Estacoes/monitoramentoIndividual', $variaveisView);
     }
@@ -51,9 +52,12 @@ class Estacoes extends BasePrivateController
         $this->load->model('EstacoesModel');
         $ids = $this->input->get('ids'); // IDs selecionados
 
+        $atividade = $this->input->get('ativa'); // IDs selecionados
+        $atividade = filter_var($atividade, FILTER_VALIDATE_BOOLEAN);
+
     // Separa os IDs das estações em um array
         $estacoesIds = explode(',', $ids);
-        $estacoes = $this->EstacoesModel->getEstacoesGeoJson($idCamada, $estacoesIds); //segundo argumento: os IDs das estações
+        $estacoes = $this->EstacoesModel->getEstacoesGeoJson($idCamada, $atividade, $estacoesIds); //segundo argumento: os IDs das estações
 
         $this->jsonOutput($estacoes);
     }

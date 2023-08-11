@@ -126,10 +126,12 @@
 
                     let estacaoIDS = $( "#estacao_selecionada" ).val(); //Organização da URL pelos IDs selecionados no multiselect menu
                     if(!estacaoIDS){
-                        let url = BASE_URL + 'Estacoes/getEstacoesGeoJson/?ids='; //SE NÃO HOUVER ESTAÇÃO MARCADA
+                        let atividade = true;
+                        let url = BASE_URL + 'Estacoes/getEstacoesGeoJson/?ids=&ativa='+atividade; //SE NÃO HOUVER ESTAÇÃO MARCADA
                         return url;
                     } else {
-                        let url = BASE_URL + 'Estacoes/getEstacoesGeoJson/?ids=' + estacaoIDS.join(','); //SE HOUVER, A URL É ORGANIZADA para retornar os IDs de marcadores selecionados 
+                        let atividade = true;
+                        let url = BASE_URL + 'Estacoes/getEstacoesGeoJson/?ids=' + estacaoIDS.join(',') + '&ativa='+atividade; //SE HOUVER, A URL É ORGANIZADA para retornar os IDs de marcadores selecionados 
                         return url;
                     }
              
