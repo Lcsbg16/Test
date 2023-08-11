@@ -8,7 +8,7 @@ require_once 'BasePrivateController.php';
 class Estacoes extends BasePrivateController
 {
 
-
+    protected $acoesPublicas = ['monitoramentoEstacao'];
 
     public function mapa()
     {
@@ -51,7 +51,6 @@ class Estacoes extends BasePrivateController
     {
         $this->load->model('EstacoesModel');
         $ids = $this->input->get('ids'); // IDs selecionados
-
         $atividade = $this->input->get('ativa'); // IDs selecionados
         $atividade = filter_var($atividade, FILTER_VALIDATE_BOOLEAN);
 
@@ -61,12 +60,16 @@ class Estacoes extends BasePrivateController
 
         $this->jsonOutput($estacoes);
     }
-	
-	 public function monitoramentoEstacao()
+
+    public function monitoramentoEstacao()
     {
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
+
         $this->load->model('EstacoesModel');
 
         $this->EstacoesModel->monitorarEstacao(5);
+        echo 'OK';
     }
-
 }

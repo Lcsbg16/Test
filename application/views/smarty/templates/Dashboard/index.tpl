@@ -15,7 +15,7 @@
                                     <span class="h2 font-weight-bold mb-0">{$qtde_estacoes}</span>
                                 </div>
                                 <div class="col-auto">
-                                    <div class="icon icon-shape bg-gradient-gray text-white rounded-circle shadow">
+                                    <div class="icon icon-shape bg-gradient-gray    text-white rounded-circle shadow">
                                         <i class="fas fa-fan"></i>
                                     </div>
                                 </div>
@@ -24,6 +24,43 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-xl-3 col-lg-6">
+                    <div class="card card-stats mb-4 mb-xl-4">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Esta&ccedil;&otilde;es Online</h5>
+                                    <span class="h2 font-weight-bold mb-0">{$qtde_estacoes_online}</span>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                                        <i class="fas fa-fan"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-6">
+                    <div class="card card-stats mb-4 mb-xl-4">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Esta&ccedil;&otilde;es Offline</h5>
+                                    <span class="h2 font-weight-bold mb-0">{$qtde_estacoes_offline}</span>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                                        <i class="fas fa-fan"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
                 <div class="col-xl-3 col-lg-6">
                     <div class="card card-stats mb-4 mb-xl-4">
                         <div class="card-body">
@@ -55,11 +92,11 @@
                                     <h5 class="card-title text-uppercase text-muted mb-0">Temperatura M&iacute;nima</h5>
 
                                     <span class="h2 font-weight-bold mb-0">
-                                    {if $temperatura_minima === NULL}
-                                    -
-                                    {else}
-                                    {$temperatura_minima|number_format:1:","}&deg;C
-                                    {/if}
+                                        {if $temperatura_minima === NULL}
+                                            -
+                                        {else}
+                                            {$temperatura_minima|number_format:1:","}&deg;C
+                                        {/if}
                                     </span>
 
                                 </div>
@@ -81,11 +118,11 @@
                                     <h5 class="card-title text-uppercase text-muted mb-0">Temperatura M&aacute;xima</h5>
 
                                     <span class="h2 font-weight-bold mb-0">
-                                    {if $temperatura_maxima === NULL}
-                                    -
-                                    {else}
-                                    {$temperatura_maxima|number_format:1:","}&deg;C
-                                    {/if}
+                                        {if $temperatura_maxima === NULL}
+                                            -
+                                        {else}
+                                            {$temperatura_maxima|number_format:1:","}&deg;C
+                                        {/if}
                                     </span>
 
                                 </div>
@@ -151,7 +188,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">Vel. M&iacute;nima do Vento</h5>
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Vel. Min. do Vento</h5>
                                     <span class="h2 font-weight-bold mb-0">
                                         {if $velocidade_minima == NULL}
                                             -
@@ -217,6 +254,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="table-responsive">
                         <!-- Projects table -->
                         <table class="table align-items-center table-flush">
@@ -231,10 +269,10 @@
                                 {foreach $eventos as $evento}
                                     <tr>
                                         <th scope="row">
-                                            {$evento.datahora|date_format:'%d/%m/%Y %H:%M'}
+                                            {$evento.datahora|date_format:'%d/%m %H:%M'}
                                         </th>
                                         <td>
-                                            {$evento.estacao_descricao|truncate:30:"...":true}
+                                            {$evento.estacao_descricao|truncate:25:"...":true}
                                         </td>
                                         <td>
                                             {if $evento.tipo_evento_id == 1}

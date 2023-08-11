@@ -39,9 +39,11 @@ class AdminEstacoes extends BaseCrudController
         $crud->display_as('_coordenadas', 'Coordenadas');
         $crud->display_as('endereco', 'Endereço Completo');
         $crud->display_as('_usuarios', 'Usuários com Acesso');
+        $crud->display_as('weathercloud_api_id', 'WeatherCloud - API ID');
+        $crud->display_as('weathercloud_api_key', 'WeatherCloud - API Key');
 
         // Campos
-        $crud->fields('identificador', 'descricao', 'endereco', '_coordenadas', 'ativa', '_usuarios', '_grupos', 'obs', 'latitude', 'longitude');
+        $crud->fields('identificador', 'descricao', 'endereco', '_coordenadas', 'ativa', '_usuarios', '_grupos', 'obs', 'latitude', 'longitude', 'weathercloud_api_id', 'weathercloud_api_key');
 
         // Tipos de campos
         $crud->field_type('ativa', 'true_false', ['Inativa', 'Ativa']);
@@ -92,5 +94,4 @@ class AdminEstacoes extends BaseCrudController
 
         return $postArray;
     }
-
 }

@@ -11,7 +11,7 @@ class AdminLeituras extends BaseCrudController
     public function index()
     {
 
-        
+
         $crud = new AppGroceryCRUD();
 
         // Configurações gerais do cadastro
@@ -23,6 +23,12 @@ class AdminLeituras extends BaseCrudController
         // Nomes dos campos
         $crud->display_as('datahora', 'Data/hora');
         $crud->display_as('estacao_id', 'Estação');
+        $crud->callback_column('temperatura', array($this, 'adicionarGraus'));
+        $crud->callback_column('umidade_ar', array($this, 'adicionarPorcentagem'));
+        $crud->callback_column('velocidade_vento', array($this, 'adicionarKm'));
+        $crud->callback_column('volume_chuva', array($this, 'adicionarMm'));
+        $crud->callback_column('volume_acc_chuva', array($this, 'adicionarMm'));
+        $this->_crud_output($crud);
 
         // Tipos de campos
         // Configurações da listagems
@@ -36,7 +42,25 @@ class AdminLeituras extends BaseCrudController
 
         $this->_crud_output($crud);
     }
+    public function adicionarGraus($value, $row)
+    {
+        return $value . ' ºC';
+    }
 
+    public function adicionarPorcentagem($value, $row)
+    {
+        return $value . ' %';
+    }
+
+    public function adicionarKm($value, $row)
+    {
+        return $value . ' Km/h';
+    }
+
+    public function adicionarMm($value, $row)
+    {
+        return $value . ' mm';
+    }
     public function getEstatisticasLeiturasJson() //Gerencia dados do Gráfico 
     {   
         $estacao = $this->input->post('estacao_selecionada'); // estação selecionada
