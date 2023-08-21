@@ -42,6 +42,8 @@ class AdminEstacoes extends BaseCrudController
         $crud->display_as('obs', 'Observação');
         $crud->display_as('weathercloud_api_id', 'Wheather Cloud id');
         $crud->display_as('weathercloud_api_key', 'Wheather Cloud key');
+        $crud->display_as('weathercloud_api_id', 'WeatherCloud - API ID');
+        $crud->display_as('weathercloud_api_key', 'WeatherCloud - API Key');
 
         // Campos
         $crud->fields('identificador', 'descricao', 'endereco', '_coordenadas', 'ativa', '_usuarios', '_grupos', 'obs', 'latitude', 'longitude', 'weathercloud_api_id', 'weathercloud_api_key');
@@ -95,5 +97,4 @@ class AdminEstacoes extends BaseCrudController
 
         return $postArray;
     }
-
 }

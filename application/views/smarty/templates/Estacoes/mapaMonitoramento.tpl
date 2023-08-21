@@ -25,7 +25,6 @@
        height: calc(1.8125rem + 2px);
         }
 
-
     </style>
     {* /leaflet *}
 
@@ -40,7 +39,7 @@
                         </select>
                     </div>
                     <div class="card-body">
-                    <label>Esta&ccedil;&atilde;o</label>
+                    <label>Esta&ccedil;&otilde;es Ativas:</label>
                     <select class="form-control form-control-sm change_controler" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada --> 
                         {foreach $estacoes as $eAtual}
                             <option value="{$eAtual.id}" selected id="estacao_descricao"> {$eAtual.descricao} ({$eAtual.identificador})</option>
@@ -156,11 +155,13 @@
                     let estacaoIDS = $( "#estacao_selecionada" ).val();
                        
                     if(!estacaoIDS){
-                            var url = BASE_URL + 'Estacoes/getEstacoesGeoJson/?ids=';
+                        let atividade = true;
+                        let url = BASE_URL + 'Estacoes/getEstacoesGeoJson/?ids=&ativa='+atividade; //SE NÃO HOUVER ESTAÇÃO MARCADA
                             return url;
                             }
                         else {
-                            var url = BASE_URL + 'Estacoes/getEstacoesGeoJson/?ids=' + estacaoIDS.join(',');
+                            let atividade = true;
+                            var url = BASE_URL + 'Estacoes/getEstacoesGeoJson/?ids=' + estacaoIDS.join(',') + '&ativa='+atividade;
                             return url;
                         }
 

@@ -35,10 +35,12 @@
                         <i class="ni ni-single-02"></i>
                         <span>Meu Perfil</span>
                     </a>
+                    {*
                     <a href="{$BASE_URL}/assets/temas/argon/examples/profile.html" class="dropdown-item">
-                        <i class="ni ni-support-16"></i>
-                        <span>Suporte</span>
+                    <i class="ni ni-support-16"></i>
+                    <span>Suporte</span>
                     </a>
+                    *}
                     <div class="dropdown-divider"></div>
                     <a href="{$BASE_URL}TelaInicial/logout/" class="dropdown-item">
                         <i class="ni ni-user-run"></i>

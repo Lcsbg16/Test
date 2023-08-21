@@ -5,35 +5,40 @@ require_once 'BaseModel.php';
 class EstacoesModel extends BaseModel
 {
 
-    // public function getEstacoesOnline()
-    // {
-    //     $this->db->distinct();
-    //     $this->db->select('estacao_id');
-    //     $this->db->where('tipo_evento_id', 2); // 2 indica que a estação está online
-    //     $query = $this->db->get('evento');
+    public function contaQtdeEstacoesPorUltimoTipoEvento($tipo_evento_id, $somenteAtivas = true)
+    {
+        $this->db->from('estacao e')
+                ->select('
+                            (
+                                SELECT
+                                    tipo_evento_id
+                                FROM
+                                    evento ev
+                                WHERE
+                                    ev.estacao_id = e.id
+                                ORDER BY
+                                    datahora DESC LIMIT 1
+                            ) as ultimo_tipo_evento_id
+                ')
+                ->having('ultimo_tipo_evento_id', $tipo_evento_id);
 
-    //     $estacoesOnline = [];
-    //     foreach ($query->result() as $row) {
-    //         $estacoesOnline[] = $this->getEstacao($row->estacao_id);
-    //     }
+        if ($somenteAtivas)
+        {
+            $this->db->where('ativa', 1);
+        }
 
-    //     return $estacoesOnline;
-    // }
+        return $this->db->count_all_results();
+    }
 
-    // public function getEstacoesOffline()
-    // {
-    //     $this->db->distinct();
-    //     $this->db->select('estacao_id');
-    //     $this->db->where('tipo_evento_id', 1); // 1 indica que a estação está offline
-    //     $query = $this->db->get('evento');
+    public function getQtdeEstacoesOnline()
+    {
+        return $this->contaQtdeEstacoesPorUltimoTipoEvento(2);
+    }
 
-    //     $estacoesOffline = [];
-    //     foreach ($query->result() as $row) {
-    //         $estacoesOffline[] = $this->getEstacao($row->estacao_id);
-    //     }
-
-    //     return $estacoesOffline;
-    // }
+    public function getQtdeEstacoesOffline()
+    {
+        return $this->contaQtdeEstacoesPorUltimoTipoEvento(1);
+    }
 
     public function getEstacao($id)
     {
@@ -45,19 +50,18 @@ class EstacoesModel extends BaseModel
     }
 
     public function getEstacoes($somenteAtivas = FALSE, $ids = array()) //alteração para aceitar um array de estações a ser buscadas também
-    {
+    { 
         $this->db->order_by('descricao');
         if ($somenteAtivas)
         {
             $this->db->where('ativa', true);
         }
         if (!empty($ids))
-    {
-        $this->db->where_in('id', $ids); //se houver estaçõesy
-    }
-                return $this->db->get('estacao')
-                ->result_array();
-
+        {
+            $this->db->where_in('id', $ids); //se houver estaçõesy
+        }
+        return $this->db->get('estacao')
+                        ->result_array();
     }
 
     public function getContagemEstacoes($somenteAtivas = TRUE)
@@ -70,9 +74,9 @@ class EstacoesModel extends BaseModel
         return $this->db->count_all_results('estacao');
     }
 
-    public function getEstacoesGeoJson($camada = NULL, $id_s)
+    public function getEstacoesGeoJson($camada = NULL, $atividade, $ids)
     {
-        $estacoesBD = $this->getEstacoes(null,$id_s); //getEstações a partir dos ids
+        $estacoesBD = $this->getEstacoes($atividade, $ids); //getEstações a partir dos ids
 
         $estacoes = [];
         $cores    = ['#4DB600', '#FF0000', '#FFAA00', '#FCFF22', '#D200DF'];
@@ -114,13 +118,9 @@ class EstacoesModel extends BaseModel
         return $geojson;
     }
 
- public function monitorarEstacao($intervaloTempo)
+    public function monitorarEstacao($intervaloTempo)
     {
-        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-        header("Cache-Control: post-check=0, pre-check=0", false);
-        header("Pragma: no-cache");
-
-        $estacoes = $this->getEstacoes(); //variavel para armazenar todas as estações Ativas
+        $estacoes = $this->getEstacoes(true); //variavel para armazenar todas as estações Ativas
         foreach ($estacoes as $estacao)
         {
             $ultimaLeitura = $this->getUltimaLeitura($estacao['id']);
@@ -141,7 +141,6 @@ class EstacoesModel extends BaseModel
                 }
             }
         }
-        echo 'OK';
     }
 
     private function getUltimaLeitura($estacaoId)
@@ -172,7 +171,7 @@ class EstacoesModel extends BaseModel
         $this->db->insert('evento', $data);
     }
 
-    public function getEventos($limit = 0)
+    public function getEventos($limit)
     {
         $this->db->select('evento.id, evento.datahora, evento.tipo_evento_id, estacao.id AS estacao_id, estacao.descricao AS estacao_descricao')
                 ->from('evento')
@@ -181,6 +180,6 @@ class EstacoesModel extends BaseModel
                 ->limit($limit);
 
         $query = $this->db->get();
-        return $query->result();
+        return $query->result_array();
     }
 }
