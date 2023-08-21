@@ -23,11 +23,11 @@ class AdminLeituras extends BaseCrudController
         // Nomes dos campos
         $crud->display_as('datahora', 'Data/hora');
         $crud->display_as('estacao_id', 'Estação');
-        $crud->callback_column('temperatura', array($this, 'adicionarGraus'));
-        $crud->callback_column('umidade_ar', array($this, 'adicionarPorcentagem'));
-        $crud->callback_column('velocidade_vento', array($this, 'adicionarKm'));
-        $crud->callback_column('volume_chuva', array($this, 'adicionarMm'));
-        $crud->callback_column('volume_acc_chuva', array($this, 'adicionarMm'));
+        $crud->display_as('temperatura', 'Temperatura (°C)');
+        $crud->display_as('umidade_ar', 'Umidade do Ar (%)');
+        $crud->display_as('velocidade_vento', 'Velocidade do Vento (km/h)');
+        $crud->display_as('volume_chuva', 'Volume da Chuva (mm³)');
+        $crud->display_as('volume_acc_chuva', 'Volume Acumulado de Chuva (mm³)');
         $this->_crud_output($crud);
 
         // Tipos de campos
@@ -42,25 +42,7 @@ class AdminLeituras extends BaseCrudController
 
         $this->_crud_output($crud);
     }
-    public function adicionarGraus($value, $row)
-    {
-        return $value . ' ºC';
-    }
 
-    public function adicionarPorcentagem($value, $row)
-    {
-        return $value . ' %';
-    }
-
-    public function adicionarKm($value, $row)
-    {
-        return $value . ' Km/h';
-    }
-
-    public function adicionarMm($value, $row)
-    {
-        return $value . ' mm';
-    }
     public function getEstatisticasLeiturasJson() //Gerencia dados do Gráfico 
     {   
         $estacao = $this->input->post('estacao_selecionada'); // estação selecionada
