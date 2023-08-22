@@ -231,7 +231,7 @@
                                 {foreach $eventos as $evento}
                                     <tr>
                                         <th scope="row">
-                                            {$evento.datahora|date_format:'%d/%m/%Y %H:%M'}
+                                            {$evento.datahora|date_format:'%d/%m %H:%M'}
                                         </th>
                                         <td>
                                             {$evento.estacao_descricao|truncate:30:"...":true}

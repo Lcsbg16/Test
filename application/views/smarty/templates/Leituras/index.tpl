@@ -2,6 +2,9 @@
 {block name = "conteudo_logado"}
     
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@0.9.16/dist/css/bootstrap-multiselect.min.css">
+        <link rel="stylesheet" href="{$BASE_URL}/assets/chosen/bootstrap-multiselect.css"/>
+    <script type="text/javascript" src="{$BASE_URL}/assets/chosen/bootstrap-multiselect.js"></script>
     <div class="container-fluid mt-3">
         <form method="GET" action="{$BASE_URL}RelatorioLeituras/">
             <div class="row">
@@ -9,14 +12,17 @@
                     <div class="card shadow">
                         <div class="card-body">
                             <div class="row my-3">
-                                <div class="col">   
-                                    <label>Esta&ccedil;&atilde;o</label>
-                                    <select class="form-control form-control-sm" name="estacoes[]" multiple>
+                                <div class="col">
+                                    <label>Estação</label><br>
+                                    <select id="estacoesSelect" class="form-control form-control-sm" name="estacoes[]" multiple>
                                         {foreach $estacoes as $eAtual}
-											<option value="{$eAtual.id}" id="estacao_descricao" {if isset($smarty.get.estacoes) && in_array($eAtual.id,$smarty.get.estacoes )} selected {/if}> {$eAtual.descricao} ({$eAtual.identificador})</option>
+                                            {if $eAtual.ativa == 0}  
+                                                <option value="{$eAtual.id}" id="estacao_descricao" style="color: red;" {if isset($smarty.get.estacoes) && in_array($eAtual.id, $smarty.get.estacoes)} selected {/if}> {$eAtual.descricao} ({$eAtual.identificador})</option>
+                                            {else}
+                                                <option value="{$eAtual.id}" id="estacao_descricao" {if isset($smarty.get.estacoes) && in_array($eAtual.id, $smarty.get.estacoes)} selected {/if}> {$eAtual.descricao} ({$eAtual.identificador})</option>
+                                            {/if}
                                         {/foreach}
                                     </select>
-                              
                                 </div>
                                 <div class="col">
                                     <label>Data Inicial</label>
@@ -102,13 +108,20 @@
     </div>
 
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script>
-        $(document).ready(function () {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.16/js/bootstrap-multiselect.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#estacoesSelect").multiselect({
+                includeSelectAllOption: true,
+                buttonWidth: '180px',
+            });
+        });
+
+        $(document).ready(function() {
             $('#tabela').DataTable({
                 "order": [[0, 'asc']]
             });
         });
     </script>
 {/block}
-
-
