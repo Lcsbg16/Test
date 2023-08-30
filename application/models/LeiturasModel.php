@@ -185,8 +185,18 @@ class LeiturasModel extends BaseModel
         }
     }
 
-    public function getUltimaLeituraRegistrada(FiltrosLeitura $filtros = NULL, $tempoLimite = 2440) //Função criada por jaque 31/07. Motivo: retorno de NULL e utilização de data na função getUltimaSleituraS
-    {//Essa função retorna a ultima leitura registrada no banco
+    /**
+     * Essa função retorna a ultima leitura registrada no banco
+     *
+     * Função criada por jaque 31/07. Motivo: retorno de NULL e utilização de data na função getUltimaSleituraS
+     *
+     * @param FiltrosLeitura $filtros
+     * @param int $tempoLimite
+     * @return array
+     * @throws Exception
+     */
+    public function getUltimaLeituraRegistrada(FiltrosLeitura $filtros = NULL)
+    {
         $this->db->from('leitura');
 
         if ($filtros)
