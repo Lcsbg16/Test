@@ -50,7 +50,7 @@ class EstacoesModel extends BaseModel
     }
 
     public function getEstacoes($somenteAtivas = FALSE, $ids = array()) //alteração para aceitar um array de estações a ser buscadas também
-    { 
+    {
         $this->db->order_by('descricao');
         if ($somenteAtivas)
         {
@@ -152,13 +152,18 @@ class EstacoesModel extends BaseModel
                         ->row_array();
     }
 
-    private function getUltimoEvento($estacaoId)
+    private function getUltimoEvento($estacaoId, $filtroTipos = NULL)
     {
-        return $this->db->where('estacao_id', $estacaoId)
-                        ->order_by('datahora', 'desc')
-                        ->limit(1)
-                        ->get('evento')
-                        ->row_array();
+        $this->db->where('estacao_id', $estacaoId)
+                ->order_by('datahora', 'desc')
+                ->limit(1);
+
+        if ($filtroTipos)
+        {
+            $this->db->where_in('tipo_evento_id', $filtroTipos);
+        }
+
+        return $this->db->get('evento')->row_array();
     }
 
     private function inserirEvento($estacaoId, $tipoEventoId)
