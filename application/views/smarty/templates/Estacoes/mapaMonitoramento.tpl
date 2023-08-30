@@ -11,18 +11,18 @@
 
     <link rel="stylesheet" href="{$BASE_URL}/assets/chosen/bootstrap-multiselect.css"/>
     <script type="text/javascript" src="{$BASE_URL}/assets/chosen/bootstrap-multiselect.js"></script>
-    
+
 
     <style>
         #map{
             width: 100%;
             height: 470px;
         }
-        #estacao_selecionada + .btn-group .multiselect { /*ALTERAÇÃO DO CSS DO MULTISELECT BUTTON - SELECIONAR MULTIPLAS ESTAÇÕES*/ 
-       /* Deixando modelo do selecionar camada */
-       font-size: 0.875rem;
-       text-align: left !important;
-       height: calc(1.8125rem + 2px);
+        #estacao_selecionada + .btn-group .multiselect { /*ALTERAÇÃO DO CSS DO MULTISELECT BUTTON - SELECIONAR MULTIPLAS ESTAÇÕES*/
+            /* Deixando modelo do selecionar camada */
+            font-size: 0.875rem;
+            text-align: left !important;
+            height: calc(1.8125rem + 2px);
         }
 
     </style>
@@ -34,21 +34,21 @@
                 <div class="card shadow">
                     <div class="card-body">
                         <label>Camada</label>
-                        <select class="form-control form-control-sm">
-                            <option value="">Pluviometria</option>
+                        <select class="form-control form-control-sm change_controler" id="camada_id" name="camada_id">
+                            {html_options options=$camadas}
                         </select>
                     </div>
                     <div class="card-body">
-                    <label>Esta&ccedil;&otilde;es Ativas:</label>
-                    <select class="form-control form-control-sm change_controler" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada --> 
-                        {foreach $estacoes as $eAtual}
-                            <option value="{$eAtual.id}" selected id="estacao_descricao"> {$eAtual.descricao} ({$eAtual.identificador})</option>
-                        {/foreach}
-                      
-                    </select>
+                        <label>Esta&ccedil;&otilde;es Ativas:</label>
+                        <select class="form-control form-control-sm change_controler" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada -->
+                            {foreach $estacoes as $eAtual}
+                                <option value="{$eAtual.id}" selected id="estacao_descricao"> {$eAtual.descricao} ({$eAtual.identificador})</option>
+                            {/foreach}
+
+                        </select>
+                    </div>
                 </div>
-                </div>
-            
+
                 <div class="card shadow">
                     <div class="card-body">
                         {if $estacoes}
@@ -66,27 +66,28 @@
     {if $estacoes}
 
         <script>
-        function criaMapa()
-        {
-            var map = L.map('map').setView([-22.368461, -41.774747], 13);
             {literal}
-            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '© OpenStreetMap'
-            }).addTo(map);
+                function criaMapa()
+                {
+                    var map = L.map('map').setView([-22.368461, -41.774747], 13);
 
-            
-            return map;
-        }
+                    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '© OpenStreetMap'
+                    }).addTo(map);
 
-        
-        function onEachFeature(feature, layer) {
-            var popupContent = '';
-            if (feature.properties) {
-                console.log(feature.properties);
-                popupContent += feature.properties.estacao.descricao + ' (' + feature.properties.estacao.identificador + ')';
-                popupContent += '<br><br><strong>&Uacute;ltima leitura:</strong> ' + feature.properties.ultimaLeitura.datahora_formatada
-                popupContent += "\
+
+                    return map;
+                }
+
+
+                function onEachFeature(feature, layer) {
+                    var popupContent = '';
+                    if (feature.properties) {
+                        console.log(feature.properties);
+                        popupContent += feature.properties.estacao.descricao + ' (' + feature.properties.estacao.identificador + ')';
+                        popupContent += '<br><br><strong>&Uacute;ltima leitura:</strong> ' + feature.properties.ultimaLeitura.datahora_formatada
+                        popupContent += "\
                         <br><strong>Temperatura:</strong> " + feature.properties.ultimaLeitura.temperatura + "\
                         <br><strong>Umidade do ar:</strong> " + feature.properties.ultimaLeitura.umidade_ar + "\
                         <br><strong>Velocidade do vento:</strong> " + feature.properties.ultimaLeitura.velocidade_vento + "\
@@ -94,102 +95,104 @@
                         <br><strong>Volume de chuva:</strong> " + feature.properties.ultimaLeitura.volume_chuva + "\
                         <br><strong>Volume acumulado de chuva:</strong> " + feature.properties.ultimaLeitura.volume_acc_chuva + "\
                             ";
-{/literal}
-            }
 
-            layer.bindPopup(popupContent);
-        }
-
-                function HandleAjax(url, mapa){
-                    $.get(url).done(
-                        function (data) {
-                            console.log(data);
-                            estacoes = L.geoJSON([data], {
-                                style: function (feature) {
-                                    return feature.properties && feature.properties.style;
-                                },
-                                onEachFeature: onEachFeature,
-                                pointToLayer: function (feature, latlng) {
-
-                                    if (feature.properties.camada.cor)
-                                    {
-                                        cor = feature.properties.camada.cor;
-                                    } else
-                                    {
-                                        cor = '#0700DF';
-                                    }
-
-                                    return L.circleMarker(latlng, {
-                                        radius: 8,
-                                        fillColor: cor,
-                                        color: '#000',
-                                        weight: 1,
-                                        opacity: 1,
-                                        fillOpacity: 0.8
-                                    });
-                                }
-                            }).addTo(mapa);
-                            console.log(estacoes);
-                            mapa.fitBounds(estacoes.getBounds());
-                        })
-                        .fail(function (jqXHR, textStatus, errorThrown) {
-                            console.error(jqXHR);
-                            console.error(textStatus);
-                            console.error(errorThrown);
-                            alert('Houve erros durante o processamento da solicitação.');
-                        });
                     }
 
-                    function GerenciaMarcador(mapa){
-                        function isCircleMarker(layer) { //ESSA FUNÇÃO VERIFICA SE A CAMADA (LAYER)
-                        return layer instanceof L.CircleMarker; //É DO TIPO CIRCLEMARKER
-                        }
+                    layer.bindPopup(popupContent);
+                }
 
-                        // Iterar sobre todas as camadas do mapa e remover os marcadores circleMarker
-                        mapa.eachLayer(function (layer) {
-                        if (isCircleMarker(layer)) { //SE FOR DO TIPO, REMOVE. 
+                function HandleAjax(url, mapa) {
+                    $.get(url).done(
+                            function (data) {
+                                console.log(data);
+                                estacoes = L.geoJSON([data], {
+                                    style: function (feature) {
+                                        return feature.properties && feature.properties.style;
+                                    },
+                                    onEachFeature: onEachFeature,
+                                    pointToLayer: function (feature, latlng) {
+
+                                        if (feature.properties.camada.cor)
+                                        {
+                                            cor = feature.properties.camada.cor;
+                                        } else
+                                        {
+                                            cor = '#0700DF';
+                                        }
+
+                                        return L.circleMarker(latlng, {
+                                            radius: 8,
+                                            fillColor: cor,
+                                            color: '#000',
+                                            weight: 1,
+                                            opacity: 1,
+                                            fillOpacity: 0.8
+                                        });
+                                    }
+                                }).addTo(mapa);
+                                console.log(estacoes);
+                                mapa.fitBounds(estacoes.getBounds());
+                            })
+                            .fail(function (jqXHR, textStatus, errorThrown) {
+                                console.error(jqXHR);
+                                console.error(textStatus);
+                                console.error(errorThrown);
+                                alert('Houve erros durante o processamento da solicitação.');
+                            });
+                }
+
+                function GerenciaMarcador(mapa) {
+                    /*
+                     * ESSA FUNÇÃO VERIFICA SE A CAMADA (LAYER) É DO TIPO CIRCLEMARKER
+                     */
+                    function isCircleMarker(layer) {
+                        return layer instanceof L.CircleMarker;
+                    }
+
+                    // Iterar sobre todas as camadas do mapa e remover os marcadores circleMarker
+                    mapa.eachLayer(function (layer) {
+                        if (isCircleMarker(layer)) { //SE FOR DO TIPO, REMOVE.
                             mapa.removeLayer(layer); //ISSO É FEITO PARA NÃO APAGAR TODAS AS LAYERS, INCLUINDO A LAYER DO MAPA (MAP)
                         }
-                        });  
+                    });
 
-                    let estacaoIDS = $( "#estacao_selecionada" ).val();
-                       
-                    if(!estacaoIDS){
+                    let estacaoIDS = $("#estacao_selecionada").val();
+
+                    if (!estacaoIDS) {
                         let atividade = true;
-                        let url = BASE_URL + 'Estacoes/getEstacoesGeoJson/?ids=&ativa='+atividade; //SE NÃO HOUVER ESTAÇÃO MARCADA
-                            return url;
-                            }
-                        else {
-                            let atividade = true;
-                            var url = BASE_URL + 'Estacoes/getEstacoesGeoJson/?ids=' + estacaoIDS.join(',') + '&ativa='+atividade;
-                            return url;
-                        }
-
+                        let url = BASE_URL + 'Estacoes/getEstacoesGeoJson/' + $('#camada_id').val() + '/?ids=&ativa=' + atividade; //SE NÃO HOUVER ESTAÇÃO MARCADA
+                        return url;
+                    } else {
+                        let atividade = true;
+                        var url = BASE_URL + 'Estacoes/getEstacoesGeoJson/' + $('#camada_id').val() + '/?ids=' + estacaoIDS.join(',') + '&ativa=' + atividade;
+                        return url;
                     }
 
+                }
 
-            $(function () {
 
-                $("#estacao_selecionada").multiselect({
-                includeSelectAllOption: true,
-                buttonWidth: '100%'
+                $(function () {
+
+                    $("#estacao_selecionada").multiselect({
+                        includeSelectAllOption: true,
+                        buttonWidth: '100%'
+                    });
+
+                    let mapa = criaMapa();
+                    let url = GerenciaMarcador(mapa);
+                    let result = HandleAjax(url, mapa);
+
+
+                    //EVENTO DE CHANGE DAS ESTAÇÕES
+                    $('.change_controler').change(function () {
+
+                        let url = GerenciaMarcador(mapa); //organização dos macadores
+                        let result = HandleAjax(url, mapa); //Requisições + adiciona os markers
+                    });
+
+
                 });
-
-              let mapa = criaMapa();
-              let url = GerenciaMarcador(mapa);
-              let result = HandleAjax(url, mapa);
-
-                   
-                //EVENTO DE CHANGE DAS ESTAÇÕES 
-                $('.change_controler').change(function() { 
-                
-                  let url = GerenciaMarcador(mapa); //organização dos macadores 
-                  let result = HandleAjax(url, mapa); //Requisições + adiciona os markers
-                });
-                
-                        
-            });
-                
+            {/literal}
         </script>
     {/if}
 
