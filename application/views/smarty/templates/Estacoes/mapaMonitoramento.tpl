@@ -80,20 +80,19 @@
                     return map;
                 }
 
-
-                function onEachFeature(feature, layer) {
-                    var popupContent = '';
-                    if (feature.properties) {
-                        console.log(feature.properties);
-                        popupContent += feature.properties.estacao.descricao + ' (' + feature.properties.estacao.identificador + ')';
-                        popupContent += '<br><br><strong>&Uacute;ltima leitura:</strong> ' + feature.properties.ultimaLeitura.datahora_formatada
-                        popupContent += "\
-                        <br><strong>Temperatura:</strong> " + feature.properties.ultimaLeitura.temperatura + "\
-                        <br><strong>Umidade do ar:</strong> " + feature.properties.ultimaLeitura.umidade_ar + "\
-                        <br><strong>Velocidade do vento:</strong> " + feature.properties.ultimaLeitura.velocidade_vento + "\
+        
+        function onEachFeature(feature, layer) {
+            var popupContent = '';
+            if (feature.properties) {
+                popupContent += feature.properties.estacao.descricao + ' (' + feature.properties.estacao.identificador + ')';
+                popupContent += '<br><br><strong>&Uacute;ltima leitura:</strong> ' + feature.properties.ultimaLeitura.datahora_formatada
+                popupContent += "\
+                        <br><strong>Temperatura:</strong> " + parseFloat(feature.properties.ultimaLeitura.temperatura).toFixed(2) + "\
+                        <br><strong>Umidade do ar:</strong> " + parseFloat(feature.properties.ultimaLeitura.umidade_ar).toFixed(2) + "\
+                        <br><strong>Velocidade do vento:</strong> " + parseFloat(feature.properties.ultimaLeitura.velocidade_vento).toFixed(2) + "\
                         <br><strong>Direção do vento:</strong> " + feature.properties.ultimaLeitura.dir_vento + "\
-                        <br><strong>Volume de chuva:</strong> " + feature.properties.ultimaLeitura.volume_chuva + "\
-                        <br><strong>Volume acumulado de chuva:</strong> " + feature.properties.ultimaLeitura.volume_acc_chuva + "\
+                        <br><strong>Volume de chuva:</strong> " + parseFloat(feature.properties.ultimaLeitura.volume_chuva).toFixed(2) + "\
+                        <br><strong>Volume acumulado de chuva:</strong> " + parseFloat(feature.properties.ultimaLeitura.volume_acc_chuva).toFixed(2) + "\
                             ";
 
                     }
@@ -103,14 +102,13 @@
 
                 function HandleAjax(url, mapa) {
                     $.get(url).done(
-                            function (data) {
-                                console.log(data);
-                                estacoes = L.geoJSON([data], {
-                                    style: function (feature) {
-                                        return feature.properties && feature.properties.style;
-                                    },
-                                    onEachFeature: onEachFeature,
-                                    pointToLayer: function (feature, latlng) {
+                        function (data) {
+                            estacoes = L.geoJSON([data], {
+                                style: function (feature) {
+                                    return feature.properties && feature.properties.style;
+                                },
+                                onEachFeature: onEachFeature,
+                                pointToLayer: function (feature, latlng) {
 
                                         if (feature.properties.camada.cor)
                                         {
@@ -120,26 +118,25 @@
                                             cor = '#0700DF';
                                         }
 
-                                        return L.circleMarker(latlng, {
-                                            radius: 8,
-                                            fillColor: cor,
-                                            color: '#000',
-                                            weight: 1,
-                                            opacity: 1,
-                                            fillOpacity: 0.8
-                                        });
-                                    }
-                                }).addTo(mapa);
-                                console.log(estacoes);
-                                mapa.fitBounds(estacoes.getBounds());
-                            })
-                            .fail(function (jqXHR, textStatus, errorThrown) {
-                                console.error(jqXHR);
-                                console.error(textStatus);
-                                console.error(errorThrown);
-                                alert('Houve erros durante o processamento da solicitação.');
-                            });
-                }
+                                    return L.circleMarker(latlng, {
+                                        radius: 8,
+                                        fillColor: cor,
+                                        color: '#000',
+                                        weight: 1,
+                                        opacity: 1,
+                                        fillOpacity: 0.8
+                                    });
+                                }
+                            }).addTo(mapa);
+                            mapa.fitBounds(estacoes.getBounds());
+                        })
+                        .fail(function (jqXHR, textStatus, errorThrown) {
+                            console.error(jqXHR);
+                            console.error(textStatus);
+                            console.error(errorThrown);
+                            alert('Houve erros durante o processamento da solicitação.');
+                        });
+                    }
 
                 function GerenciaMarcador(mapa) {
                     /*
@@ -178,9 +175,15 @@
                         buttonWidth: '100%'
                     });
 
-                    let mapa = criaMapa();
-                    let url = GerenciaMarcador(mapa);
-                    let result = HandleAjax(url, mapa);
+                let mapa = criaMapa();
+              let url = GerenciaMarcador(mapa);
+              let result = HandleAjax(url, mapa);
+
+                setInterval(() => { 
+              let url = GerenciaMarcador(mapa);
+              let result = HandleAjax(url, mapa);
+            }, 30000); 
+              
 
 
                     //EVENTO DE CHANGE DAS ESTAÇÕES
