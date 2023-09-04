@@ -50,6 +50,8 @@ class EstacoesModel extends BaseModel
         {
             if ($eAtual['latitude'] && $eAtual['longitude'])
             {
+                
+                $ultimoRegistro = $this->getUltimoRegistro($eAtual['id']);
                 $estacoes[] = [
                     'type'       => 'Feature',
                     'geometry'   => [
@@ -62,14 +64,14 @@ class EstacoesModel extends BaseModel
                     'properties' => [
                         'estacao'       => $eAtual,
                         'ultimaLeitura' => [
-                            'datahora'           => date('Y-m-d H:i:s'),
-                            'datahora_formatada' => date('d/m/Y H:i:s'),
-                            'temperatura'        => 30.,
-                            'umidade_ar'         => 60.,
-                            'velocidade_vento'   => 30.,
-                            'dir_vento'          => 'NE',
-                            'volume_chuva'       => 0.5,
-                            'volume_acc_chuva'   => 50.
+                            'datahora'           => $ultimoRegistro['datahora'],
+                            'datahora_formatada' => date('d/m/Y H:i:s', strtotime($ultimoRegistro['datahora'])),
+                            'temperatura'        => $ultimoRegistro['temperatura'],
+                            'umidade_ar'         => $ultimoRegistro['umidade_ar'],
+                            'velocidade_vento'   => $ultimoRegistro['velocidade_vento'],
+                            'dir_vento'          => $ultimoRegistro['dir_vento'],
+                            'volume_chuva'       => $ultimoRegistro['volume_chuva'],
+                            'volume_acc_chuva'   => $ultimoRegistro['volume_acc_chuva']
                         ],
                         'camada'        => [
                             'cor' => $cores[array_rand($cores)]
@@ -152,5 +154,14 @@ class EstacoesModel extends BaseModel
 
         $query = $this->db->get();
         return $query->result();
+    }
+
+    private function getUltimoRegistro($estacaoId) //pega o ultimo registro de cada estação para atualizar o mapa de monitoamento a cada 30seg
+    {
+        return $this->db->where('estacao_id', $estacaoId)
+                        ->order_by('datahora', 'desc')
+                        ->limit(1)
+                        ->get('leitura')
+                        ->row_array();
     }
 }

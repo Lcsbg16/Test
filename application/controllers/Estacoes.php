@@ -52,7 +52,7 @@ class Estacoes extends BasePrivateController
         $this->load->model('EstacoesModel');
         $ids = $this->input->get('ids'); // IDs selecionados
 
-        $atividade = $this->input->get('ativa'); // IDs selecionados
+        $atividade = $this->input->get('ativa'); //valor de atividade
         $atividade = filter_var($atividade, FILTER_VALIDATE_BOOLEAN);
 
     // Separa os IDs das estações em um array
