@@ -2,6 +2,9 @@
 <html lang="pt-br">
     <head>
         <meta charset="utf-8" />
+        {if $refresh_automatico|default:false}
+            <meta http-equiv="refresh" content="{$refresh_automatico}">
+        {/if}
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>
             {$titulo_pagina|default:$APPLICATION_TITLE}

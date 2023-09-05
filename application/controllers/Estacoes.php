@@ -25,11 +25,13 @@ class Estacoes extends BasePrivateController
     public function mapaMonitoramento()
     {
         $this->load->model('EstacoesModel');
+        $this->load->model('LeiturasModel');
 
         $variaveisView = [];
 
         $variaveisView['titulo_pagina'] = 'Mapa de Monitoramento';
         $variaveisView['estacoes']      = $this->EstacoesModel->getEstacoes(true);
+        $variaveisView['camadas']       = FiltrosLeitura::getTodosTiposInformacao();
 
         $this->loadSmartyView('Estacoes/mapaMonitoramento', $variaveisView);
     }
@@ -41,8 +43,8 @@ class Estacoes extends BasePrivateController
         $variaveisView = [];
 
         $variaveisView['titulo_pagina'] = 'Monitoramento individual de estações';
-        $variaveisView['estacao']      = $this->EstacoesModel->getEstacao($id_estacao);
-        $variaveisView['eventos'] = json_decode(json_encode($this->EstacoesModel->getEventos(4)), true); //Adicionei ao view de monitoramento individual a variavel $eventos, para controlar os ultimos eventos da estação
+        $variaveisView['estacao']       = $this->EstacoesModel->getEstacao($id_estacao);
+        $variaveisView['eventos']       = json_decode(json_encode($this->EstacoesModel->getEventos(4)), true); //Adicionei ao view de monitoramento individual a variavel $eventos, para controlar os ultimos eventos da estação
 
         $this->loadSmartyView('Estacoes/monitoramentoIndividual', $variaveisView);
     }
@@ -51,12 +53,13 @@ class Estacoes extends BasePrivateController
     {
         $this->load->model('EstacoesModel');
         $ids = $this->input->get('ids'); // IDs selecionados
-        $atividade = $this->input->get('ativa'); // IDs selecionados
+
+        $atividade = $this->input->get('ativa'); //valor de atividade
         $atividade = filter_var($atividade, FILTER_VALIDATE_BOOLEAN);
 
-    // Separa os IDs das estações em um array
+        // Separa os IDs das estações em um array
         $estacoesIds = explode(',', $ids);
-        $estacoes = $this->EstacoesModel->getEstacoesGeoJson($idCamada, $atividade, $estacoesIds); //segundo argumento: os IDs das estações
+        $estacoes    = $this->EstacoesModel->getEstacoesGeoJson($idCamada, $atividade, $estacoesIds); //segundo argumento: os IDs das estações
 
         $this->jsonOutput($estacoes);
     }

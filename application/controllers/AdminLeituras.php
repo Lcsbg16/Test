@@ -43,18 +43,18 @@ class AdminLeituras extends BaseCrudController
         $this->_crud_output($crud);
     }
 
-    public function getEstatisticasLeiturasJson() //Gerencia dados do Gráfico 
-    {   
-        $estacao = $this->input->post('estacao_selecionada'); // estação selecionada
-        $dataInicial = $this->input->post('data_inicial'); // data inicial 
-        $dataFinal = $this->input->post('data_final'); // data final 
-        $escala = $this->input->post('escala'); // escala escolhida 
-        $tipo_dados = $this->input->post('tipo_dados'); // tipo de dados  
+    public function getEstatisticasLeiturasJson() //Gerencia dados do Gráfico
+    {
+        $estacao     = $this->input->post('estacao_selecionada'); // estação selecionada
+        $dataInicial = $this->input->post('data_inicial'); // data inicial
+        $dataFinal   = $this->input->post('data_final'); // data final
+        $escala      = $this->input->post('escala'); // escala escolhida
+        $tipo_dados  = $this->input->post('tipo_dados'); // tipo de dados
 
 
-        $this->load->model('LeiturasModel'); 
+        $this->load->model('LeiturasModel');
 
-        $filtros = new FiltrosLeitura();
+        $filtros  = new FiltrosLeitura();
         $filtros->setEstacoes($estacao);
         $filtros->setDataInicial($dataInicial);
         $filtros->setDataFinal($dataFinal);
@@ -62,26 +62,19 @@ class AdminLeituras extends BaseCrudController
         $filtros->setTipoInformacao(constant("FiltrosLeitura::$tipo_dados"));
         $filtros->setDirecao(FiltrosLeitura::DIRECAO_ASC);
         $leituras = $this->LeiturasModel->calcularEstatisticasPorPeriodo($filtros);
-        print_r(json_encode($leituras));
-
+        $this->jsonOutput($leituras);
     }
 
-
     public function getUltimaLeituraRegistrada()
-    {   $estacao = $this->input->post('estacao_selecionada'); // estação selecionada
-        $tipo_dados = $this->input->post('tipo_dados'); // tipo de dados  
+    {
+        $estacao    = $this->input->post('estacao_selecionada'); // estação selecionada
+        $tipo_dados = $this->input->post('tipo_dados'); // tipo de dados
 
-        $this->load->model('LeiturasModel'); 
-        $filtros = new FiltrosLeitura(); 
+        $this->load->model('LeiturasModel');
+        $filtros  = new FiltrosLeitura();
         $filtros->setEstacoes($estacao);
         $filtros->setTipoInformacao(constant("FiltrosLeitura::$tipo_dados"));
         $leituras = $this->LeiturasModel->getUltimaLeituraRegistrada($filtros);
-        print_r(json_encode($leituras));
- 
+        $this->jsonOutput($leituras);
     }
-
-
-    
-
-    
 }

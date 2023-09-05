@@ -37,9 +37,8 @@ class LoginModel extends BaseModel
         if (!$usr)
         {
             throw new LoginError('Usuário ou senha não conferem.');
-            
         }
-       
+
         return $this->setUsuarioLogado($usr['id']);
     }
 
@@ -75,24 +74,27 @@ class LoginModel extends BaseModel
         return $permissao == 'GERAL' || $ci->PermissoesModel->checaPermissaoGrupos($permissao, $grupos);
     }
 
-    public function esqueciSenha($email,$token, $criado, $expirado){ //insercao de registro
+    public function esqueciSenha($email, $token, $criado, $expirado)
+    { //insercao de registro
         $data = array(
-            'email' => $email,
-            'token' => $token,
-            'criado' => $criado,
+            'email'    => $email,
+            'token'    => $token,
+            'criado'   => $criado,
             'expirado' => $expirado
         );
         $this->db->insert('troca_de_senha', $data);
-        return $this->db->affected_rows()==1;
+        return $this->db->affected_rows() == 1;
     }
 
-    public function getUsuariosPorToken($token){
+    public function getUsuariosPorToken($token)
+    {
         $this->db->select('usuario_id');
         $this->db->from('troca_de_senha');
-        $this->db->where('token',$token);
-        $this->db->where('expirado>',date('Y-m-d H:i:s'));//expirado maior q a data atual
-        $query=$this->db->get(); //armazena o resultado na $query
-        if($query->num_rows() == 1){
+        $this->db->where('token', $token);
+        $this->db->where('expirado>', date('Y-m-d H:i:s')); //expirado maior q a data atual
+        $query = $this->db->get(); //armazena o resultado na $query
+        if ($query->num_rows() == 1)
+        {
             return $query->row_array();
         }
         else
@@ -105,15 +107,14 @@ class LoginModel extends BaseModel
     {
         $dados = array(
             'usuario_id' => $usuario_id,
-            'email' => $email,
-            'token' => $token,
-            'criado' => $criado,
-            'expirado' => $expirado
+            'email'      => $email,
+            'token'      => $token,
+            'criado'     => $criado,
+            'expirado'   => $expirado
         );
 
         $this->db->insert('troca_de_senha', $dados);
     }
-
 
     public function getUsuarioPorEmail($email)
     {
@@ -137,38 +138,17 @@ class LoginModel extends BaseModel
         $this->db->where('T.token', $token);
         $this->db->where('T.expirado >', date('Y-m-d H:i:s'));
         $query = $this->db->get();
-        
-        if($query->num_rows()==1)//se o token nao tiver espirado retorna true
+
+        if ($query->num_rows() == 1)//se o token nao tiver espirado retorna true
         {
             return true;
-        } 
+        }
         else
         {
             return false;
         }
     }
-
-
-
-
-
-    /*model-> checar o token, 
-    apagar token
-
-$this->db->where(...)
-->where('expirado <= ',date('Y-m-d H:i:s'))
-->from('troca_de_senha T')
-->select('U.*')
-->join('usuario U','T.usuario_id = U.id')
-->get(); */
-    
-    
-    
-
 }
-
-   
-
 
 class LoginError extends Exception
 {
