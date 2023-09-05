@@ -55,12 +55,12 @@ class EmailUtil
 
 
             //$this->load->library('email');
-            var_dump(EMAIL_PROTOCOLO);
+            //var_dump(EMAIL_PROTOCOLO);
             if (EMAIL_PROTOCOLO == "smtp")
             {
                 $mail->isSMTP();
                 $mail->SMTPAuth = true;
-                echo 'OK';
+                //echo 'OK';
             }
             $mail->CharSet    = EMAIL_CHARSET;
             $mail->Host       = SMTP_HOST;
