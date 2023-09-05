@@ -69,7 +69,16 @@ class Estacoes extends BasePrivateController
 
         $this->load->model('EstacoesModel');
 
-        $this->EstacoesModel->monitorarEstacao(5);
+        $eventos = $this->EstacoesModel->monitorarEstacao(5);
+        foreach($eventos as $evento)
+        {
+            $estacaoId = $evento['estacao_id'];
+            $eventoTipo = $evento['tipo_evento_id'];
+            $mensagem = $evento['mensagem'];
+
+            $estacao = $this->EstacoesModel->getEstacao($estacaoId);
+            $this->EstacoesModel->enviarEmailEvento($estacao['descricao'], $mensagem);
+        }
         echo 'OK';
     }
 }

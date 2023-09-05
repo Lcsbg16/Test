@@ -49,17 +49,18 @@ class EmailUtil
    
             $mail = new PHPMailer;
 
-            //$mail->SMTPDebug = 1;
+            $mail->SMTPDebug = 1;
 
             $CI = & get_instance();
 
 
             //$this->load->library('email');
-
+            var_dump(EMAIL_PROTOCOLO);
             if (EMAIL_PROTOCOLO == "smtp")
             {
                 $mail->isSMTP();
                 $mail->SMTPAuth = true;
+                echo 'OK';
             }
             $mail->CharSet    = EMAIL_CHARSET;
             $mail->Host       = SMTP_HOST;

@@ -121,6 +121,7 @@ class EstacoesModel extends BaseModel
     public function monitorarEstacao($intervaloTempo)
     {
         $estacoes = $this->getEstacoes(true); //variavel para armazenar todas as estações Ativas
+        $eventos = [];
         foreach ($estacoes as $estacao)
         {
             $ultimaLeitura = $this->getUltimaLeitura($estacao['id']);
@@ -131,6 +132,11 @@ class EstacoesModel extends BaseModel
                 if (!isset($ultimoEvento['tipo_evento_id']) || $ultimoEvento['tipo_evento_id'] != 1) //Verificando se o evento anterior também não é down
                 {
                     $this->inserirEvento($estacao['id'], 1); //Inserindo na tabela evento que a estação esta offline
+                    $eventos[] = [
+                        "estacao_id" => $estacao['id'],
+                        "tipo_evento_id" => 1,
+                        "mensagem" => 'offline'
+                    ];
                 }
             }
             else
@@ -138,10 +144,29 @@ class EstacoesModel extends BaseModel
                 if (!isset($ultimoEvento['tipo_evento_id']) || $ultimoEvento['tipo_evento_id'] != 2) //Verificando se o evento anterior também não é up
                 {
                     $this->inserirEvento($estacao['id'], 2); //Inserindo na tabela evento que a estação esta online
+                    $eventos[] = [
+                        "estacao_id" => $estacao['id'],
+                        "tipo_evento_id" => 2,
+                        "mensagem" => 'online'
+                    ];
                 }
             }
         }
+        return $eventos;
     }
+    
+    public function enviarEmailEvento($nomeEstacao, $evento)
+    {
+        $this->load->library('EmailUtil');
+        $adminEmail = 'lbguimaraes16@gmail.com';
+        $assunto = "Evento de Estação: $nomeEstacao $evento";
+        $destinatario = $adminEmail;
+        $mensagem = "A estação $nomeEstacao está $evento.";
+        $remetente = 'lucasbarbosaguimaraes2016@gmail.com';
+       
+        $this->emailutil->enviarEmail($assunto, $destinatario, $mensagem, $remetente);
+    }
+
 
     private function getUltimaLeitura($estacaoId)
     {
@@ -170,6 +195,8 @@ class EstacoesModel extends BaseModel
         ];
         $this->db->insert('evento', $data);
     }
+
+
 
     public function getEventos($limit)
     {

@@ -33,3 +33,5 @@ define('APPLICATION_TITLE', 'Sistema de Telemetria');
  * URL base da aplicação
  */
 define("WEBSITE_BASE_URL", "http://localhost/telemetria-web");
+
+define('ADMIN_EMAIL', 'lbguimaraes16@gmail.com');
