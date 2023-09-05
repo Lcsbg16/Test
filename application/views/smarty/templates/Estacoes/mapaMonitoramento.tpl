@@ -33,19 +33,22 @@
             <div class="col">
                 <div class="card shadow">
                     <div class="card-body">
-                        <label>Camada</label>
-                        <select class="form-control form-control-sm change_controler" id="camada_id" name="camada_id">
-                            {html_options options=$camadas}
-                        </select>
-                    </div>
-                    <div class="card-body">
-                        <label>Esta&ccedil;&otilde;es Ativas:</label>
-                        <select class="form-control form-control-sm change_controler" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada -->
-                            {foreach $estacoes as $eAtual}
-                                <option value="{$eAtual.id}" selected id="estacao_descricao"> {$eAtual.descricao} ({$eAtual.identificador})</option>
-                            {/foreach}
+                        <div class="form-group">
+                            <label for="camada_id">Camada:</label>
+                            <select class="form-control form-control-sm change_controler" id="camada_id" name="camada_id">
+                                {html_options options=$camadas}
+                            </select>
+                        </div>
+                        <div class="form-group">
 
-                        </select>
+                            <label for="estacao_selecionada">Esta&ccedil;&otilde;es Ativas:</label>
+                            <select class="form-control form-control-sm change_controler" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada -->
+                                {foreach $estacoes as $eAtual}
+                                    <option value="{$eAtual.id}" selected id="estacao_descricao"> {$eAtual.descricao} ({$eAtual.identificador})</option>
+                                {/foreach}
+
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -80,13 +83,13 @@
                     return map;
                 }
 
-        
-        function onEachFeature(feature, layer) {
-            var popupContent = '';
-            if (feature.properties) {
-                popupContent += feature.properties.estacao.descricao + ' (' + feature.properties.estacao.identificador + ')';
-                popupContent += '<br><br><strong>&Uacute;ltima leitura:</strong> ' + feature.properties.ultimaLeitura.datahora_formatada
-                popupContent += "\
+
+                function onEachFeature(feature, layer) {
+                    var popupContent = '';
+                    if (feature.properties) {
+                        popupContent += feature.properties.estacao.descricao + ' (' + feature.properties.estacao.identificador + ')';
+                        popupContent += '<br><br><strong>&Uacute;ltima leitura:</strong> ' + feature.properties.ultimaLeitura.datahora_formatada
+                        popupContent += "\
                         <br><strong>Temperatura:</strong> " + parseFloat(feature.properties.ultimaLeitura.temperatura).toFixed(2) + "\
                         <br><strong>Umidade do ar:</strong> " + parseFloat(feature.properties.ultimaLeitura.umidade_ar).toFixed(2) + "\
                         <br><strong>Velocidade do vento:</strong> " + parseFloat(feature.properties.ultimaLeitura.velocidade_vento).toFixed(2) + "\
@@ -102,13 +105,13 @@
 
                 function HandleAjax(url, mapa) {
                     $.get(url).done(
-                        function (data) {
-                            estacoes = L.geoJSON([data], {
-                                style: function (feature) {
-                                    return feature.properties && feature.properties.style;
-                                },
-                                onEachFeature: onEachFeature,
-                                pointToLayer: function (feature, latlng) {
+                            function (data) {
+                                estacoes = L.geoJSON([data], {
+                                    style: function (feature) {
+                                        return feature.properties && feature.properties.style;
+                                    },
+                                    onEachFeature: onEachFeature,
+                                    pointToLayer: function (feature, latlng) {
 
                                         if (feature.properties.camada.cor)
                                         {
@@ -118,25 +121,25 @@
                                             cor = '#0700DF';
                                         }
 
-                                    return L.circleMarker(latlng, {
-                                        radius: 8,
-                                        fillColor: cor,
-                                        color: '#000',
-                                        weight: 1,
-                                        opacity: 1,
-                                        fillOpacity: 0.8
-                                    });
-                                }
-                            }).addTo(mapa);
-                            mapa.fitBounds(estacoes.getBounds());
-                        })
-                        .fail(function (jqXHR, textStatus, errorThrown) {
-                            console.error(jqXHR);
-                            console.error(textStatus);
-                            console.error(errorThrown);
-                            alert('Houve erros durante o processamento da solicitação.');
-                        });
-                    }
+                                        return L.circleMarker(latlng, {
+                                            radius: 8,
+                                            fillColor: cor,
+                                            color: '#000',
+                                            weight: 1,
+                                            opacity: 1,
+                                            fillOpacity: 0.8
+                                        });
+                                    }
+                                }).addTo(mapa);
+                                mapa.fitBounds(estacoes.getBounds());
+                            })
+                            .fail(function (jqXHR, textStatus, errorThrown) {
+                                console.error(jqXHR);
+                                console.error(textStatus);
+                                console.error(errorThrown);
+                                alert('Houve erros durante o processamento da solicitação.');
+                            });
+                }
 
                 function GerenciaMarcador(mapa) {
                     /*
@@ -175,15 +178,15 @@
                         buttonWidth: '100%'
                     });
 
-                let mapa = criaMapa();
-              let url = GerenciaMarcador(mapa);
-              let result = HandleAjax(url, mapa);
+                    let mapa = criaMapa();
+                    let url = GerenciaMarcador(mapa);
+                    let result = HandleAjax(url, mapa);
 
-                setInterval(() => { 
-              let url = GerenciaMarcador(mapa);
-              let result = HandleAjax(url, mapa);
-            }, 30000); 
-              
+                    setInterval(() => {
+                        let url = GerenciaMarcador(mapa);
+                        let result = HandleAjax(url, mapa);
+                    }, 30000);
+
 
 
                     //EVENTO DE CHANGE DAS ESTAÇÕES
