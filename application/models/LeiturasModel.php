@@ -107,6 +107,14 @@ class LeiturasModel extends BaseModel
         }
     }
 
+    /**
+     * Retorna a última leitura obtida de cada estação
+     *
+     * @param FiltrosLeitura $filtros Filtros para obtenção das leituras
+     * @param int $tempoLimite Tempo limite (em minutos) a considerar na obtenção das leituras. Leituras mais antigas serão descartadas.
+     * @return array 
+     * @throws Exception
+     */
     public function getUltimasLeituras(FiltrosLeitura $filtros = NULL, $tempoLimite = 2440)
     {
         $this->db->from('leitura');
@@ -459,8 +467,8 @@ class FiltrosLeitura
             self::TIPO_DIRECAO_VENTO    => 'Direção do Vento',
             self::TIPO_UMIDADE_AR       => 'Umidade do Ar',
             self::TIPO_VELOCIDADE_VENTO => 'Velocidade do Vento',
-            self::TIPO_VOLUME_ACC_CHUVA => 'Volume Acumulado de Chuva',
-            self::TIPO_VOLUME_CHUVA     => 'Volume de Chuva'
+            //self::TIPO_VOLUME_ACC_CHUVA => 'Volume Acumulado de Chuva',
+            self::TIPO_VOLUME_CHUVA     => 'Pluviometria'
         ];
     }
 
