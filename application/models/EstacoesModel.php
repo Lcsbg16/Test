@@ -84,9 +84,9 @@ class EstacoesModel extends BaseModel
         {
             if ($eAtual['latitude'] && $eAtual['longitude'])
             {
-                
+
                 $ultimoRegistro = $this->getUltimoRegistro($eAtual['id']);
-                $estacoes[] = [
+                $estacoes[]     = [
                     'type'       => 'Feature',
                     'geometry'   => [
                         'type'        => 'Point',
@@ -123,7 +123,7 @@ class EstacoesModel extends BaseModel
     public function monitorarEstacao($intervaloTempo)
     {
         $estacoes = $this->getEstacoes(true); //variavel para armazenar todas as estações Ativas
-        $eventos = [];
+        $eventos  = [];
         foreach ($estacoes as $estacao)
         {
             $ultimaLeitura = $this->getUltimaLeitura($estacao['id']);
@@ -135,9 +135,9 @@ class EstacoesModel extends BaseModel
                 {
                     $this->inserirEvento($estacao['id'], 1); //Inserindo na tabela evento que a estação esta offline
                     $eventos[] = [
-                        "estacao_id" => $estacao['id'],
+                        "estacao_id"     => $estacao['id'],
                         "tipo_evento_id" => 1,
-                        "mensagem" => 'offline'
+                        "mensagem"       => 'offline'
                     ];
                 }
             }
@@ -147,28 +147,15 @@ class EstacoesModel extends BaseModel
                 {
                     $this->inserirEvento($estacao['id'], 2); //Inserindo na tabela evento que a estação esta online
                     $eventos[] = [
-                        "estacao_id" => $estacao['id'],
+                        "estacao_id"     => $estacao['id'],
                         "tipo_evento_id" => 2,
-                        "mensagem" => 'online'
+                        "mensagem"       => 'online'
                     ];
                 }
             }
         }
         return $eventos;
     }
-    
-    public function enviarEmailEvento($nomeEstacao, $evento)
-    {
-        $this->load->library('EmailUtil');
-        $adminEmail = 'lbguimaraes16@gmail.com';
-        $assunto = "Evento de Estação: $nomeEstacao $evento";
-        $destinatario = $adminEmail;
-        $mensagem = "A estação $nomeEstacao está $evento.";
-        $remetente = 'lucasbarbosaguimaraes2016@gmail.com';
-       
-        $this->emailutil->enviarEmail($assunto, $destinatario, $mensagem, $remetente);
-    }
-
 
     private function getUltimaLeitura($estacaoId)
     {
@@ -203,8 +190,6 @@ class EstacoesModel extends BaseModel
         $this->db->insert('evento', $data);
     }
 
-
-
     public function getEventos($limit)
     {
         $this->db->select('evento.id, evento.datahora, evento.tipo_evento_id, estacao.id AS estacao_id, estacao.descricao AS estacao_descricao')
@@ -216,7 +201,6 @@ class EstacoesModel extends BaseModel
         $query = $this->db->get();
         return $query->result_array();
     }
-
 
     private function getUltimoRegistro($estacaoId) //pega o ultimo registro de cada estação para atualizar o mapa de monitoamento a cada 30seg
     {
