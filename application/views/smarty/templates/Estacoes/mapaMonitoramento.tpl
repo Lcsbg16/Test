@@ -73,13 +73,10 @@
                 function criaMapa()
                 {
                     var map = L.map('map').setView([-22.368461, -41.774747], 13);
-
                     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         maxZoom: 19,
                         attribution: '© OpenStreetMap'
                     }).addTo(map);
-
-
                     return map;
                 }
 
@@ -88,16 +85,15 @@
                     var popupContent = '';
                     if (feature.properties) {
                         popupContent += feature.properties.estacao.descricao + ' (' + feature.properties.estacao.identificador + ')';
-                        popupContent += '<br><br><strong>&Uacute;ltima leitura:</strong> ' + feature.properties.ultimaLeitura.datahora_formatada
+                        popupContent += '<br><br><strong>Status:</strong> ' + (feature.properties.estacao.online ? 'Online' : 'Offline') + '\
+                        <br><strong>&Uacute;ltima leitura:</strong> ' + feature.properties.ultimaLeitura.datahora_formatada
                         popupContent += "\
                         <br><strong>Temperatura:</strong> " + parseFloat(feature.properties.ultimaLeitura.temperatura).toFixed(2) + "\
                         <br><strong>Umidade do ar:</strong> " + parseFloat(feature.properties.ultimaLeitura.umidade_ar).toFixed(2) + "\
                         <br><strong>Velocidade do vento:</strong> " + parseFloat(feature.properties.ultimaLeitura.velocidade_vento).toFixed(2) + "\
                         <br><strong>Direção do vento:</strong> " + feature.properties.ultimaLeitura.dir_vento + "\
                         <br><strong>Volume de chuva:</strong> " + parseFloat(feature.properties.ultimaLeitura.volume_chuva).toFixed(2) + "\
-                        <br><strong>Volume acumulado de chuva:</strong> " + parseFloat(feature.properties.ultimaLeitura.volume_acc_chuva).toFixed(2) + "\
                             ";
-
                     }
 
                     layer.bindPopup(popupContent);
@@ -113,12 +109,12 @@
                                     onEachFeature: onEachFeature,
                                     pointToLayer: function (feature, latlng) {
 
-                                        if (feature.properties.camada.cor)
+                                        if (feature.properties.estacao.online && feature.properties.camada.cor)
                                         {
                                             cor = feature.properties.camada.cor;
                                         } else
                                         {
-                                            cor = '#0700DF';
+                                            cor = '#5f5f5f';
                                         }
 
                                         return L.circleMarker(latlng, {
@@ -155,9 +151,7 @@
                             mapa.removeLayer(layer); //ISSO É FEITO PARA NÃO APAGAR TODAS AS LAYERS, INCLUINDO A LAYER DO MAPA (MAP)
                         }
                     });
-
                     let estacaoIDS = $("#estacao_selecionada").val();
-
                     if (!estacaoIDS) {
                         let atividade = true;
                         let url = BASE_URL + 'Estacoes/getEstacoesGeoJson/' + $('#camada_id').val() + '/?ids=&ativa=' + atividade; //SE NÃO HOUVER ESTAÇÃO MARCADA
@@ -177,26 +171,19 @@
                         includeSelectAllOption: true,
                         buttonWidth: '100%'
                     });
-
                     let mapa = criaMapa();
                     let url = GerenciaMarcador(mapa);
                     let result = HandleAjax(url, mapa);
-
                     setInterval(() => {
                         let url = GerenciaMarcador(mapa);
                         let result = HandleAjax(url, mapa);
                     }, 30000);
-
-
-
                     //EVENTO DE CHANGE DAS ESTAÇÕES
                     $('.change_controller').change(function () {
 
                         let url = GerenciaMarcador(mapa); //organização dos macadores
                         let result = HandleAjax(url, mapa); //Requisições + adiciona os markers
                     });
-
-
                 });
             {/literal}
         </script>
