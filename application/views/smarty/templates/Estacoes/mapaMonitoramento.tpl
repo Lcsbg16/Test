@@ -114,7 +114,7 @@
                                             cor = feature.properties.camada.cor;
                                         } else
                                         {
-                                            cor = '#5f5f5f';
+                                            cor = '#bebebe';
                                         }
 
                                         return L.circleMarker(latlng, {
