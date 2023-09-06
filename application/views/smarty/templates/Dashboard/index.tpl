@@ -272,7 +272,7 @@
                                         <th scope="row">
                                             {$evento.datahora|date_format:'%d/%m %H:%M'}
                                         </th>
-                                        <td title="{$evento.estacao_descricao|escape:'quotes'}">
+                                        <td title="{$evento.estacao_identificador} - {$evento.estacao_descricao|escape:'quotes'}">
                                             {$evento.estacao_descricao|truncate:25:"...":true}
                                         </td>
                                         <td>
