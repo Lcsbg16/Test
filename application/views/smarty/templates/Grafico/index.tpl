@@ -35,7 +35,7 @@
                             </div>
                             <div class="col-sm-12 col-md-4 col-xl-2">
                                 <label>Data Inicial</label>
-                                <input class="form-control form-control-sm datepicker" value="{'-3 months'|strtotime|date_format:'%d/%m/%Y'}" id="dataInicial">
+                                <input class="form-control form-control-sm datepicker" value="{'-5 days'|strtotime|date_format:'%d/%m/%Y'}" id="dataInicial">
                             </div>
                             <div class="col-sm-12 col-md-4 col-xl-2">
                                 <label>Data Final</label>
