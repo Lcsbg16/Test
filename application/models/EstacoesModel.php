@@ -5,10 +5,23 @@ require_once 'BaseModel.php';
 class EstacoesModel extends BaseModel
 {
 
-    public function contaQtdeEstacoesPorUltimoTipoEvento($tipo_evento_id, $somenteAtivas = true)
+    /**
+     * Retorna a quantidade de estações cujo último evento registrado é de id informado em $tipo_evento_id
+     *
+     * @param int $tipo_evento_id Id do tipo de evento a ser considerado na contagem
+     * @param bool $somenteAtivas Considerar apenas estações ativas
+     * @param array[int] $filtrarTipos Considerar apenas os esses ids de tipo na consulta. Se vazio, considera todos os tipos.
+     * @return int
+     */
+    public function contaQtdeEstacoesPorUltimoTipoEvento($tipo_evento_id, $somenteAtivas = true, $filtrarTipos = [])
     {
+        if ($filtrarTipos)
+        {
+            $queryFiltrarTipos = 'AND ev.tipo_evento_id IN(' . implode(',', $filtrarTipos) . ')';
+        }
+
         $this->db->from('estacao e')
-                ->select('
+                ->select("
                             (
                                 SELECT
                                     tipo_evento_id
@@ -16,10 +29,11 @@ class EstacoesModel extends BaseModel
                                     evento ev
                                 WHERE
                                     ev.estacao_id = e.id
+                                    {$queryFiltrarTipos}
                                 ORDER BY
                                     datahora DESC LIMIT 1
                             ) as ultimo_tipo_evento_id
-                ')
+                ")
                 ->having('ultimo_tipo_evento_id', $tipo_evento_id);
 
         if ($somenteAtivas)
@@ -27,26 +41,66 @@ class EstacoesModel extends BaseModel
             $this->db->where('ativa', 1);
         }
 
+
+
         return $this->db->count_all_results();
     }
 
+    /**
+     * Retorna a quantidade de estações ativas online
+     *
+     * @return int
+     */
     public function getQtdeEstacoesOnline()
     {
-        return $this->contaQtdeEstacoesPorUltimoTipoEvento(2);
+        $idTipoEventoOnline        = 2;
+        $idsTipoEventoOnlineOffile = [1, 2];
+
+        return $this->contaQtdeEstacoesPorUltimoTipoEvento($idTipoEventoOnline, true, $idsTipoEventoOnlineOffile);
     }
 
+    /**
+     * Retorna a quantidade de estações ativas offline
+     *
+     * @return int
+     */
     public function getQtdeEstacoesOffline()
     {
-        return $this->contaQtdeEstacoesPorUltimoTipoEvento(1);
+        $idTipoEventoOffline       = 1;
+        $idsTipoEventoOnlineOffile = [1, 2];
+
+        return $this->contaQtdeEstacoesPorUltimoTipoEvento($idTipoEventoOffline, true, $idsTipoEventoOnlineOffile);
     }
 
+    /**
+     * Retorna os dados de uma estação em array
+     *
+     * @param int $id
+     * @return array[mixed]
+     */
     public function getEstacao($id)
     {
         $estacao = $this->db->where('id', $id)
                 ->get('estacao')
                 ->row_array();
 
+        $estacao['online'] = $this->getEstacaoOnline($id);
+
         return $estacao;
+    }
+
+    /**
+     * Checa se uma estação está online
+     *
+     * @param int $estacaoId Id da estação
+     * @return bool
+     */
+    public function getEstacaoOnline($estacaoId)
+    {
+        $idTipoEventoOnline        = 2;
+        $idsTipoEventoOnlineOffile = [1, 2];
+
+        return $this->getUltimoEvento($estacaoId, $idsTipoEventoOnlineOffile) == $idTipoEventoOnline;
     }
 
     public function getEstacoes($somenteAtivas = FALSE, $ids = array()) //alteração para aceitar um array de estações a ser buscadas também
@@ -60,8 +114,14 @@ class EstacoesModel extends BaseModel
         {
             $this->db->where_in('id', $ids); //se houver estaçõesy
         }
-        return $this->db->get('estacao')
-                        ->result_array();
+        $estacoes = $this->db->get('estacao')
+                ->result_array();
+        foreach ($estacoes as $index => $estacaoAtual)
+        {
+            $estacoes[$index]['online'] = $this->getEstacaoOnline($estacaoAtual['id']);
+        }
+
+        return $estacoes;
     }
 
     public function getContagemEstacoes($somenteAtivas = TRUE)

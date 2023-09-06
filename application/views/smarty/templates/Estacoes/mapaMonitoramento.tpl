@@ -35,14 +35,14 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label for="camada_id">Camada:</label>
-                            <select class="form-control form-control-sm change_controler" id="camada_id" name="camada_id">
+                            <select class="form-control form-control-sm change_controller" id="camada_id" name="camada_id">
                                 {html_options options=$camadas}
                             </select>
                         </div>
                         <div class="form-group">
 
                             <label for="estacao_selecionada">Esta&ccedil;&otilde;es Ativas:</label>
-                            <select class="form-control form-control-sm change_controler" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada -->
+                            <select class="form-control form-control-sm change_controller" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada -->
                                 {foreach $estacoes as $eAtual}
                                     <option value="{$eAtual.id}" selected id="estacao_descricao"> {$eAtual.descricao} ({$eAtual.identificador})</option>
                                 {/foreach}
@@ -190,7 +190,7 @@
 
 
                     //EVENTO DE CHANGE DAS ESTAÇÕES
-                    $('.change_controler').change(function () {
+                    $('.change_controller').change(function () {
 
                         let url = GerenciaMarcador(mapa); //organização dos macadores
                         let result = HandleAjax(url, mapa); //Requisições + adiciona os markers

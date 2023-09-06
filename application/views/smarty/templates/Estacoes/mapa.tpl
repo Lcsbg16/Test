@@ -17,11 +17,11 @@
             width: 100%;
             height: 500px;
         }
-        #estacao_selecionada + .btn-group .multiselect { /*ALTERAÇÃO DO CSS DO MULTISELECT BUTTON - SELECIONAR MULTIPLAS ESTAÇÕES*/ 
-       /* Deixando modelo do selecionar camada */
-       font-size: 0.875rem;
-       text-align: left !important;
-       height: calc(1.8125rem + 2px);
+        #estacao_selecionada + .btn-group .multiselect { /*ALTERAÇÃO DO CSS DO MULTISELECT BUTTON - SELECIONAR MULTIPLAS ESTAÇÕES*/
+            /* Deixando modelo do selecionar camada */
+            font-size: 0.875rem;
+            text-align: left !important;
+            height: calc(1.8125rem + 2px);
         }
     </style>
     {* /leaflet *}
@@ -31,14 +31,14 @@
             <div class="col">
                 <div class="card shadow">
                     <div class="card-body">
-                    <label>Esta&ccedil;&atilde;o</label>
-                    <select class="form-control form-control-sm change_controler" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada --> 
-                        {foreach $estacoes as $eAtual}
-                            <option value="{$eAtual.id}" selected id="estacao_descricao"> {$eAtual.descricao} ({$eAtual.identificador})</option>
-                        {/foreach}
-                    
-                    </select>
-                </div>
+                        <label>Esta&ccedil;&atilde;o</label>
+                        <select class="form-control form-control-sm change_controller" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada -->
+                            {foreach $estacoes as $eAtual}
+                                <option value="{$eAtual.id}" selected id="estacao_descricao"> {$eAtual.descricao} ({$eAtual.identificador})</option>
+                            {/foreach}
+
+                        </select>
+                    </div>
 
                     <div class="card-body">
                         {if $estacoes}
@@ -49,185 +49,127 @@
                             </div>
                         {/if}
                     </div>
-                    
+
                 </div>
             </div>
         </div>
     </div>
     {if $estacoes}
-            
-        <script>
 
-            function criaMapa() {
-                var map = L.map('map').setView([-22.368461, -41.774747], 13);
-        {literal}
-                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 19,
-                    attribution: '© OpenStreetMap'
-                }).addTo(map);
-                              
-                return map; 
-            
-            }
-             
-            function onEachFeature(feature, layer) { //organiza o pop-up
+        <script>
+            {literal}
+                var offlineIcon = L.icon({
+                    iconUrl: BASE_URL + 'assets/images/grey_marker.png',
+                    shadowUrl: BASE_URL + 'assets/images/marker-shadow.png',
+                });
+
+                function criaMapa() {
+                    var map = L.map('map').setView([-22.368461, -41.774747], 13);
+
+                    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '© OpenStreetMap'
+                    }).addTo(map);
+
+                    return map;
+
+                }
+
+                function onEachFeature(feature, layer) { //organiza o pop-up
                     var popupContent = '';
                     if (feature.properties) {
                         var url = BASE_URL + 'AdminEstacoes/index/edit/' + feature.properties.estacao.id; //URL PARA O 'EDITAR ESSA ESTAÇÃO'
-                        var verUrl = BASE_URL + 'Estacoes/monitoramentoIndividual/' + feature.properties.estacao.id; 
+                        var verUrl = BASE_URL + 'Estacoes/monitoramentoIndividual/' + feature.properties.estacao.id;
                         popupContent += "\
                     <h3><strong>" + feature.properties.estacao.descricao + ' (' + feature.properties.estacao.identificador + ')' + "</strong></h3>\
                     <br><strong>Endere&ccedil;o:</strong><br>" + feature.properties.estacao.endereco + "\
                     <br><strong>Coordenadas:</strong><br>" + feature.properties.estacao.latitude + ", " + feature.properties.estacao.longitude + "\
-                    <br><br><a class='btn btn-default' href="+url+" target='_blank'>Editar Esta&ccedil;&atilde;o</a>&nbsp" + "\
-                    <a class='btn btn-warning' href="+verUrl+ " target='_blank'>Ver Estação</a>&nbsp" + "\
+                    <br><strong>Status:</strong> " + (feature.properties.estacao.online ? 'Online' : 'Offline') + "\
+                    <br><br><a class='btn btn-default' href=" + url + " target='_blank'>Editar Esta&ccedil;&atilde;o</a>&nbsp" + "\n\
+                    <a class='btn btn-warning' href=" + verUrl + " target='_blank'>Ver Estação</a>&nbsp" + "\
                         ";
-        {/literal}
+
                     }
                     layer.bindPopup(popupContent);
                 }
 
                 function HandleAjax(url, mapa)
                 { //Organiza AJAX
-                    $.get(url).done( //URL
-                        function (data) {
-                            estacoes = L.geoJSON([data], {
-                                onEachFeature: onEachFeature,
-                                pointToLayer: function (feature, latlng) 
-                                {
-                                    return L.marker(latlng);
-                                    
-                                }
-                            }).addTo(mapa); //adc os marcadores 
-                            mapa.fitBounds(estacoes.getBounds());
+                    $.get(url).done(//URL
+                            function (data) {
+                                estacoes = L.geoJSON([data], {
+                                    onEachFeature: onEachFeature,
+                                    pointToLayer: function (feature, latlng)
+                                    {
+                                        //console.log(feature)
+                                        if (!feature.properties.estacao.online)
+                                        {
+                                            opcoesIcone = {icon: offlineIcon};
+                                        } else
+                                        {
+                                            opcoesIcone = {};
+                                        }
 
-                             }).fail(function (jqXHR, textStatus, errorThrown) 
-                             {
-                                console.error(jqXHR);
-                                console.error(textStatus);
-                                console.error(errorThrown);
-                                alert('Houve erros durante o processamento da solicitação.');
-                            });
+                                        return L.marker(latlng, opcoesIcone);
+                                    }
+                                }).addTo(mapa); //adc os marcadores
+                                mapa.fitBounds(estacoes.getBounds());
+                            }).fail(function (jqXHR, textStatus, errorThrown)
+                    {
+                        console.error(jqXHR);
+                        console.error(textStatus);
+                        console.error(errorThrown);
+                        alert('Houve erros durante o processamento da solicitação.');
+                    });
                 }
 
                 function GerenciaMarcador(mapa)
-                { 
-                      // CORREÇÃO DE BUG: AO DESMARCAR A ESTAÇÃO, O MAP MARKER CONTINUAVA NO MAPA
+                {
+                    // CORREÇÃO DE BUG: AO DESMARCAR A ESTAÇÃO, O MAP MARKER CONTINUAVA NO MAPA
                     function isMarker(layer) { //ESSA FUNÇÃO VERIFICA SE A CAMADA (LAYER) É DE UM MARKERPOINT
                         return layer instanceof L.Marker;
                     }
 
                     // Iterar sobre todas as camadas do mapa e remover os marcadores Marker
                     mapa.eachLayer(function (layer) {
-                        if (isMarker(layer)) { //SE FOR DO TIPO, REMOVE. 
+                        if (isMarker(layer)) { //SE FOR DO TIPO, REMOVE.
                             mapa.removeLayer(layer); //ISSO É FEITO PARA NÃO APAGAR TODAS AS LAYERS, INCLUINDO A LAYER principal DO MAPA (MAP)
                         }
-                    });   
-
-                    let estacaoIDS = $( "#estacao_selecionada" ).val(); //Organização da URL pelos IDs selecionados no multiselect menu
-                    if(!estacaoIDS){
+                    });
+                    let estacaoIDS = $("#estacao_selecionada").val(); //Organização da URL pelos IDs selecionados no multiselect menu
+                    if (!estacaoIDS) {
                         let atividade = true;
-                        let url = BASE_URL + 'Estacoes/getEstacoesGeoJson/?ids=&ativa='+atividade; //SE NÃO HOUVER ESTAÇÃO MARCADA
+                        let url = BASE_URL + 'Estacoes/getEstacoesGeoJson/?ids=&ativa=' + atividade; //SE NÃO HOUVER ESTAÇÃO MARCADA
                         return url;
                     } else {
                         let atividade = true;
-                        let url = BASE_URL + 'Estacoes/getEstacoesGeoJson/?ids=' + estacaoIDS.join(',') + '&ativa='+atividade; //SE HOUVER, A URL É ORGANIZADA para retornar os IDs de marcadores selecionados 
+                        let url = BASE_URL + 'Estacoes/getEstacoesGeoJson/?ids=' + estacaoIDS.join(',') + '&ativa=' + atividade; //SE HOUVER, A URL É ORGANIZADA para retornar os IDs de marcadores selecionados
                         return url;
                     }
-             
-                 }
 
-        $(function () { //onload da page
+                }
 
-            $("#estacao_selecionada").multiselect({ //Configurações do Multiselect
-                includeSelectAllOption: true,
-                buttonWidth: '100%'
-                        });
+                $(function () { //onload da page
+                    // Configurações do multiselect
+                    $("#estacao_selecionada").multiselect({
+                        includeSelectAllOption: true,
+                        buttonWidth: '100%'
+                    });
+                    let mapa = criaMapa(); //ciação do mapa
+                    let url = GerenciaMarcador(mapa); //organização dos macadores
+                    let result = HandleAjax(url, mapa); //Requisições + adiciona os markers
 
-            let mapa = criaMapa(); //ciação do mapa
-            let url = GerenciaMarcador(mapa); //organização dos macadores 
-            let result = HandleAjax(url, mapa); //Requisições + adiciona os markers
-
-         //////EVENTO DE CHANGE DAS ESTAÇÕES 
-            $('.change_controler').change(function() { 
-                let url = GerenciaMarcador(mapa); //organização dos macadores 
-                let result = HandleAjax(url, mapa); //Requisições + adiciona os markers
+                    //////EVENTO DE CHANGE DAS ESTAÇÕES
+                    $('.change_controller').change(function () {
+                        let url = GerenciaMarcador(mapa); //organização dos macadores
+                        let result = HandleAjax(url, mapa); //Requisições + adiciona os markers
+                    });
                 });
-
-        });
+            {/literal}
         </script>
-            
-    
-            
-      {/if}
 
- {/block}
 
-        <!-- 
-    
-        <script>
-            $(function () {
-                var map = L.map('map').setView([-22.368461, -41.774747], 13);
-            { literal}
-                    L.tileLayer('https://tile.openstreetmap.org/{ z}/{ x}/ { y}.png', {
-                        maxZoom: 19,
-                        attribution: '© OpenStreetMap'
-                    }).addTo(map);
-            { / literal}
 
-                    estacoes = new Array();
-            { foreach $estacoes as $eAtual}
-                 { if ($eAtual.latitude and $eAtual.longitude) or $eAtual.endereco}
-                     { if !$eAtual.latitude or !$eAtual.longitude}
-                    var coordenadas = null;
-                        {*
-                        $.ajax({
-                        url: 'https://nominatim.openstreetmap.org/ui/search.html',
-                        type: 'GET',
-                        async: false,
-                        cache: false,
-                        timeout: 30000,
-                        data: {
-                        'q': '{$eAtual.endereco|escape:'quotes'}'
-                        },
-                        dataType: 'json',
-                        crossDomain: true,
-                        headers: {
-                        'Access-Control-Allow-Origin': '*',
-                        },
-                        beforeSend: function (xhr) {
-                        xhr.setRequestHeader("Authorization", "Basic " + btoa(""));
-                        },
-                        fail: function () {
-                        console.log('Falha ao buscar coordenadas pelo endereço.')
-                        },
-                        done: function (data) {
-                        var coordenadas = [data[0].lat, data[0].lon];
-                        console.log('Endereço encontrado: ' + coordenadas);
-                        }
-                        });
-                        *}
-                   /* { else}
-                    coordenadas = [Number('{ $eAtual.latitude}'), Number('{ $eAtual.longitude}')];
-                     { /if}
-                    if (coordenadas != null)
-                    {
-                        var marker = L.marker(coordenadas).addTo(map);
-                        marker.bindPopup("<h3>{ $eAtual.descricao|escape:'quotes'} ({ $eAtual.identificador|escape:'quotes'})</h3><br><strong>Endere&ccedil;o:</strong> { $eAtual.endereco|default:'-'|escape:'quotes'}<br><strong>Coordendas:</strong> " + coordenadas + '<br><br><a class="btn btn-default" href="{$BASE_URL}AdminEstacoes/index/edit/{ $eAtual.id}" target="_blank">Editar Esta&ccedil;&atilde;o</a>&nbsp;<a class="btn btn-warning" href="javascript:alert(\'Ainda não implementado.\')" >Ver Resultados</a>');
-                        estacoes.push(marker);
-                    }
-                { /if}
-            { / foreach}
+    {/if}
 
-                    var group = new L.featureGroup(estacoes);
-                    map.fitBounds(group.getBounds());
-                });
-        </script>
-     { /if} */
-
-{ /block}
-        
-        
-        
-        
-        --> 
+{/block}

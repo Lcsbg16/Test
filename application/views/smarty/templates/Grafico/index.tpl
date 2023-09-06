@@ -24,7 +24,7 @@
                         <div class="row my-3">
                             <div class="col-sm-12 col-md-4 col-xl-2">
                                 <label>Esta&ccedil;&atilde;o</label>
-                                <select class="form-control form-control-sm change_controler" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada --> 
+                                <select class="form-control form-control-sm change_controller" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada --> 
                                     {foreach $estacoes as $eAtual}
                                         {if $eAtual.ativa==1}
                                             <option value="{$eAtual.id}" id="estacao_descricao"> {$eAtual.descricao} ({$eAtual.identificador})</option>
@@ -43,7 +43,7 @@
                             </div>
                             <div class="col-sm-12 col-md-4 col-xl-2">
                                 <label>Escala</label>
-                                <select class="form-control form-control-sm change_controler" id="escala_selecionada" >
+                                <select class="form-control form-control-sm change_controller" id="escala_selecionada" >
                                     <option value="">Selecione</option>
                                     <option>Hora</option>
                                     <option>Dia</option>
@@ -53,7 +53,7 @@
                             </div>
                             <div class="col-sm-12 col-md-4 col-xl-2">
                                 <label>Informa&ccedil;&atilde;o</label>
-                                <select class="form-control form-control-sm change_controler" id="info_selecionada" >
+                                <select class="form-control form-control-sm change_controller" id="info_selecionada" >
                                     <option>Selecione</option>
                                     <option>Temperatura</option>
                                     <option>Volume de Chuva</option>
@@ -240,7 +240,7 @@ $(document).ready(function(){
 
 
 //EVENTO DE CHANGE DAS TAGS (ACOPLADO A ESTAÇÃO, TIPO DE INFORMAÇÃO E ESCALA)   
-        $('.change_controler').change(function() {       
+        $('.change_controller').change(function() {       
             HandleAjax();  });
 
 //EVENTO DE CHANGE ACOPLADO À DATA, USANDO A CLASSE DATEPICKER E O EVENTO DATECHANGE - EVITA A DUPLICAÇÃO DO EVENTO NO MOUSEOVER DO CALENDARIO QUE OCORRE AO USAR O CHANGE PURO

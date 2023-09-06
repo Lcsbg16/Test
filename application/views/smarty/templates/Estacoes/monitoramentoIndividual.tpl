@@ -207,7 +207,7 @@
             <div class="row d-flex justify-content-center">
             <div class="col-xl-4 col-lg-6">
                                 <label>Escala</label>
-                                <select class="form-control form-control-sm change_controler" id="escala_selecionada" >
+                                <select class="form-control form-control-sm change_controller" id="escala_selecionada" >
                                     <option value="">Selecione</option>
                                     <option>Minuto</option>
                                     <option>Hora</option>
@@ -618,7 +618,7 @@
 
      }
 
-     $('.change_controler').change(function()  { //mudanças da escala
+     $('.change_controller').change(function()  { //mudanças da escala
            
                     let novaEscala = GetEscala();
                     configureDateTimePicker(novaEscala); //altera o tipo de calendario, se a escala for "minuto" há algumas alterações em relação as outras escalas
