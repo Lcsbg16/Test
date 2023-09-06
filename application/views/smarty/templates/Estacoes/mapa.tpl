@@ -15,7 +15,7 @@
     <style>
         #map{
             width: 100%;
-            height: 500px;
+            height: 400px;
         }
         #estacao_selecionada + .btn-group .multiselect { /*ALTERAÇÃO DO CSS DO MULTISELECT BUTTON - SELECIONAR MULTIPLAS ESTAÇÕES*/
             /* Deixando modelo do selecionar camada */
