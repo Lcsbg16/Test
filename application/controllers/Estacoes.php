@@ -60,7 +60,7 @@ class Estacoes extends BasePrivateController
         // Separa os IDs das estações em um array
         $estacoesIds = explode(',', $ids);
         $estacoes    = $this->EstacoesModel->getEstacoesGeoJson($idCamada, $atividade, $estacoesIds); //segundo argumento: os IDs das estações
-
+        //var_dump($estacoes);
         /* TODO: Filtrar melhor aqui quais informações serão retornadas no json */
         $this->jsonOutput($estacoes);
     }

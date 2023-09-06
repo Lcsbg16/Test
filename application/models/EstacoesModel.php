@@ -100,7 +100,9 @@ class EstacoesModel extends BaseModel
         $idTipoEventoOnline        = 2;
         $idsTipoEventoOnlineOffile = [1, 2];
 
-        return $this->getUltimoEvento($estacaoId, $idsTipoEventoOnlineOffile) == $idTipoEventoOnline;
+        $evento = $this->getUltimoEvento($estacaoId, $idsTipoEventoOnlineOffile);
+
+        return $evento['tipo_evento_id'] == $idTipoEventoOnline;
     }
 
     public function getEstacoes($somenteAtivas = FALSE, $ids = array()) //alteração para aceitar um array de estações a ser buscadas também
