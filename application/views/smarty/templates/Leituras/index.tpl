@@ -1,9 +1,9 @@
 {extends file = 'app_logado.tpl'}
 {block name = "conteudo_logado"}
-    
+
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@0.9.16/dist/css/bootstrap-multiselect.min.css">
-        <link rel="stylesheet" href="{$BASE_URL}/assets/chosen/bootstrap-multiselect.css"/>
+    <link rel="stylesheet" href="{$BASE_URL}/assets/chosen/bootstrap-multiselect.css"/>
     <script type="text/javascript" src="{$BASE_URL}/assets/chosen/bootstrap-multiselect.js"></script>
     <div class="container-fluid mt-3">
         <form method="GET" action="{$BASE_URL}RelatorioLeituras/">
@@ -16,7 +16,7 @@
                                     <label>Estação</label><br>
                                     <select id="estacoesSelect" class="form-control form-control-sm" name="estacoes[]" multiple>
                                         {foreach $estacoes as $eAtual}
-                                            {if $eAtual.ativa == 0}  
+                                            {if $eAtual.ativa == 0}
                                                 <option value="{$eAtual.id}" id="estacao_descricao" style="color: red;" {if isset($smarty.get.estacoes) && in_array($eAtual.id, $smarty.get.estacoes)} selected {/if}> {$eAtual.descricao} ({$eAtual.identificador})</option>
                                             {else}
                                                 <option value="{$eAtual.id}" id="estacao_descricao" {if isset($smarty.get.estacoes) && in_array($eAtual.id, $smarty.get.estacoes)} selected {/if}> {$eAtual.descricao} ({$eAtual.identificador})</option>
@@ -34,8 +34,8 @@
                                 </div>
                                 <div class="col">
                                     <label>Escala</label>
-                                    
-                                    <select class="form-control form-control-sm" name="escala">    
+
+                                    <select class="form-control form-control-sm" name="escala">
                                         <option value="ESCALA_MINUTO" {if isset($smarty.get.escala) && $smarty.get.escala == "ESCALA_MINUTO"} selected{/if}>Minuto</option>
                                         <option value="ESCALA_HORA" {if isset($smarty.get.escala) && $smarty.get.escala == "ESCALA_HORA"} selected{/if}>Hora</option>
                                         <option value="ESCALA_DIA" {if isset($smarty.get.escala) && $smarty.get.escala == "ESCALA_DIA"} selected{/if}>Dia</option>
@@ -47,10 +47,9 @@
                                 <div class="col">
                                     <label>Tipo de Informa&ccedil;&atilde;o</label>
                                     <select class="form-control form-control-sm" name="tipoInformacao">
-                                       
+
                                         <option value="TIPO_TEMPERATURA" {if isset($smarty.get.tipoInformacao) && $smarty.get.tipoInformacao == "TIPO_TEMPERATURA"} selected{/if}>Temperatura</option>
                                         <option value="TIPO_VOLUME_CHUVA" {if isset($smarty.get.tipoInformacao) && $smarty.get.tipoInformacao == "TIPO_VOLUME_CHUVA"} selected{/if}>Volume de Chuva</option>
-                                        <option value="TIPO_VOLUME_ACC_CHUVA" {if isset($smarty.get.tipoInformacao) && $smarty.get.tipoInformacao == "TIPO_VOLUME_ACC_CHUVA"} selected{/if}>Volume de Chuva Acumulada</option>
                                         <option value="TIPO_UMIDADE_AR" {if isset($smarty.get.tipoInformacao) && $smarty.get.tipoInformacao == "TIPO_UMIDADE_AR"} selected{/if}>Umidade do Ar</option>
                                         <option value="TIPO_VELOCIDADE_VENTO" {if isset($smarty.get.tipoInformacao) && $smarty.get.tipoInformacao == "TIPO_VELOCIDADE_VENTO"} selected{/if}> Velocidade do Vento</option>
                                     </select>
@@ -61,12 +60,12 @@
                             </div>
                         </div>
                     </div>
-                </form>
-                <div class="row my-12">
-                    <div class="col-md-12 py-1">
-                        <div class="card">
-                            <div class="card-body" style="height: 500px">
-                                <table id="tabela" class="display" style="width:100%">
+                    </form>
+                    <div class="row my-12">
+                        <div class="col-md-12 py-1">
+                            <div class="card">
+                                <div class="card-body" style="height: 500px">
+                                    <table id="tabela" class="display" style="width:100%">
                                         <thead>
                                             <tr>
                                                 <th scope="col">Periodo</th>
@@ -96,32 +95,32 @@
                                                     </td>
                                                 </tr>
                                             {/foreach}
-          
+
                                         </tbody>
-                                  </table>                           
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                     </div>
+                    </div>
                 </div>
             </div>
-        </div>
     </div>
 
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.16/js/bootstrap-multiselect.min.js"></script>
 
     <script type="text/javascript">
-        $(document).ready(function() {
-            $("#estacoesSelect").multiselect({
-                includeSelectAllOption: true,
-                buttonWidth: '180px',
-            });
-        });
+                                        $(document).ready(function () {
+                                            $("#estacoesSelect").multiselect({
+                                                includeSelectAllOption: true,
+                                                buttonWidth: '180px',
+                                            });
+                                        });
 
-        $(document).ready(function() {
-            $('#tabela').DataTable({
-                "order": [[0, 'asc']]
-            });
-        });
+                                        $(document).ready(function () {
+                                            $('#tabela').DataTable({
+                                                "order": [[0, 'asc']]
+                                            });
+                                        });
     </script>
 {/block}
