@@ -1,6 +1,8 @@
 <?php
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+
 /*
  * Desenvolvido pela equipe de desencolvimento de sistemas Tic/Macaé
  */
@@ -46,13 +48,12 @@ class EmailUtil
         $mensagem = $this->processaVariaveis($mensagem);
         try
         {
-   
+
             $mail = new PHPMailer;
 
-            $mail->SMTPDebug = 1;
+            //$mail->SMTPDebug = 1;
 
             $CI = & get_instance();
-
 
             //$this->load->library('email');
             //var_dump(EMAIL_PROTOCOLO);
@@ -96,7 +97,7 @@ class EmailUtil
                 }
             }
 
-            $mensagem      .= '<p><small>Aten&ccedil;&atilde;o: N&atilde;o responda a este e-mail. Para suporte, entre em contato atrav&eacute;s do endere&ccedil;o suportemacae@tic.ufrj.br.</small></p>';
+            $mensagem      .= '<p><small>Aten&ccedil;&atilde;o: N&atilde;o responda a este e-mail.</small></p>';
 //            $mail->FromName = Constante::REMETENTE;
             $mail->Subject = $assunto;
             $mail->Body    = $mensagem;
@@ -125,7 +126,6 @@ class EmailUtil
             return false;
         }
     }
-
 }
 
 class EmailEnviado
@@ -175,7 +175,6 @@ class EmailEnviado
     {
         $this->remetente = $remetente;
     }
-
 }
 
 /**
