@@ -53,12 +53,8 @@
                             </div>
                             <div class="col-sm-12 col-md-4 col-xl-2">
                                 <label>Informa&ccedil;&atilde;o</label>
-                                <select class="form-control form-control-sm change_controller" id="info_selecionada" >
+                                <select class="form-control form-control-sm change_controller" id="tipo_informacao" >
                                     <option value="">Selecione</option>
-                                    <option value="temperatura">Temperatura</option>
-                                    <option value="velocidade_vento" selected>Velocidade do Vento</option>
-                                    <option value="volume_chuva">Volume de Chuva</option>
-                                    <option value="umidade_ar" selected>Umidade do Ar</option>
                                 </select>
                             </div>
 
@@ -104,16 +100,37 @@
     {literal}
 
         <script>
+            ///// Atualiza o select de tipos de informação
+            const tiposInformacao = {
+                "temperatura": "Temperatura (°C)",
+                "velocidade_vento": "Velocidade do Vento (m/s)",
+                "volume_chuva": "Volume de Chuva (mm³)",
+                "umidade_ar": "Umidade do Ar (%)"
+            };
+
+            $(document).ready(function () {
+                const selectElement = $("#tipo_informacao");
+
+                $.each(tiposInformacao, function (value, label) {
+                    selectElement.append($("<option>", {
+                        value: value,
+                        text: label
+                    }));
+                });
+            });
+
+            //////////////////////////////////
+
             //Funções de tratativa de dados:
             function GetTipoDados() {
-                let info_selecionada = $("#info_selecionada").val(); //Guarda esse valor numa variavel
-                if (info_selecionada == "Selecione") {
+                let tipo_informacao = $("#tipo_informacao").val(); //Guarda esse valor numa variavel
+                if (tipo_informacao == "") {
                     throw new Error('Necessário informar o tipo de dados desejado');
                     return;
                 }
 
                 let tipo_dados;
-                switch (info_selecionada)
+                switch (tipo_informacao)
                 {
                     case 'temperatura':
                         tipo_dados = "TIPO_TEMPERATURA";
@@ -397,6 +414,12 @@
                         scales: {
                             y: {
                                 beginAtZero: true
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: $('#tipo_informacao').val() != "" ? tiposInformacao[$('#tipo_informacao').val()] : "-"
                             }
                         }
                     }

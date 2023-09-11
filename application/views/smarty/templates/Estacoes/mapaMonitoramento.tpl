@@ -88,11 +88,11 @@
                         popupContent += '<br><br><strong>Status:</strong> ' + (feature.properties.estacao.online ? 'Online' : 'Offline') + '\
                         <br><strong>&Uacute;ltima leitura:</strong> ' + feature.properties.ultimaLeitura.datahora_formatada
                         popupContent += "\
-                        <br><strong>Temperatura:</strong> " + parseFloat(feature.properties.ultimaLeitura.temperatura).toFixed(2) + "\
-                        <br><strong>Umidade do ar:</strong> " + parseFloat(feature.properties.ultimaLeitura.umidade_ar).toFixed(2) + "\
-                        <br><strong>Velocidade do vento:</strong> " + parseFloat(feature.properties.ultimaLeitura.velocidade_vento).toFixed(2) + "\
-                        <br><strong>Direção do vento:</strong> " + feature.properties.ultimaLeitura.dir_vento + "\
-                        <br><strong>Volume de chuva:</strong> " + parseFloat(feature.properties.ultimaLeitura.volume_chuva).toFixed(2) + "\
+                        <br><strong>Temperatura:</strong> " + parseFloat(feature.properties.ultimaLeitura.temperatura).toFixed(2) + "&#176;C\
+                        <br><strong>Umidade do ar:</strong> " + parseFloat(feature.properties.ultimaLeitura.umidade_ar).toFixed(2) + "%\
+                        <br><strong>Velocidade do vento:</strong> " + parseFloat(feature.properties.ultimaLeitura.velocidade_vento).toFixed(2) + " m/s\
+                        <br><strong>Direção do vento:</strong> " + feature.properties.ultimaLeitura.dir_vento + "&#176;\
+                        <br><strong>Volume de chuva:</strong> " + parseFloat(feature.properties.ultimaLeitura.volume_chuva).toFixed(2) + "mm&sup3;\
                             ";
                     }
 

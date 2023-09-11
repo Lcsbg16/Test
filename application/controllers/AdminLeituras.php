@@ -23,16 +23,18 @@ class AdminLeituras extends BaseCrudController
         // Nomes dos campos
         $crud->display_as('datahora', 'Data/hora');
         $crud->display_as('estacao_id', 'Estação');
-        $crud->display_as('temperatura', 'Temperatura (°C)');
+        $crud->display_as('temperatura', 'Temperatura (&#176;C)');
         $crud->display_as('umidade_ar', 'Umidade do Ar (%)');
-        $crud->display_as('velocidade_vento', 'Velocidade do Vento (km/h)');
+        $crud->display_as('velocidade_vento', 'Velocidade do Vento (m/s)');
         $crud->display_as('volume_chuva', 'Volume da Chuva (mm³)');
-        $crud->display_as('volume_acc_chuva', 'Volume Acumulado de Chuva (mm³)');
-        $this->_crud_output($crud);
+        $crud->display_as('volume_acc_chuva', 'Volume Acumulado de Chuva (mm&sup3;)');
+        $crud->display_as('dir_vento', 'Direção do Vento (&#176;)');
+
+        $crud->set_read_fields('datahora', 'estacao_id', 'temperatura', 'umidade_ar', 'velocidade_vento', 'dir_vento', 'volume_chuva');
 
         // Tipos de campos
         // Configurações da listagems
-        //$crud->columns('descricao', 'bairro_id');
+        $crud->columns('datahora', 'estacao_id', 'temperatura', 'umidade_ar', 'velocidade_vento', 'dir_vento', 'volume_chuva');
         $crud->unset_add();
         $crud->unset_edit();
         $crud->unset_delete();
