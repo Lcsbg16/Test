@@ -18,7 +18,8 @@ class MenusModel extends BaseModel
         
         $principal->adicionarFilho(new MenuItem('Gráficos', base_url('grafico'), 'chart-bar-32', 'green'));
         $principal->adicionarFilho(new MenuItem('Reportar Ocorrência', base_url('AdminOcorrencias/index/add'), 'square-pin', 'orange'));
-
+        
+        
         if ($this->LoginModel->checaPermissaoUsuarioLogado('ADMIN'))
         {
             $cadastros = new MenuItem('Cadastros', '');
@@ -30,8 +31,10 @@ class MenusModel extends BaseModel
             $relatorios = new MenuItem('Relatórios', '');
             $relatorios->adicionarFilho(new MenuItem('Leituras', base_url('AdminLeituras'), 'collection', 'green'));
             $relatorios->adicionarFilho(new MenuItem('Estatísticas de Leituras', base_url('RelatorioLeituras'), 'collection', 'green'));
+            $relatorios->adicionarFilho(new MenuItem('Download dados de leitura', base_url('AdminLeituras/exportarLeitura'), 'collection', 'green'));
             $relatorios->adicionarFilho(new MenuItem('Ocorrências', base_url('RelatorioOcorrencias'), 'collection', 'green'));
             $relatorios->adicionarFilho(new MenuItem('Eventos', base_url('AdminEventos'), 'collection', 'green'));
+            
         }
 
         $usuario = new MenuItem('Usuário', '');

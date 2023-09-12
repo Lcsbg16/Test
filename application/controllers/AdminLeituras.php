@@ -79,4 +79,47 @@ class AdminLeituras extends BaseCrudController
         $leituras = $this->LeiturasModel->getUltimaLeituraRegistrada($filtros);
         $this->jsonOutput($leituras);
     }
+
+    public function exportarLeitura()
+    {
+        $this->load->model('LeiturasModel');
+        $leituras = $this->LeiturasModel->getAllLeituras();
+    
+        if (!empty($leituras)) 
+        {
+            $filename = 'leituras.csv';
+            header('Content-Type: text/csv');
+            header('Content-Disposition: attachment; filename="' . $filename . '"');
+            
+            $output = fopen('php://output', 'w');
+
+            $header = array(
+                'id',
+                'datahora',
+                'identificador',
+                'descricao',
+                'temperatura',
+                'umidade_ar',
+                'velocidade_vento',
+                'direcao_vento',
+                'volume_chuva',
+                'datahora_cadastro'
+            );
+            
+            fputcsv($output, $header);
+
+            foreach ($leituras as $leitura) 
+            {
+                fputcsv($output, $leitura);
+            }
+    
+            fclose($output);
+            exit;
+        }
+        else 
+        {
+            echo 'Não há dados de leituras para serem exportar.';
+        }
+    }
+
 }

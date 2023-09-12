@@ -433,6 +433,19 @@ class LeiturasModel extends BaseModel
 
         return $linha["velocidade_maxima"];
     }
+    
+    public function getAllLeituras()
+    {
+        $this->db->select('leitura.id, leitura.datahora, estacao.identificador as estacao_identificador, estacao.descricao as estacao_descricao, leitura.temperatura, leitura.umidade_ar, leitura.velocidade_vento, leitura.dir_vento, leitura.volume_chuva,datahora_cadastro');
+        $this->db->from('leitura');
+        $this->db->join('estacao', 'leitura.estacao_id = estacao.id');
+        //$this->db->order_by('leitura.datahora', 'DESC'); 
+        $this->db->order_by('leitura.id', 'ASC'); 
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+
 }
 
 class FiltrosLeitura
