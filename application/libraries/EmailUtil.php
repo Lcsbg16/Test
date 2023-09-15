@@ -44,7 +44,7 @@ class EmailUtil
      */
     function enviarEmail($assunto, $destinatario, $mensagem, $remetente = "", $getAnexo = NULL)
     {
-
+        //var_dump(func_get_args());
         $mensagem = $this->processaVariaveis($mensagem);
         try
         {
@@ -81,9 +81,6 @@ class EmailUtil
             {
                 $mail->FromName = $remetente;
             }
-
-
-
 
             if (!is_array($destinatario))
             {
