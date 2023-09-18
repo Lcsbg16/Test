@@ -99,6 +99,7 @@
                     layer.bindPopup(popupContent);
                 }
 
+
                 function HandleAjax(url, mapa) {
                     $.get(url).done(
                             function (data) {
