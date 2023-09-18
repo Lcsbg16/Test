@@ -436,7 +436,9 @@ class LeiturasModel extends BaseModel
     
     public function getAllLeituras()
     {
-        $this->db->select('leitura.id, leitura.datahora, estacao.identificador as estacao_identificador, estacao.descricao as estacao_descricao, leitura.temperatura, leitura.umidade_ar, leitura.velocidade_vento, leitura.dir_vento, leitura.volume_chuva,datahora_cadastro');
+        $this->db->select('leitura.id, leitura.datahora, estacao.identificador as estacao_identificador, estacao.descricao as estacao_descricao,
+                           estacao.endereco as estacao_edereco, estacao.latitude as estacao_latitude, estacao.longitude as estacao_longitude,
+                           leitura.temperatura, leitura.umidade_ar, leitura.velocidade_vento, leitura.dir_vento, leitura.volume_chuva,datahora_cadastro'); // Adiciona os campos de estacao
         $this->db->from('leitura');
         $this->db->join('estacao', 'leitura.estacao_id = estacao.id');
         //$this->db->order_by('leitura.datahora', 'DESC'); 
@@ -444,8 +446,6 @@ class LeiturasModel extends BaseModel
         $query = $this->db->get();
         return $query->result_array();
     }
-
-
 }
 
 class FiltrosLeitura

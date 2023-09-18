@@ -96,8 +96,11 @@ class AdminLeituras extends BaseCrudController
             $header = array(
                 'id',
                 'datahora',
-                'identificador',
-                'descricao',
+                'estacao_identificador',
+                'estacao_descricao',
+                'estacao_endereco',
+                'estacao_latitude',
+                'estacao_longitude',
                 'temperatura',
                 'umidade_ar',
                 'velocidade_vento',
