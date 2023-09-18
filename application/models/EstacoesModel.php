@@ -136,12 +136,20 @@ class EstacoesModel extends BaseModel
         return $this->db->count_all_results('estacao');
     }
 
-    public function getEstacoesGeoJson($camada = NULL, $atividade, $ids)
+    /**
+     * Retotna um array com as dados das estações, com as últimas leituras, no padrão do JSON para Leaflet
+     *
+     * @param string $camada Tipo de informação
+     * @param bool $somenteAtivas Mostrar somente estações ativas
+     * @param array $ids Ids das estações
+     * @return array
+     */
+    public function getEstacoesGeoJson($camada = NULL, $somenteAtivas, $ids)
     {
-        $estacoesBD = $this->getEstacoes($atividade, $ids); //getEstações a partir dos ids
+        $estacoesBD = $this->getEstacoes($somenteAtivas, $ids); //getEstações a partir dos ids
 
         $estacoes = [];
-        $cores    = ['#4DB600', '#FF0000', '#FFAA00', '#FCFF22', '#D200DF'];
+
         foreach ($estacoesBD as $eAtual)
         {
             if ($eAtual['latitude'] && $eAtual['longitude'])
@@ -166,12 +174,9 @@ class EstacoesModel extends BaseModel
                             'umidade_ar'         => $ultimoRegistro['umidade_ar'],
                             'velocidade_vento'   => $ultimoRegistro['velocidade_vento'],
                             'dir_vento'          => $ultimoRegistro['dir_vento'],
-                            'volume_chuva'       => $ultimoRegistro['volume_chuva'],
-                            'volume_acc_chuva'   => $ultimoRegistro['volume_acc_chuva']
+                            'volume_chuva'       => $ultimoRegistro['volume_chuva']
                         ],
-                        'camada'        => [
-                            'cor' => $cores[array_rand($cores)]
-                        ]
+                        'camada'        => $this->getConfiguracoesCamada($ultimoRegistro, $camada)
                     ],
                     'id'         => $eAtual['id']
                 ];
@@ -180,6 +185,36 @@ class EstacoesModel extends BaseModel
         $geojson = ['type' => 'FeatureCollection', 'features' => $estacoes];
 
         return $geojson;
+    }
+
+    private function getConfiguracoesCamada($leitura, $camada)
+    {
+        $this->load->model('LeiturasModel');
+//$cores         = ['#4DB600', '#FF0000', '#FFAA00', '#FCFF22', '#D200DF'];
+
+        switch ($camada)
+        {
+            case FiltrosLeitura::TIPO_VOLUME_CHUVA:
+                $coresPluviometria = [
+                    LeiturasModel::PLUVIOMETRIA_NIVEL_ATENCAO       => '#fe9900',
+                    LeiturasModel::PLUVIOMETRIA_NIVEL_ALERTA        => '#fe0000',
+                    LeiturasModel::PLUVIOMETRIA_NIVEL_ALERTA_MAXIMO => '#7030a0',
+                    LeiturasModel::PLUVIOMETRIA_NIVEL_NORMALIDADE   => '#7eff2c'
+                ];
+                $nivel             = $this->LeiturasModel->calcularAlertaPluviometria($leitura);
+                $corDaEstacao      = $coresPluviometria[$nivel];
+
+                break;
+
+            default:
+                $corDaEstacao = '#0000FF';
+        }
+
+        $camadaRetorno = [
+            'cor' => $corDaEstacao
+        ];
+
+        return $camadaRetorno;
     }
 
     public function monitorarEstacao($intervaloTempo)
@@ -269,7 +304,7 @@ class EstacoesModel extends BaseModel
         return $this->db->where('estacao_id', $estacaoId)
                         ->order_by('datahora', 'desc')
                         ->limit(1)
-                        ->get('leitura')
+                        ->get('v_leitura_calculada')
                         ->row_array();
     }
 }
