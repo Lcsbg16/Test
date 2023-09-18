@@ -110,26 +110,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {*
-                                    <div class="col-xl-6 col-lg-6 p-1">
-                                    <div class="card card-stats mb-4 mb-xl-4">
-                                    <div class="card-body" style="min-height: 100px !important;">
-                                    <div class="row">
-                                    <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">Volume Acumulado de Chuva</h5>
-                                    <span class="h2 font-weight-bold mb-0" id="card_vol_acc_chuva"></span> <span class="h3 font-weight-bold mb-0"> mm </span>
-                                    </div>
-                                    <div class="col-auto">
-                                    <div class="icon icon-shape bg-gradient-purple text-white rounded-circle shadow">
-                                    <i class="fas fa-cloud-rain" aria-hidden="true"></i>
-                                    </div>
-                                    </div>
-                                    </div>
 
-                                    </div>
-                                    </div>
-                                    </div>
-                                    *}
+
                                     <div class="col-xl-6 col-lg-6 p-1">
                                         <div class="card card-stats mb-4 mb-xl-4">
                                             <div class="card-body" style="min-height: 100px !important;">
@@ -571,7 +553,7 @@
                         console.log("é diferente");
 
                         ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_DIRECAO_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_VOLUME_ACC_CHUVA"].forEach(function (tipo) {
-                        carregarGraficoPorTipo(tipo, {$estacao.id});
+                            carregarGraficoPorTipo(tipo, {$estacao.id});
                         });
 
                         valorAnteriorData = novoValorData;
