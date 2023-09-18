@@ -5,6 +5,11 @@ require_once 'BaseModel.php';
 class LeiturasModel extends BaseModel
 {
 
+    const PLUVIOMETRIA_NIVEL_NORMALIDADE   = 'normalidade';
+    const PLUVIOMETRIA_NIVEL_ATENCAO       = 'atencao';
+    const PLUVIOMETRIA_NIVEL_ALERTA        = 'alerta';
+    const PLUVIOMETRIA_NIVEL_ALERTA_MAXIMO = 'alerta_maximo';
+
     public function calcularEstatisticasPorPeriodo(FiltrosLeitura $filtros)
     {
 
@@ -112,7 +117,7 @@ class LeiturasModel extends BaseModel
      *
      * @param FiltrosLeitura $filtros Filtros para obtenção das leituras
      * @param int $tempoLimite Tempo limite (em minutos) a considerar na obtenção das leituras. Leituras mais antigas serão descartadas.
-     * @return array 
+     * @return array
      * @throws Exception
      */
     public function getUltimasLeituras(FiltrosLeitura $filtros = NULL, $tempoLimite = 2440)
@@ -433,19 +438,37 @@ class LeiturasModel extends BaseModel
 
         return $linha["velocidade_maxima"];
     }
-    
+
     public function getAllLeituras()
     {
         $this->db->select('leitura.id, leitura.datahora, estacao.identificador as estacao_identificador, estacao.descricao as estacao_descricao, leitura.temperatura, leitura.umidade_ar, leitura.velocidade_vento, leitura.dir_vento, leitura.volume_chuva,datahora_cadastro');
         $this->db->from('leitura');
         $this->db->join('estacao', 'leitura.estacao_id = estacao.id');
-        //$this->db->order_by('leitura.datahora', 'DESC'); 
-        $this->db->order_by('leitura.id', 'ASC'); 
+        //$this->db->order_by('leitura.datahora', 'DESC');
+        $this->db->order_by('leitura.id', 'ASC');
         $query = $this->db->get();
         return $query->result_array();
     }
 
-
+    public function calcularAlertaPluviometria($leitura)
+    {
+        if ($leitura['volume_chuva_ac_96h'] > 250. || $leitura['volume_chuva_ac_24h'] > 150. || $leitura['volume_chuva_ac_1h'] > 40.)
+        {
+            return self::PLUVIOMETRIA_NIVEL_ALERTA_MAXIMO;
+        }
+        elseif ($leitura['volume_chuva_ac_96h'] > 175. && $leitura['volume_chuva_ac_96h'] <= 250. || $leitura['volume_chuva_ac_24h'] > 80. && $leitura['volume_chuva_ac_24h'] <= 150. || $leitura['volume_chuva_ac_1h'] >= 20. && $leitura['volume_chuva_ac_1h'] <= 40.)
+        {
+            return self::PLUVIOMETRIA_NIVEL_ALERTA;
+        }
+        elseif ($leitura['volume_chuva_ac_96h'] >= 100. && $leitura['volume_chuva_ac_96h'] < 175. || $leitura['volume_chuva_ac_24h'] >= 40. && $leitura['volume_chuva_ac_24h'] < 80. || $leitura['volume_chuva_ac_1h'] >= 5. && $leitura['volume_chuva_ac_1h'] < 20.)
+        {
+            return self::PLUVIOMETRIA_NIVEL_ATENCAO;
+        }
+        else
+        {
+            return self::PLUVIOMETRIA_NIVEL_NORMALIDADE;
+        }
+    }
 }
 
 class FiltrosLeitura

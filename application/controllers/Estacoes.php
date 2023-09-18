@@ -51,6 +51,10 @@ class Estacoes extends BasePrivateController
 
     public function getEstacoesGeoJson($idCamada = NULL)
     {
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
+
         $this->load->model('EstacoesModel');
         $ids = $this->input->get('ids'); // IDs selecionados
 
@@ -97,5 +101,10 @@ class Estacoes extends BasePrivateController
         $remetente    = EMAIL_FROM;
 
         $this->emailutil->enviarEmail($assunto, $destinatario, $mensagem, $remetente);
+    }
+
+    public function getLegendaMonitoramento($camada)
+    {
+        return 'Legenda não disponível.';
     }
 }

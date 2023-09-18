@@ -118,7 +118,7 @@
                                         }
 
                                         return L.circleMarker(latlng, {
-                                            radius: 8,
+                                            radius: 16,
                                             fillColor: cor,
                                             color: '#000',
                                             weight: 1,
