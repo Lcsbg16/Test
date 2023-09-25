@@ -102,6 +102,11 @@ class EstacoesModel extends BaseModel
 
         $evento = $this->getUltimoEvento($estacaoId, $idsTipoEventoOnlineOffile);
 
+        if (!$evento)
+        {
+            return false;
+        }
+
         return $evento['tipo_evento_id'] == $idTipoEventoOnline;
     }
 
