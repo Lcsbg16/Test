@@ -99,7 +99,7 @@
                             ";
                         } else
                         {
-                            popupContent += '<br><strong>Não há leituras recentes registradas.</strong>'
+                            popupContent += '<br><br><strong>Não há leituras recentes registradas.</strong>'
                         }
                     }
 
