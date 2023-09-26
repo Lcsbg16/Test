@@ -1,7 +1,6 @@
 <?php
 
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 
 /*
  * Desenvolvido pela equipe de desencolvimento de sistemas Tic/Macaé
