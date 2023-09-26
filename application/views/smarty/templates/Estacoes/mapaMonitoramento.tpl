@@ -33,13 +33,14 @@
             <div class="col">
                 <div class="card shadow">
                     <div class="card-body">
-                        <div class="form-group">
+                        <div class="row justify-content-center"> 
+                        <div class="col-5 form-group">
                             <label for="camada_id">Camada:</label>
                             <select class="form-control form-control-sm change_controller" id="camada_id" name="camada_id">
                                 {html_options options=$camadas}
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="col-5 form-group">
 
                             <label for="estacao_selecionada">Esta&ccedil;&otilde;es Ativas:</label>
                             <select class="form-control form-control-sm change_controller" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada -->
@@ -48,6 +49,7 @@
                                 {/foreach}
 
                             </select>
+                        </div>
                         </div>
                     </div>
                 </div>
@@ -87,15 +89,15 @@
                         popupContent += feature.properties.estacao.descricao + ' (' + feature.properties.estacao.identificador + ')';
                         popupContent += '<br><br><strong>Status:</strong> ' + (feature.properties.estacao.online ? 'Online' : 'Offline');
                         if (feature.properties.ultimaLeitura)
-                        {
+                        { console.log(feature.properties.ultimaLeitura);
 
-                            popupContent += '<br><strong>&Uacute;ltima leitura:</strong> ' + feature.properties.ultimaLeitura.datahora_formatada
+                            popupContent += '<br><strong>&Uacute;ltima leitura:</strong> ' + (feature.properties.ultimaLeitura.datahora_formatada ? feature.properties.ultimaLeitura.datahora_formatada : "Sem registro")
                             popupContent += "\
-                        <br><strong>Temperatura:</strong> " + parseFloat(feature.properties.ultimaLeitura.temperatura).toFixed(2) + "&#176;C\
-                        <br><strong>Umidade do ar:</strong> " + parseFloat(feature.properties.ultimaLeitura.umidade_ar).toFixed(2) + "%\
-                        <br><strong>Velocidade do vento:</strong> " + parseFloat(feature.properties.ultimaLeitura.velocidade_vento).toFixed(2) + " m/s\
-                        <br><strong>Direção do vento:</strong> " + feature.properties.ultimaLeitura.dir_vento + "&#176;\
-                        <br><strong>Volume de chuva:</strong> " + parseFloat(feature.properties.ultimaLeitura.volume_chuva).toFixed(2) + "mm&sup3;\
+                        <br><strong>Temperatura:</strong> " + (feature.properties.ultimaLeitura.temperatura ? parseFloat(feature.properties.ultimaLeitura.temperatura).toFixed(2).replace(".", ",") + " &#176;C" : "Sem registro") + "\
+                        <br><strong>Umidade do ar:</strong> " + (feature.properties.ultimaLeitura.umidade_ar ? parseFloat(feature.properties.ultimaLeitura.umidade_ar).toFixed(2).replace(".", ",") + "%" : "Sem registro") + "\
+                        <br><strong>Velocidade do vento:</strong> " + (feature.properties.ultimaLeitura.velocidade_vento ? parseFloat(feature.properties.ultimaLeitura.velocidade_vento).toFixed(2).replace(".", ",") + " m/s" : "Sem registro") + "\
+                        <br><strong>Direção do vento:</strong> " + (feature.properties.ultimaLeitura.dir_vento ? feature.properties.ultimaLeitura.dir_vento + "&#176;" : "Sem registro") + "\
+                        <br><strong>Volume de chuva:</strong> " + (feature.properties.ultimaLeitura.volume_chuva ? parseFloat(feature.properties.ultimaLeitura.volume_chuva).toFixed(2).replace(".", ",") + " mm&sup3;" : "Sem registro") + "\
                             ";
                         } else
                         {
