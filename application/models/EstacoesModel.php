@@ -173,7 +173,7 @@ class EstacoesModel extends BaseModel
                     'properties' => [
                         'estacao'       => $eAtual,
                         'ultimaLeitura' => [
-                            'datahora'           => $ultimoRegistro['datahora'],
+                            'datahora'           => $ultimoRegistro['datahora'] ?? NULL,
                             'datahora_formatada' => date('d/m/Y H:i:s', strtotime($ultimoRegistro['datahora'])),
                             'temperatura'        => $ultimoRegistro['temperatura'],
                             'umidade_ar'         => $ultimoRegistro['umidade_ar'],
