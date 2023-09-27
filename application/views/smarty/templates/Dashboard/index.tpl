@@ -194,7 +194,7 @@
                                         {if $velocidade_minima == NULL}
                                             -
                                         {else}
-                                            {$velocidade_minima|number_format:1:","}km/h
+                                            {$velocidade_minima|number_format:1:","}m/s
                                         {/if}
                                     </span>
                                 </div>
@@ -218,7 +218,7 @@
                                         {if $velocidade_maxima == NULL}
                                             -
                                         {else}
-                                            {$velocidade_maxima|number_format:1:","} km/h
+                                            {$velocidade_maxima|number_format:1:","} m/s
                                         {/if}
                                     </span>
                                 </div>
