@@ -106,6 +106,10 @@ class LeiturasModel extends BaseModel
             $retorno        = [];
             foreach ($resultadoArray as $linha)
             {
+                if ($tipoInformacao === FiltrosLeitura::TIPO_VELOCIDADE_VENTO) {
+                    // Converte a velocidade do vento de m/s para km/h se for o tipo de informação 'velocidade_vento'
+                    $linha['valor'] = $this->converterVelocidadeVentoKMH($linha['valor']);
+                }
                 $retorno[$linha['periodo']] = $linha['valor'];
             }
             return $retorno;
@@ -446,11 +450,11 @@ class LeiturasModel extends BaseModel
                            leitura.temperatura, leitura.umidade_ar, leitura.velocidade_vento, leitura.dir_vento, leitura.volume_chuva,datahora_cadastro'); // Adiciona os campos de estacao
         $this->db->from('leitura');
         $this->db->join('estacao', 'leitura.estacao_id = estacao.id');
-        //$this->db->order_by('leitura.datahora', 'DESC');
         $this->db->order_by('leitura.id', 'ASC');
         $query = $this->db->get();
         return $query->result_array();
     }
+
 
     public function calcularAlertaPluviometria($leitura)
     {
@@ -471,6 +475,12 @@ class LeiturasModel extends BaseModel
             return self::PLUVIOMETRIA_NIVEL_NORMALIDADE;
         }
     }
+    
+    public function converterVelocidadeVentoKMH($velocidadeMS)
+    {
+        return number_format($velocidadeMS * 3.6, 1);
+    }
+
 }
 
 class FiltrosLeitura

@@ -103,7 +103,7 @@
             ///// Atualiza o select de tipos de informação
             const tiposInformacao = {
                 "temperatura": "Temperatura (°C)",
-                "velocidade_vento": "Velocidade do Vento (m/s)",
+                "velocidade_vento": "Velocidade do Vento (km/h)",
                 "volume_chuva": "Volume de Chuva (mm³)",
                 "umidade_ar": "Umidade do Ar (%)"
             };
