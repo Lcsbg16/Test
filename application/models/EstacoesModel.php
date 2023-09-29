@@ -102,6 +102,11 @@ class EstacoesModel extends BaseModel
 
         $evento = $this->getUltimoEvento($estacaoId, $idsTipoEventoOnlineOffile);
 
+        if (!$evento)
+        {
+            return false;
+        }
+
         return $evento['tipo_evento_id'] == $idTipoEventoOnline;
     }
 
@@ -155,8 +160,24 @@ class EstacoesModel extends BaseModel
             if ($eAtual['latitude'] && $eAtual['longitude'])
             {
 
-                $ultimoRegistro = $this->getUltimoRegistro($eAtual['id']);
-                $estacoes[]     = [
+                if ($ultimoRegistro = $this->getUltimoRegistro($eAtual['id']))
+                {
+                    $ultimaLeituraRetorno = [
+                        'datahora'           => $ultimoRegistro['datahora'],
+                        'datahora_formatada' => date('d/m/Y H:i:s', strtotime($ultimoRegistro['datahora'])),
+                        'temperatura'        => $ultimoRegistro['temperatura'],
+                        'umidade_ar'         => $ultimoRegistro['umidade_ar'],
+                        'velocidade_vento'   => $ultimoRegistro['velocidade_vento'],
+                        'dir_vento'          => $ultimoRegistro['dir_vento'],
+                        'volume_chuva'       => $ultimoRegistro['volume_chuva']
+                    ];
+                }
+                else
+                {
+                    $ultimaLeituraRetorno = NULL;
+                }
+
+                $estacoes[] = [
                     'type'       => 'Feature',
                     'geometry'   => [
                         'type'        => 'Point',
@@ -167,15 +188,7 @@ class EstacoesModel extends BaseModel
                     ],
                     'properties' => [
                         'estacao'       => $eAtual,
-                        'ultimaLeitura' => [
-                            'datahora'           => $ultimoRegistro['datahora'],
-                            'datahora_formatada' => date('d/m/Y H:i:s', strtotime($ultimoRegistro['datahora'])),
-                            'temperatura'        => $ultimoRegistro['temperatura'],
-                            'umidade_ar'         => $ultimoRegistro['umidade_ar'],
-                            'velocidade_vento'   => $ultimoRegistro['velocidade_vento'],
-                            'dir_vento'          => $ultimoRegistro['dir_vento'],
-                            'volume_chuva'       => $ultimoRegistro['volume_chuva']
-                        ],
+                        'ultimaLeitura' => $ultimaLeituraRetorno,
                         'camada'        => $this->getConfiguracoesCamada($ultimoRegistro, $camada)
                     ],
                     'id'         => $eAtual['id']

@@ -63,7 +63,7 @@
                                     <div class="row">
                                         <div class="col">
                                             <h5 class="card-title text-uppercase text-muted mb-0">Velocidade do Vento</h5>
-                                            <span class="h2 font-weight-bold mb-0" id="card_vel_vento"></span> <span class="h3 font-weight-bold mb-0"> km/h </span>
+                                            <span class="h2 font-weight-bold mb-0" id="card_vel_vento"></span> <span class="h3 font-weight-bold mb-0"> m/s </span>
                                         </div>
                                         <div class="col-auto">
                                             <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
@@ -81,7 +81,7 @@
                                     <div class="row">
                                         <div class="col">
                                             <h5 class="card-title text-uppercase text-muted mb-0">Direção do Vento</h5>
-                                            <span class="h2 font-weight-bold mb-0" id="card_dir_vento"></span> <span class="h3 font-weight-bold mb-0"> g/m³ </span>
+                                            <span class="h2 font-weight-bold mb-0" id="card_dir_vento"></span> <span class="h3 font-weight-bold mb-0"> &#176 </span>
                                         </div>
                                         <div class="col-auto">
                                             <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
@@ -107,24 +107,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-6 col-lg-6 p-1">
-                            <div class="card card-stats mb-4 mb-xl-4">
-                                <div class="card-body" style="min-height: 100px !important;">
-                                    <div class="row">
-                                        <div class="col">
-                                            <h5 class="card-title text-uppercase text-muted mb-0">Volume Acumulado de Chuva</h5>
-                                            <span class="h2 font-weight-bold mb-0" id="card_vol_acc_chuva"></span> <span class="h3 font-weight-bold mb-0"> mm </span>
-                                        </div>
-                                        <div class="col-auto">
-                                            <div class="icon icon-shape bg-gradient-purple text-white rounded-circle shadow">
-                                            <i class="fas fa-cloud-rain" aria-hidden="true"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-
                                 </div>
                             </div>
                         </div>
@@ -210,10 +192,10 @@
                                 <select class="form-control form-control-sm change_controller" id="escala_selecionada" >
                                     <option value="">Selecione</option>
                                     <option>Minuto</option>
-                                    <option>Hora</option>
+                                    <option selected>Hora</option>
                                     <option>Dia</option>
                                     <option>Semana</option>
-                                    <option selected>M&ecirc;s</option>
+                                    <option >M&ecirc;s</option>
                                 </select>
                             </div>
                 <div class="col-xl-4 col-lg-6">
@@ -251,9 +233,6 @@
     <div class="row my-12" >
         <div class="col-md-12 col-lg-12 col-xl-6 py-1">
                     <canvas id="graficoVolChuva" style="min-height: 350px;"></canvas>
-        </div>
-        <div class="col-md-12 col-lg-12 col-xl-6 py-1" >
-                    <canvas id="graficoVolChuvaAcc" style="min-height: 350px; max-width: 100%;"></canvas>
         </div>
     </div>
 
@@ -329,9 +308,8 @@
             let graficoVelVento = document.getElementById("graficoVelVento");
             let graficoDirVento = document.getElementById("graficoDirVento");
             let graficoVolChuva = document.getElementById("graficoVolChuva");
-            let graficoVolChuvaAcc = document.getElementById("graficoVolChuvaAcc");
 
-
+                    console.log(tipo_dados);
                     $.ajax({
                         url: "{$BASE_URL}/AdminLeituras/getEstatisticasLeiturasJson",
                         dataType: "json",
@@ -347,7 +325,7 @@
                          {     
                                 if(data.length == 0)
                                 {
-                                    let graficosArray = [graficoTemp, graficoUmid, graficoVelVento, graficoDirVento, graficoVolChuva, graficoVolChuvaAcc];
+                                    let graficosArray = [graficoTemp, graficoUmid, graficoVelVento, graficoDirVento, graficoVolChuva];
                                    graficosArray.forEach(grafico => geraGrafico(grafico, "Dados indisponíveis nesse período", "errro", "0"));
 
                              } 
@@ -388,12 +366,6 @@
 
                                     break;
 
-                                    case 'TIPO_VOLUME_ACC_CHUVA':
-                                    tipo_informação = "Chuva Acumulada";
-                                    geraGrafico(graficoVolChuvaAcc, tipo_informação, periodos, valores, escala);
-
-                                    break;
-
                                     default:
                                     throw new Exception('Tipo não especificado - Ajax, MonitoramentoIndividual');
 
@@ -409,7 +381,7 @@
 
 
         function handleAjax(card_id, estacao_id, tipo_dados)
-    { 
+    { console.log("tipo de dados: " + tipo_dados);
                  $.ajax({
                         url: "{$BASE_URL}/AdminLeituras/getUltimaLeituraRegistrada",
                         dataType: "json",
@@ -420,11 +392,12 @@
                      },
                 }).done(function (data)
                  {
+                    console.log(data);
                     if(data.length == 0)
                     {
                         $(card_id).text("Erro leitura");
                         $('#leitura_label').text('Não foram localizados dados para essa estação:');
-                        console.log("Ocorreu um erro no recebimento dos dados");
+                        console.log("Nãp há dados registrados para essa estação");
                         return;
                     }  
                     else {
@@ -567,7 +540,7 @@
                     if (novoValorData !== valorAnteriorData) {
                         console.log("é diferente");
 
-                        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_DIRECAO_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_VOLUME_ACC_CHUVA"].forEach(function (tipo) {
+                        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_DIRECAO_VENTO", "TIPO_VOLUME_CHUVA"].forEach(function (tipo) {
                             carregarGraficoPorTipo(tipo, {$estacao.id});
                         });
 
@@ -612,7 +585,7 @@
         $('#dataFinal').val(dataHoraAtual);
 
         let dataInicial = new Date();
-        dataInicial.setHours(dataAtual.getHours() - 1) //dataInicial definida como mesmo dia, uma hora antes da hora atual
+        dataInicial.setHours(dataAtual.getHours() - 24) //dataInicial definida como mesmo dia, uma hora antes da hora atual
         let dataHoraInicial = ("0" + dataInicial.getDate()).slice(-2) + "/" + ("0" + (dataInicial.getMonth() + 1)).slice(-2) + "/" + dataInicial.getFullYear() + " " + ("0" + dataInicial.getHours()).slice(-2) + ":" + ("0" + dataInicial.getMinutes()).slice(-2);
         $('#dataInicial').val(dataHoraInicial);
 
@@ -646,8 +619,7 @@
             ["#card_umidade", {$estacao.id}, "TIPO_UMIDADE_AR"],
             ["#card_vel_vento",{$estacao.id}, "TIPO_VELOCIDADE_VENTO"],
             ["#card_dir_vento", {$estacao.id}, "TIPO_DIRECAO_VENTO"],
-            ["#card_vol_chuva", {$estacao.id}, "TIPO_VOLUME_CHUVA"],
-            ["#card_vol_acc_chuva", {$estacao.id}, "TIPO_VOLUME_ACC_CHUVA"]
+            ["#card_vol_chuva", {$estacao.id}, "TIPO_VOLUME_CHUVA"]
             ];
 
             parametrosHandleAjax.forEach(parametro => {
@@ -661,7 +633,7 @@
             }, 10000); 
 
         //ATUALIZA O GRÁFICO COM OS VALORES PADRÃO NO LOAD DA PAGE
-        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_DIRECAO_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_VOLUME_ACC_CHUVA"].forEach(function (tipo) {
+        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_DIRECAO_VENTO", "TIPO_VOLUME_CHUVA"].forEach(function (tipo) {
             carregarGraficoPorTipo(tipo, {$estacao.id}); });
 
   });

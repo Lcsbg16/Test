@@ -29,12 +29,12 @@ class LeiturasModel extends BaseModel
 
             if ($dataInicial)
             {
-                $this->db->where('datahora >=', $dataInicial);
+                $this->db->where('datahora >=', $dataInicial . ' 00:00:00');
             }
 
             if ($dataFinal)
             {
-                $this->db->where('datahora <=', $dataFinal);
+                $this->db->where('datahora <=', $dataFinal . ' 23:59:59');
             }
 
             switch ($tipoInformacao)
@@ -70,11 +70,11 @@ class LeiturasModel extends BaseModel
             switch ($escala)
             {
                 case FiltrosLeitura::ESCALA_MINUTO:
-                    $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d %H:%i:00')";
+                    $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d %H:%i')";
                     break;
 
                 case FiltrosLeitura::ESCALA_HORA:
-                    $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d %H:00:00')";
+                    $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d %H:00')";
                     break;
 
                 case FiltrosLeitura::ESCALA_DIA:
@@ -101,6 +101,8 @@ class LeiturasModel extends BaseModel
             $this->db->group_by($colunaPeriodo);
             $this->db->order_by('periodo', $filtros->getDirecao());
             $resultado = $this->db->get();
+
+            //echo $this->db->last_query();
 
             $resultadoArray = $resultado->result_array();
             $retorno        = [];

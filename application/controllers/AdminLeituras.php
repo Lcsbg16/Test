@@ -58,14 +58,13 @@ class AdminLeituras extends BaseCrudController
 
     public function getEstatisticasLeiturasJson() //Gerencia dados do Gráfico
     {
+        $this->load->model('LeiturasModel');
+
         $estacao     = $this->input->post('estacao_selecionada'); // estação selecionada
         $dataInicial = $this->input->post('data_inicial'); // data inicial
         $dataFinal   = $this->input->post('data_final'); // data final
         $escala      = $this->input->post('escala'); // escala escolhida
         $tipo_dados  = $this->input->post('tipo_dados'); // tipo de dados
-
-
-        $this->load->model('LeiturasModel');
 
         $filtros  = new FiltrosLeitura();
         $filtros->setEstacoes($estacao);
@@ -75,6 +74,7 @@ class AdminLeituras extends BaseCrudController
         $filtros->setTipoInformacao(constant("FiltrosLeitura::$tipo_dados"));
         $filtros->setDirecao(FiltrosLeitura::DIRECAO_ASC);
         $leituras = $this->LeiturasModel->calcularEstatisticasPorPeriodo($filtros);
+
         $this->jsonOutput($leituras);
     }
 
@@ -95,6 +95,7 @@ class AdminLeituras extends BaseCrudController
     {
         $this->load->model('LeiturasModel');
         $leituras = $this->LeiturasModel->getAllLeituras();
+
 
         if (!empty($leituras))
         {
@@ -120,13 +121,15 @@ class AdminLeituras extends BaseCrudController
                 'datahora_cadastro'
             );
 
+
             fputcsv($output, $header);
 
-            foreach ($leituras as $leitura) {
+            foreach ($leituras as $leitura){
                 // Converter velocidade do vento para km/h
                 $leitura['velocidade_vento'] = $this->LeiturasModel->converterVelocidadeVentoKMH($leitura['velocidade_vento']);
                 fputcsv($output, $leitura);
             }
+
 
             fclose($output);
             exit;
