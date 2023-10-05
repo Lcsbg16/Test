@@ -102,7 +102,6 @@
                 { //Organiza AJAX
                     $.get(url).done(//URL
                             function (data) {
-                                console.log(data);
                                 estacoes = L.geoJSON([data], {
                                     onEachFeature: onEachFeature,
                                     pointToLayer: function (feature, latlng)
