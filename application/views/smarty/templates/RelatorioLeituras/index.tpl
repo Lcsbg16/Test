@@ -51,7 +51,7 @@
                                         <option value="TIPO_TEMPERATURA" {if isset($smarty.get.tipoInformacao) && $smarty.get.tipoInformacao == "TIPO_TEMPERATURA"} selected{/if}>Temperatura (&#176;C)</option>
                                         <option value="TIPO_VOLUME_CHUVA" {if isset($smarty.get.tipoInformacao) && $smarty.get.tipoInformacao == "TIPO_VOLUME_CHUVA"} selected{/if}>Volume de Chuva (mm&sup3;)</option>
                                         <option value="TIPO_UMIDADE_AR" {if isset($smarty.get.tipoInformacao) && $smarty.get.tipoInformacao == "TIPO_UMIDADE_AR"} selected{/if}>Umidade do Ar (%)</option>
-                                        <option value="TIPO_VELOCIDADE_VENTO" {if isset($smarty.get.tipoInformacao) && $smarty.get.tipoInformacao == "TIPO_VELOCIDADE_VENTO"} selected{/if}> Velocidade do Vento (m/s)</option>
+                                        <option value="TIPO_VELOCIDADE_VENTO" {if isset($smarty.get.tipoInformacao) && $smarty.get.tipoInformacao == "TIPO_VELOCIDADE_VENTO"} selected{/if}> Velocidade do Vento (km/h)</option>
                                     </select>
                                     <br>
                                     <button type="button" class="btn btn-primary" onclick="window.location = '{$BASE_URL}/RelatorioLeituras/'">Limpar</button>

@@ -10,8 +10,7 @@ class AdminLeituras extends BaseCrudController
 
     public function index()
     {
-
-
+        $this->load->model('LeiturasModel');
         $crud = new AppGroceryCRUD();
 
         // Configurações gerais do cadastro
@@ -25,7 +24,7 @@ class AdminLeituras extends BaseCrudController
         $crud->display_as('estacao_id', 'Estação');
         $crud->display_as('temperatura', 'Temperatura (&#176;C)');
         $crud->display_as('umidade_ar', 'Umidade do Ar (%)');
-        $crud->display_as('velocidade_vento', 'Velocidade do Vento (m/s)');
+        $crud->display_as('velocidade_vento', 'Velocidade do Vento (km/h)');
         $crud->display_as('volume_chuva', 'Volume da Chuva (mm³)');
         $crud->display_as('volume_acc_chuva', 'Volume Acumulado de Chuva (mm&sup3;)');
         $crud->display_as('dir_vento', 'Direção do Vento (&#176;)');
@@ -42,7 +41,19 @@ class AdminLeituras extends BaseCrudController
         // Relacionamentos
         $crud->set_relation('estacao_id', 'estacao', 'identificador');
 
+        $crud->callback_column('velocidade_vento', array($this, '_callback_converterVelocidadeVento'));
         $this->_crud_output($crud);
+    }
+
+    public function _callback_converterVelocidadeVento($value, $row)
+    {
+        $this->load->model('LeiturasModel');
+        
+        $velocidade_ms = $row->velocidade_vento;
+
+        $velocidade_kmh = $this->LeiturasModel->converterVelocidadeVentoKMH($velocidade_ms);
+
+        return $velocidade_kmh;
     }
 
     public function getEstatisticasLeiturasJson() //Gerencia dados do Gráfico
@@ -85,6 +96,7 @@ class AdminLeituras extends BaseCrudController
         $this->load->model('LeiturasModel');
         $leituras = $this->LeiturasModel->getAllLeituras();
 
+
         if (!empty($leituras))
         {
             $filename = 'leituras.csv';
@@ -109,12 +121,15 @@ class AdminLeituras extends BaseCrudController
                 'datahora_cadastro'
             );
 
+
             fputcsv($output, $header);
 
-            foreach ($leituras as $leitura)
-            {
+            foreach ($leituras as $leitura){
+                // Converter velocidade do vento para km/h
+                $leitura['velocidade_vento'] = $this->LeiturasModel->converterVelocidadeVentoKMH($leitura['velocidade_vento']);
                 fputcsv($output, $leitura);
             }
+
 
             fclose($output);
             exit;
@@ -124,4 +139,6 @@ class AdminLeituras extends BaseCrudController
             echo 'Não há dados de leituras para serem exportar.';
         }
     }
+
+
 }
