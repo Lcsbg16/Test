@@ -105,6 +105,8 @@ class AdminLeituras extends BaseCrudController
 
             $output = fopen('php://output', 'w');
 
+            $separador = ';';
+
             $header = array(
                 'id',
                 'datahora',
@@ -122,12 +124,18 @@ class AdminLeituras extends BaseCrudController
             );
 
 
-            fputcsv($output, $header);
+            fputcsv($output, $header, $separador);
 
             foreach ($leituras as $leitura){
                 // Converter velocidade do vento para km/h
                 $leitura['velocidade_vento'] = $this->LeiturasModel->converterVelocidadeVentoKMH($leitura['velocidade_vento']);
-                fputcsv($output, $leitura);
+
+                //Substituindo o separador decimal de . para ,
+                $leitura['velocidade_vento'] = str_replace('.', ',', $leitura['velocidade_vento']);
+                $leitura['temperatura'] = str_replace('.', ',', $leitura['temperatura']);
+                $leitura['umidade_ar'] = str_replace('.', ',', $leitura['umidade_ar']);
+                $leitura['volume_chuva'] = str_replace('.', ',', $leitura['volume_chuva']);
+                fputcsv($output, $leitura, $separador);
             }
 
 
