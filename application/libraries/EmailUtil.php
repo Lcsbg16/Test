@@ -1,7 +1,5 @@
 <?php
 
-use PHPMailer\PHPMailer\PHPMailer;
-
 /*
  * Desenvolvido pela equipe de desencolvimento de sistemas Tic/Macaé
  */
