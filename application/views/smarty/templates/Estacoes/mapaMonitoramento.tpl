@@ -89,7 +89,7 @@
                         popupContent += feature.properties.estacao.descricao + ' (' + feature.properties.estacao.identificador + ')';
                         popupContent += '<br><br><strong>Status:</strong> ' + (feature.properties.estacao.online ? 'Online' : 'Offline');
                         if (feature.properties.ultimaLeitura)
-                        { console.log(feature.properties.ultimaLeitura);
+                        { 
 
                             popupContent += '<br><strong>&Uacute;ltima leitura:</strong> ' + (feature.properties.ultimaLeitura.datahora_formatada ? feature.properties.ultimaLeitura.datahora_formatada : "Sem registro")
                             popupContent += "\
@@ -108,7 +108,7 @@
                     layer.bindPopup(popupContent);
                 }
 
-
+                var controlaAcionamentoBounds = false; 
                 function HandleAjax(url, mapa) {
                     $.get(url).done(
                             function (data) {
@@ -137,8 +137,12 @@
                                         });
                                     }
                                 }).addTo(mapa);
-                                mapa.fitBounds(estacoes.getBounds());
-                            })
+                                if (!controlaAcionamentoBounds) {
+                                    console.log("bounds: " + controlaAcionamentoBounds);
+                                     mapa.fitBounds(estacoes.getBounds());
+                                     controlaAcionamentoBounds = true; 
+                                     }                           
+                                })
                             .fail(function (jqXHR, textStatus, errorThrown) {
                                 console.error(jqXHR);
                                 console.error(textStatus);
@@ -184,10 +188,12 @@
                     let mapa = criaMapa();
                     let url = GerenciaMarcador(mapa);
                     let result = HandleAjax(url, mapa);
+
                     setInterval(() => {
-                        let url = GerenciaMarcador(mapa);
+                       let url = GerenciaMarcador(mapa);
                         let result = HandleAjax(url, mapa);
                     }, 30000);
+                   
                     //EVENTO DE CHANGE DAS ESTAÇÕES
                     $('.change_controller').change(function () {
 

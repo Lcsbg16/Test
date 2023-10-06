@@ -80,24 +80,6 @@
                                 <div class="card-body" style="min-height: 100px !important;">
                                     <div class="row">
                                         <div class="col">
-                                            <h5 class="card-title text-uppercase text-muted mb-0">Direção do Vento</h5>
-                                            <span class="h2 font-weight-bold mb-0" id="card_dir_vento"></span> <span class="h3 font-weight-bold mb-0"> &#176 </span>
-                                        </div>
-                                        <div class="col-auto">
-                                            <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
-                                            <i class="fas fa-wind" aria-hidden="true"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-6 col-lg-6 p-1">
-                            <div class="card card-stats mb-4 mb-xl-4">
-                                <div class="card-body" style="min-height: 100px !important;">
-                                    <div class="row">
-                                        <div class="col">
                                             <h5 class="card-title text-uppercase text-muted mb-0">Volume de Chuva</h5>
                                             <span class="h2 font-weight-bold mb-0" id="card_vol_chuva"> </span> <span class="h3 font-weight-bold mb-0"> mm </span>
                                         </div>
@@ -186,8 +168,8 @@
     </div>
 
             
-            <div class="row d-flex justify-content-center">
-            <div class="col-xl-4 col-lg-6">
+            <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-xl-3 col-lg-6">
                                 <label>Escala</label>
                                 <select class="form-control form-control-sm change_controller" id="escala_selecionada" >
                                     <option value="">Selecione</option>
@@ -198,13 +180,20 @@
                                     <option >M&ecirc;s</option>
                                 </select>
                             </div>
-                <div class="col-xl-4 col-lg-6">
+                <div class="col-xl-3 col-lg-6">
                     <label>Data Inicial</label>
                     <input type="text" class="form-control form-control-sm datetimepicker" value="{'-1 hour'|strtotime|date_format:'%d/%m/%Y %H:%M'}" id="dataInicial"> <!-- Deixei os values apesar de alterar direto no JS-->
                 </div>
-                <div class="col-xl-4 col-lg-6">
+                <div class="col-xl-3 col-lg-6">
                     <label>Data Final</label>
                     <input type="text" class="form-control form-control-sm datetimepicker" value="{$smarty.now|date_format:'%d/%m/%Y %H:%M'}" id="dataFinal"/>
+                </div>
+                    <div class="col-xl-3 col-lg-6 align-items-center">
+                        <label>Seleção Rápida:</label><br>
+                    <button type="button" class="btn btn-sm btn-primary" style="height: 39px; margin: 0 !important; justify-content: center;">Dia</button>
+                    <button type="button" class="btn btn-sm btn-primary" style="height: 39px; margin: 0 !important; justify-content: center;">Mês</button>
+                    <button type="button" class="btn btn-sm btn-primary" style="height: 39px; margin: 0 !important; justify-content: center;">Ano</button>
+
                     </div>
             </div>
 <br><br>
@@ -225,15 +214,13 @@
         </div>
 
         <div class="col-md-12 col-lg-12 col-xl-6 py-1">
-                    <canvas id="graficoDirVento" style="min-height: 350px; max-width: 100%;"></canvas>
+                    <canvas id="graficoVolChuva" style="min-height: 350px;"></canvas>
         </div>
 
     </div>
 
     <div class="row my-12" >
-        <div class="col-md-12 col-lg-12 col-xl-6 py-1">
-                    <canvas id="graficoVolChuva" style="min-height: 350px;"></canvas>
-        </div>
+        
     </div>
 
             </div>
@@ -325,7 +312,7 @@
                          {     
                                 if(data.length == 0)
                                 {
-                                    let graficosArray = [graficoTemp, graficoUmid, graficoVelVento, graficoDirVento, graficoVolChuva];
+                                    let graficosArray = [graficoTemp, graficoUmid, graficoVelVento, graficoVolChuva];
                                    graficosArray.forEach(grafico => geraGrafico(grafico, "Dados indisponíveis nesse período", "errro", "0"));
 
                              } 
@@ -354,11 +341,6 @@
                                     geraGrafico(graficoVelVento, tipo_informação, periodos, valores, escala);
                                     break;
 
-                                    case 'TIPO_DIRECAO_VENTO':
-                                    tipo_informação = "Direção do Vento";
-                                    geraGrafico(graficoDirVento, tipo_informação, periodos, valores, escala);
-
-                                    break;
 
                                     case 'TIPO_VOLUME_CHUVA':
                                     tipo_informação = "Volume de Chuva";
@@ -540,7 +522,7 @@
                     if (novoValorData !== valorAnteriorData) {
                         console.log("é diferente");
 
-                        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_DIRECAO_VENTO", "TIPO_VOLUME_CHUVA"].forEach(function (tipo) {
+                        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA"].forEach(function (tipo) {
                             carregarGraficoPorTipo(tipo, {$estacao.id});
                         });
 
@@ -595,7 +577,7 @@
            
                     let novaEscala = GetEscala();
                     configureDateTimePicker(novaEscala); //altera o tipo de calendario, se a escala for "minuto" há algumas alterações em relação as outras escalas
-                    ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_DIRECAO_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_VOLUME_ACC_CHUVA"].forEach(function (tipo) {
+                    ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_VOLUME_ACC_CHUVA"].forEach(function (tipo) {
                     carregarGraficoPorTipo(tipo, {$estacao.id}); }); //carrega os gráficos 
 
                         
@@ -618,7 +600,6 @@
             ["#card_temperatura", {$estacao.id}, "TIPO_TEMPERATURA"],
             ["#card_umidade", {$estacao.id}, "TIPO_UMIDADE_AR"],
             ["#card_vel_vento",{$estacao.id}, "TIPO_VELOCIDADE_VENTO"],
-            ["#card_dir_vento", {$estacao.id}, "TIPO_DIRECAO_VENTO"],
             ["#card_vol_chuva", {$estacao.id}, "TIPO_VOLUME_CHUVA"]
             ];
 
@@ -633,7 +614,7 @@
             }, 10000); 
 
         //ATUALIZA O GRÁFICO COM OS VALORES PADRÃO NO LOAD DA PAGE
-        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_DIRECAO_VENTO", "TIPO_VOLUME_CHUVA"].forEach(function (tipo) {
+        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA"].forEach(function (tipo) {
             carregarGraficoPorTipo(tipo, {$estacao.id}); });
 
   });
