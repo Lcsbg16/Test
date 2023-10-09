@@ -37,6 +37,7 @@ class LeiturasModel extends BaseModel
                 $this->db->where('datahora <=', $dataFinal . ' 23:59:59');
             }
 
+            $funcao = 'AVG';
             switch ($tipoInformacao)
             {
                 case FiltrosLeitura::TIPO_VELOCIDADE_VENTO:
@@ -53,6 +54,7 @@ class LeiturasModel extends BaseModel
 
                 case FiltrosLeitura::TIPO_VOLUME_CHUVA:
                     $colunaTipoInformacao = 'volume_chuva';
+                    $funcao               = 'SUM';
                     break;
 
                 case FiltrosLeitura::TIPO_UMIDADE_AR:
@@ -97,7 +99,7 @@ class LeiturasModel extends BaseModel
                     throw new Exception('É necessário informar a escala desejada.');
             }
 
-            $this->db->select($colunaPeriodo . ' AS periodo, AVG(' . $colunaTipoInformacao . ') AS valor');
+            $this->db->select($colunaPeriodo . ' AS periodo, ' . $funcao . '(' . $colunaTipoInformacao . ') AS valor');
             $this->db->group_by($colunaPeriodo);
             $this->db->order_by('periodo', $filtros->getDirecao());
             $resultado = $this->db->get();
@@ -108,7 +110,8 @@ class LeiturasModel extends BaseModel
             $retorno        = [];
             foreach ($resultadoArray as $linha)
             {
-                if ($tipoInformacao === FiltrosLeitura::TIPO_VELOCIDADE_VENTO) {
+                if ($tipoInformacao === FiltrosLeitura::TIPO_VELOCIDADE_VENTO)
+                {
                     // Converte a velocidade do vento de m/s para km/h se for o tipo de informação 'velocidade_vento'
                     $linha['valor'] = $this->converterVelocidadeVentoKMH($linha['valor']);
                 }
@@ -457,7 +460,6 @@ class LeiturasModel extends BaseModel
         return $query->result_array();
     }
 
-
     public function calcularAlertaPluviometria($leitura)
     {
         if ($leitura['volume_chuva_ac_96h'] > 250. || $leitura['volume_chuva_ac_24h'] > 150. || $leitura['volume_chuva_ac_1h'] > 40.)
@@ -477,12 +479,11 @@ class LeiturasModel extends BaseModel
             return self::PLUVIOMETRIA_NIVEL_NORMALIDADE;
         }
     }
-    
+
     public function converterVelocidadeVentoKMH($velocidadeMS)
     {
         return number_format($velocidadeMS * 3.6, 1);
     }
-
 }
 
 class FiltrosLeitura
