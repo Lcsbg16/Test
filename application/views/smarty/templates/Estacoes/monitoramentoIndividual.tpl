@@ -46,7 +46,7 @@
                                     <div class="row">
                                         <div class="col">
                                             <h5 class="card-title text-uppercase text-muted mb-0">Umidade do ar</h5>
-                                            <span class="h2 font-weight-bold mb-0" id="card_umidade"></span> <span class="h3 font-weight-bold mb-0"> g/m³ </span>
+                                            <span class="h2 font-weight-bold mb-0" id="card_umidade"></span> <span class="h3 font-weight-bold mb-0">%</span>
                                         </div>
                                         <div class="col-auto">
                                             <div class="icon icon-shape bg-blue text-white rounded-circle shadow">
