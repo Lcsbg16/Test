@@ -29,15 +29,14 @@ class LeiturasModel extends BaseModel
 
             if ($dataInicial)
             {
-                $this->db->where('datahora >=', $dataInicial . ' 00:00:00');
+                $this->db->where('datahora >=', $dataInicial . (strlen($dataInicial) > 10 ?? ' 00:00:00'));
             }
 
             if ($dataFinal)
             {
-                $this->db->where('datahora <=', $dataFinal . ' 23:59:59');
+                $this->db->where('datahora <=', $dataFinal . (strlen($dataFinal) > 10 ?? ' 23:59:59'));
             }
 
-            $funcao = 'AVG';
             switch ($tipoInformacao)
             {
                 case FiltrosLeitura::TIPO_VELOCIDADE_VENTO:
@@ -54,7 +53,6 @@ class LeiturasModel extends BaseModel
 
                 case FiltrosLeitura::TIPO_VOLUME_CHUVA:
                     $colunaTipoInformacao = 'volume_chuva';
-                    $funcao               = 'SUM';
                     break;
 
                 case FiltrosLeitura::TIPO_UMIDADE_AR:
@@ -99,7 +97,7 @@ class LeiturasModel extends BaseModel
                     throw new Exception('É necessário informar a escala desejada.');
             }
 
-            $this->db->select($colunaPeriodo . ' AS periodo, ' . $funcao . '(' . $colunaTipoInformacao . ') AS valor');
+            $this->db->select($colunaPeriodo . ' AS periodo, AVG(' . $colunaTipoInformacao . ') AS valor');
             $this->db->group_by($colunaPeriodo);
             $this->db->order_by('periodo', $filtros->getDirecao());
             $resultado = $this->db->get();
