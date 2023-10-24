@@ -113,7 +113,7 @@ class LeiturasModel extends BaseModel
                 if ($tipoInformacao === FiltrosLeitura::TIPO_VELOCIDADE_VENTO)
                 {
                     // Converte a velocidade do vento de m/s para km/h se for o tipo de informação 'velocidade_vento'
-                    $linha['valor'] = $this->converterVelocidadeVentoKMH($linha['valor']);
+                    $linha['valor'] = Conversao::velVentoParakmH($linha['valor']);
                 }
                 $retorno[$linha['periodo']] = $linha['valor'];
             }
@@ -460,6 +460,66 @@ class LeiturasModel extends BaseModel
         return $query->result_array();
     }
 
+
+    public function getLeiturasPorEscala(FiltrosLeitura $filtros = NULL, $retornarTudo = true)
+    {
+        $this->db->from('leitura');
+        if ($filtros)
+        {
+            $estacoes       = $filtros->getEstacoes();
+            $dataInicial    = $filtros->getDataInicial();
+            $dataFinal      = $filtros->getDataFinal();
+            $escala         = $filtros->getEscala();
+
+            if ($estacoes)
+            {
+                $this->db->where_in('estacao_id',$estacoes);
+            }
+
+            if ($dataInicial)
+            {
+                $this->db->where('datahora >=', $dataInicial . ' 00:00:00');
+            }
+
+            if ($dataFinal)
+            {
+                $this->db->where('datahora <=', $dataFinal . ' 23:59:59');
+            }
+
+            switch ($escala)
+            {
+                case FiltrosLeitura::ESCALA_HORA:
+                    $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d %H:00')";
+                    break;
+
+                case FiltrosLeitura::ESCALA_DIA:
+                    $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m-%d')";
+                    break;
+
+                case FiltrosLeitura::ESCALA_MES:
+                    $colunaPeriodo = "DATE_FORMAT(datahora,'%Y-%m')";
+                    break;
+
+                case FiltrosLeitura::ESCALA_ANO:
+                    $colunaPeriodo = "DATE_FORMAT(datahora,'%Y')";
+                    break;
+
+                default:
+                    throw new Exception('É necessário informar a escala desejada.');
+            }
+
+            $this->db->select($colunaPeriodo . ' AS periodo, leitura.id, leitura.datahora, estacao.identificador as estacao_identificador, estacao.descricao as estacao_descricao,
+            estacao.endereco as estacao_edereco, estacao.latitude as estacao_latitude, estacao.longitude as estacao_longitude,
+            leitura.temperatura, leitura.umidade_ar, leitura.velocidade_vento, leitura.dir_vento, leitura.volume_chuva,datahora_cadastro');
+
+            $this->db->join('estacao', 'leitura.estacao_id = estacao.id');
+            $this->db->group_by($colunaPeriodo);
+            $this->db->order_by('periodo', 'ASC');
+            $resultado = $this->db->get();
+            return $resultado->result_array();
+        }
+    }
+
     public function calcularAlertaPluviometria($leitura)
     {
         if ($leitura['volume_chuva_ac_96h'] > 250. || $leitura['volume_chuva_ac_24h'] > 150. || $leitura['volume_chuva_ac_1h'] > 40.)
@@ -480,7 +540,7 @@ class LeiturasModel extends BaseModel
         }
     }
 
-    public function converterVelocidadeVentoKMH($velocidadeMS)
+    public static function converterVelocidadeVentoKMH($velocidadeMS)
     {
         return number_format($velocidadeMS * 3.6, 1);
     }

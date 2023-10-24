@@ -59,7 +59,7 @@ $autoload['packages'] = array();
   |
   |	$autoload['libraries'] = array('user_agent' => 'ua');
  */
-$autoload['libraries'] = array('database', 'parametros', 'session', 'SmartyLib');
+$autoload['libraries'] = array('database', 'parametros', 'session', 'SmartyLib', 'conversao');
 
 /*
   | -------------------------------------------------------------------

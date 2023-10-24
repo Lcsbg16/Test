@@ -28,8 +28,9 @@ class Dashboard extends BasePrivateController
         $variaveisView['temperatura_minima'] = $this->LeiturasModel->getTemperaturaMinima();
         $variaveisView['temperatura_maxima'] = $this->LeiturasModel->getTemperaturaMaxima();
 
-        $variaveisView['velocidade_minima'] = $this->LeiturasModel->converterVelocidadeVentoKMH($this->LeiturasModel->getVelocidadeMinima());
-        $variaveisView['velocidade_maxima'] = $this->LeiturasModel->converterVelocidadeVentoKMH($this->LeiturasModel->getVelocidadeMaxima());
+        //$variaveisView['velocidade_minima'] = $this->LeiturasModel->converterVelocidadeVentoKMH($this->LeiturasModel->getVelocidadeMinima());
+        $variaveisView['velocidade_minima'] = Conversao::velVentoParakmH($this->LeiturasModel->getVelocidadeMinima());
+        $variaveisView['velocidade_maxima'] = Conversao::velVentoParakmH($this->LeiturasModel->getVelocidadeMaxima());
 
         $variaveisView['eventos'] = $this->EstacoesModel->getEventos(5);
         $this->loadSmartyView('Dashboard/index', $variaveisView);
