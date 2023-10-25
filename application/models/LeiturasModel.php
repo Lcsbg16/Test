@@ -29,12 +29,12 @@ class LeiturasModel extends BaseModel
 
             if ($dataInicial)
             {
-                $this->db->where('datahora >=', $dataInicial . (strlen($dataInicial) > 10 ?? ' 00:00:00'));
+                $this->db->where('datahora >=', $dataInicial . (strlen($dataInicial) <= 10 ?? ' 00:00:00'));
             }
 
             if ($dataFinal)
             {
-                $this->db->where('datahora <=', $dataFinal . (strlen($dataFinal) > 10 ?? ' 23:59:59'));
+                $this->db->where('datahora <=', $dataFinal . (strlen($dataFinal) <= 10 ?? ' 23:59:59'));
             }
 
             switch ($tipoInformacao)
@@ -458,20 +458,19 @@ class LeiturasModel extends BaseModel
         return $query->result_array();
     }
 
-
     public function getLeiturasPorEscala(FiltrosLeitura $filtros = NULL, $retornarTudo = true)
     {
         $this->db->from('leitura');
         if ($filtros)
         {
-            $estacoes       = $filtros->getEstacoes();
-            $dataInicial    = $filtros->getDataInicial();
-            $dataFinal      = $filtros->getDataFinal();
-            $escala         = $filtros->getEscala();
+            $estacoes    = $filtros->getEstacoes();
+            $dataInicial = $filtros->getDataInicial();
+            $dataFinal   = $filtros->getDataFinal();
+            $escala      = $filtros->getEscala();
 
             if ($estacoes)
             {
-                $this->db->where_in('estacao_id',$estacoes);
+                $this->db->where_in('estacao_id', $estacoes);
             }
 
             if ($dataInicial)
