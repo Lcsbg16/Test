@@ -517,7 +517,7 @@ class LeiturasModel extends BaseModel
                             AVG(L.umidade_ar) as umidade_ar,
                             AVG(L.velocidade_vento) as velocidade_vento,
                             AVG(L.dir_vento) as dir_vento,
-                            SUM(L.volume_chuva)
+                            SUM(L.volume_chuva) as volume_chuva
                         ');
 
             $this->db->join('estacao E', 'L.estacao_id = E.id');
