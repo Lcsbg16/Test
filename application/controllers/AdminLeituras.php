@@ -166,18 +166,18 @@ class AdminLeituras extends BaseCrudController
                 $leitura['umidade_ar']       = str_replace('.', ',', $leitura['umidade_ar']);
                 $leitura['volume_chuva']     = str_replace('.', ',', $leitura['volume_chuva']);
 
-                $leituraArquivo = $leitura        = [
-                    $leitura_atual['id'],
-                    $leitura_atual['estacao_identificador'],
-                    $leitura_atual['estacao_descricao'],
-                    $leitura_atual['estacao_endereco'],
-                    $leitura_atual['estacao_latitude'],
-                    $leitura_atual['estacao_longitude'],
-                    $leitura_atual['temperatura'],
-                    $leitura_atual['umidade_ar'],
-                    $leitura_atual['velocidade_vento'],
-                    $leitura_atual['direcao_vento'],
-                    $leitura_atual['volume_chuva']
+                $leituraArquivo = [
+                    $leitura['id'],
+                    $leitura['estacao_identificador'],
+                    $leitura['estacao_descricao'],
+                    $leitura['estacao_endereco'],
+                    $leitura['estacao_latitude'],
+                    $leitura['estacao_longitude'],
+                    $leitura['temperatura'],
+                    $leitura['umidade_ar'],
+                    $leitura['velocidade_vento'],
+                    $leitura['direcao_vento'],
+                    $leitura['volume_chuva']
                 ];
 
                 fputcsv($output, $leituraArquivo, $separador);
