@@ -513,11 +513,11 @@ class LeiturasModel extends BaseModel
                             E.endereco as estacao_edereco,
                             E.latitude as estacao_latitude,
                             E.longitude as estacao_longitude,
-                            L.temperatura,
-                            L.umidade_ar,
-                            L.velocidade_vento,
-                            L.dir_vento,
-                            L.volume_chuva
+                            AVG(L.temperatura) as temperatura,
+                            AVG(L.umidade_ar) as umidade_ar,
+                            AVG(L.velocidade_vento) as velocidade_vento,
+                            AVG(L.dir_vento) as dir_vento,
+                            SUM(L.volume_chuva)
                         ');
 
             $this->db->join('estacao E', 'L.estacao_id = E.id');
@@ -528,12 +528,8 @@ class LeiturasModel extends BaseModel
                             E.descricao,
                             E.endereco,
                             E.latitude,
-                            E.longitude,
-                            L.temperatura,
-                            L.umidade_ar,
-                            L.velocidade_vento,
-                            L.dir_vento,
-                            L.volume_chuva
+                            E.longitude
+
             ');
             $this->db->order_by('periodo', 'ASC');
             $resultado = $this->db->get();
