@@ -138,7 +138,6 @@ class AdminLeituras extends BaseCrudController
             $separador = ';';
 
             $header = array(
-                'id',
                 'estacao_identificador',
                 'estacao_descricao',
                 'estacao_endereco',
@@ -167,7 +166,6 @@ class AdminLeituras extends BaseCrudController
                 $leitura['volume_chuva']     = str_replace('.', ',', $leitura['volume_chuva']);
 
                 $leituraArquivo = [
-                    $leitura['id'],
                     $leitura['estacao_identificador'],
                     $leitura['estacao_descricao'],
                     $leitura['estacao_endereco'],
@@ -176,7 +174,7 @@ class AdminLeituras extends BaseCrudController
                     $leitura['temperatura'],
                     $leitura['umidade_ar'],
                     $leitura['velocidade_vento'],
-                    $leitura['direcao_vento'],
+                    $leitura['dir_vento'],
                     $leitura['volume_chuva']
                 ];
 

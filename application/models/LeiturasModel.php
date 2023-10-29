@@ -507,10 +507,9 @@ class LeiturasModel extends BaseModel
 
             $this->db->select(
                     $colunaPeriodo . ' AS periodo,
-                            L.id,
                             E.identificador as estacao_identificador,
                             E.descricao as estacao_descricao,
-                            E.endereco as estacao_edereco,
+                            E.endereco as estacao_endereco,
                             E.latitude as estacao_latitude,
                             E.longitude as estacao_longitude,
                             AVG(L.temperatura) as temperatura,
@@ -523,7 +522,6 @@ class LeiturasModel extends BaseModel
             $this->db->join('estacao E', 'L.estacao_id = E.id');
             $this->db->group_by(
                     $colunaPeriodo . ',
-                            L.id,
                             E.identificador,
                             E.descricao,
                             E.endereco,
