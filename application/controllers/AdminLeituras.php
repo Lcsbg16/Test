@@ -155,6 +155,8 @@ class AdminLeituras extends BaseCrudController
 
             while ($leitura = $leituras->unbuffered_row('array'))
             {
+
+
                 // Converter velocidade do vento para km/h
                 $leitura['velocidade_vento'] = Conversao::velVentoParakmH($leitura['velocidade_vento']);
 
@@ -163,7 +165,22 @@ class AdminLeituras extends BaseCrudController
                 $leitura['temperatura']      = str_replace('.', ',', $leitura['temperatura']);
                 $leitura['umidade_ar']       = str_replace('.', ',', $leitura['umidade_ar']);
                 $leitura['volume_chuva']     = str_replace('.', ',', $leitura['volume_chuva']);
-                fputcsv($output, $leitura, $separador);
+
+                $leituraArquivo = $leitura        = [
+                    $leitura_atual['id'],
+                    $leitura_atual['estacao_identificador'],
+                    $leitura_atual['estacao_descricao'],
+                    $leitura_atual['estacao_endereco'],
+                    $leitura_atual['estacao_latitude'],
+                    $leitura_atual['estacao_longitude'],
+                    $leitura_atual['temperatura'],
+                    $leitura_atual['umidade_ar'],
+                    $leitura_atual['velocidade_vento'],
+                    $leitura_atual['direcao_vento'],
+                    $leitura_atual['volume_chuva']
+                ];
+
+                fputcsv($output, $leituraArquivo, $separador);
             }
 
             fclose($output);
