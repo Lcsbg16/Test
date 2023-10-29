@@ -102,7 +102,7 @@ class LeiturasModel extends BaseModel
             $this->db->order_by('periodo', $filtros->getDirecao());
             $resultado = $this->db->get();
 
-            //echo $this->db->last_query();
+//echo $this->db->last_query();
 
             $resultadoArray = $resultado->result_array();
             $retorno        = [];
@@ -110,7 +110,7 @@ class LeiturasModel extends BaseModel
             {
                 if ($tipoInformacao === FiltrosLeitura::TIPO_VELOCIDADE_VENTO)
                 {
-                    // Converte a velocidade do vento de m/s para km/h se for o tipo de informação 'velocidade_vento'
+// Converte a velocidade do vento de m/s para km/h se for o tipo de informação 'velocidade_vento'
                     $linha['valor'] = Conversao::velVentoParakmH($linha['valor']);
                 }
                 $retorno[$linha['periodo']] = $linha['valor'];
@@ -264,7 +264,7 @@ class LeiturasModel extends BaseModel
                     throw new Exception('É necessário informar o tipo de informação desejada.');
             }
 
-            // Utilize a consulta SQL desejada
+// Utilize a consulta SQL desejada
             $this->db->select("COALESCE({$colunaTipoInformacao}, 0) AS 'valor', datahora")
                     ->order_by("datahora", "DESC")
                     ->limit(1);
@@ -460,7 +460,7 @@ class LeiturasModel extends BaseModel
 
     public function getLeiturasPorEscala(FiltrosLeitura $filtros = NULL, $retornarTudo = true)
     {
-        $this->db->from('leitura');
+        $this->db->from('leitura L');
         if ($filtros)
         {
             $estacoes    = $filtros->getEstacoes();
@@ -505,15 +505,48 @@ class LeiturasModel extends BaseModel
                     throw new Exception('É necessário informar a escala desejada.');
             }
 
-            $this->db->select($colunaPeriodo . ' AS periodo, leitura.id, leitura.datahora, estacao.identificador as estacao_identificador, estacao.descricao as estacao_descricao,
-            estacao.endereco as estacao_edereco, estacao.latitude as estacao_latitude, estacao.longitude as estacao_longitude,
-            leitura.temperatura, leitura.umidade_ar, leitura.velocidade_vento, leitura.dir_vento, leitura.volume_chuva,datahora_cadastro');
+            $this->db->select(
+                    $colunaPeriodo . ' AS periodo,
+                            L.id,
+                            E.identificador as estacao_identificador,
+                            E.descricao as estacao_descricao,
+                            E.endereco as estacao_edereco,
+                            E.latitude as estacao_latitude,
+                            E.longitude as estacao_longitude,
+                            L.temperatura,
+                            L.umidade_ar,
+                            L.velocidade_vento,
+                            L.dir_vento,
+                            L.volume_chuva
+                        ');
 
-            $this->db->join('estacao', 'leitura.estacao_id = estacao.id');
-            $this->db->group_by($colunaPeriodo);
+            $this->db->join('estacao E', 'L.estacao_id = E.id');
+            $this->db->group_by(
+                    $colunaPeriodo . ',
+                            L.id,
+                            E.identificador,
+                            E.descricao,
+                            E.endereco,
+                            E.latitude,
+                            E.longitude,
+                            L.temperatura,
+                            L.umidade_ar,
+                            L.velocidade_vento,
+                            L.dir_vento,
+                            L.volume_chuva
+            ');
             $this->db->order_by('periodo', 'ASC');
             $resultado = $this->db->get();
-            return $resultado->result_array();
+            //echo $this->db->last_query();
+
+            if ($retornarTudo)
+            {
+                return $resultado->result_array();
+            }
+            else
+            {
+                return $resultado;
+            }
         }
     }
 
