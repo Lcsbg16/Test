@@ -29,12 +29,12 @@ class LeiturasModel extends BaseModel
 
             if ($dataInicial)
             {
-                $this->db->where('datahora >=', $dataInicial . (strlen($dataInicial) <= 10 ?? ' 00:00:00'));
+                $this->db->where('datahora >=', $dataInicial . (strlen($dataInicial) <= 10 ? ' 00:00:00' : ''));
             }
 
             if ($dataFinal)
             {
-                $this->db->where('datahora <=', $dataFinal . (strlen($dataFinal) <= 10 ?? ' 23:59:59'));
+                $this->db->where('datahora <=', $dataFinal . (strlen($dataFinal) <= 10 ? ' 23:59:59' : ''));
             }
 
             switch ($tipoInformacao)
