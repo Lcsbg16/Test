@@ -100,9 +100,10 @@ class AdminLeituras extends BaseCrudController
         if ($this->input->get('escala'))
         {
             $estacoes      = $this->input->get('estacoes');
-            $dataInicial   = $this->input->get('dataInicial');
-            $dataFinal     = $this->input->get('dataFinal');
+            $dataInicial   = $this->input->get('data_inicial');
+            $dataFinal     = $this->input->get('data_final');
             $colunaPeriodo = $this->input->get('escala');
+            $estacao       = $this->input->get('estacao');
 
             if ($estacoes)
             {
@@ -124,6 +125,8 @@ class AdminLeituras extends BaseCrudController
                 $filtros->setEscala($colunaPeriodo);
             }
 
+            $filtros->setEstacoes($estacao);
+
             $leituras = $this->LeiturasModel->getLeiturasPorEscala($filtros, false);
 
             $filename = 'leituras.csv';
@@ -144,7 +147,7 @@ class AdminLeituras extends BaseCrudController
                 'temperatura',
                 'umidade_ar',
                 'velocidade_vento',
-                'direcao_vento',
+                'rajada_vento',
                 'volume_chuva'
             );
 
@@ -156,6 +159,7 @@ class AdminLeituras extends BaseCrudController
 
                 // Converter velocidade do vento para km/h
                 $leitura['velocidade_vento'] = Conversao::velVentoParakmH($leitura['velocidade_vento']);
+                $leitura['rajada_vento']     = Conversao::velVentoParakmH($leitura['rajada_vento']);
 
                 //Substituindo o separador decimal de . para ,
                 $leitura['velocidade_vento'] = str_replace('.', ',', $leitura['velocidade_vento']);
@@ -173,7 +177,7 @@ class AdminLeituras extends BaseCrudController
                     $leitura['temperatura'],
                     $leitura['umidade_ar'],
                     $leitura['velocidade_vento'],
-                    $leitura['dir_vento'],
+                    $leitura['rajada_vento'],
                     $leitura['volume_chuva']
                 ];
 
