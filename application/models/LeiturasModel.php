@@ -597,12 +597,11 @@ class FiltrosLeitura
     public static function getTodosTiposInformacao()
     {
         return [
+            self::TIPO_VOLUME_CHUVA     => 'Pluviometria',
             self::TIPO_TEMPERATURA      => 'Temperatura',
             self::TIPO_DIRECAO_VENTO    => 'Direção do Vento',
             self::TIPO_UMIDADE_AR       => 'Umidade do Ar',
-            self::TIPO_VELOCIDADE_VENTO => 'Velocidade do Vento',
-            //self::TIPO_VOLUME_ACC_CHUVA => 'Volume Acumulado de Chuva',
-            self::TIPO_VOLUME_CHUVA     => 'Pluviometria'
+            self::TIPO_VELOCIDADE_VENTO => 'Velocidade do Vento'
         ];
     }
 
