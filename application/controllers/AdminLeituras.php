@@ -104,9 +104,6 @@ class AdminLeituras extends BaseCrudController
             $dataFinal     = $this->input->get('dataFinal');
             $colunaPeriodo = $this->input->get('escala');
 
-            $classe        = new ReflectionClass('FiltrosLeitura');
-            $colunaPeriodo = $classe->getConstant($colunaPeriodo);
-
             if ($estacoes)
             {
                 $filtros->setEstacoes($estacoes);
@@ -138,6 +135,7 @@ class AdminLeituras extends BaseCrudController
             $separador = ';';
 
             $header = array(
+                'periodo',
                 'estacao_identificador',
                 'estacao_descricao',
                 'estacao_endereco',
@@ -166,6 +164,7 @@ class AdminLeituras extends BaseCrudController
                 $leitura['volume_chuva']     = str_replace('.', ',', $leitura['volume_chuva']);
 
                 $leituraArquivo = [
+                    $leitura['periodo'],
                     $leitura['estacao_identificador'],
                     $leitura['estacao_descricao'],
                     $leitura['estacao_endereco'],
