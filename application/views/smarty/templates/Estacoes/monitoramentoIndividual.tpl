@@ -190,9 +190,9 @@
                 </div>
                     <div class="col-xl-3 col-lg-6 align-items-center">
                         <label>Seleção Rápida:</label><br>
-                    <button type="button" class="btn btn-sm btn-primary" style="height: 39px; margin: 0 !important; justify-content: center;">Dia</button>
-                    <button type="button" class="btn btn-sm btn-primary" style="height: 39px; margin: 0 !important; justify-content: center;">Mês</button>
-                    <button type="button" class="btn btn-sm btn-primary" style="height: 39px; margin: 0 !important; justify-content: center;">Ano</button>
+                    <button type="button" class="btn btn-sm btn-primary" style="height: 39px; margin: 0 !important; justify-content: center;" onclick="selecionaDiaAtual()">Dia</button>
+                    <button type="button" class="btn btn-sm btn-primary" style="height: 39px; margin: 0 !important; justify-content: center;" onclick="selecionaSemanaAtual()">Semana</button>
+                    <button type="button" class="btn btn-sm btn-primary" style="height: 39px; margin: 0 !important; justify-content: center;" onclick="selecionaMesAtual()">Mês</button>
 
                     </div>
             </div>
@@ -238,7 +238,6 @@
                 throw new Error('Necessário informar a escala'); 
                 return;
             }
-
             let escala; 
                 if (escala_selecionada!="Mês") { 
                     escala = "ESCALA_"+ escala_selecionada.toUpperCase();
@@ -246,15 +245,15 @@
                 else {
                     escala = "ESCALA_MES"; //Mês tem acento, tem que trocar 
                 }
-
-            return escala; }
+            return escala; 
+        }
 
 
     var charts = {};
 
     function geraGrafico(canva, label_sup, label_inf, dados,  tipo_escala)
      {
-        
+        console.log(canva.id);
      if (charts[canva.id]) {
         charts[canva.id].destroy();
         delete charts[canva.id]; // Remover a referência do gráfico
@@ -272,7 +271,7 @@
                                 fill: false,
                                 borderColor: "#8B9DC8",
                                 backgroundColor: "#8B9DC8"
-                                },]
+                                }]
                     },
             options: {
                 responsive: true,
@@ -285,7 +284,6 @@
             };
 
         charts[canva.id] = new Chart(canva, config);
-
     }
   
         function handleAjaxGraficos(estacao_id, datas, escala, tipo_dados)
@@ -296,9 +294,8 @@
             let graficoDirVento = document.getElementById("graficoDirVento");
             let graficoVolChuva = document.getElementById("graficoVolChuva");
 
-                    console.log(tipo_dados);
                     $.ajax({
-                        url: "{$BASE_URL}/AdminLeituras/getEstatisticasLeiturasJson",
+                        url: "{$BASE_URL}AdminLeituras/getEstatisticasLeiturasJson",
                         dataType: "json",
                         method: "POST",
                         data: {
@@ -309,7 +306,7 @@
                                 tipo_dados: tipo_dados
                              },
                          }).done(function (data)
-                         {     
+                         {     console.log(data);
                                 if(data.length == 0)
                                 {
                                     let graficosArray = [graficoTemp, graficoUmid, graficoVelVento, graficoVolChuva];
@@ -327,23 +324,22 @@
                                 switch (tipo_dados) 
                                 { 
                                     case 'TIPO_TEMPERATURA':
-                                    tipo_informação = "Temperatura";
+                                    tipo_informação = "Temperatura (ºC)";
                                     geraGrafico(graficoTemp, tipo_informação, periodos, valores, escala); //passa: canva de temperatura, Temperatura como label superior, periodos como label inferior e valores como dados finais
                                     break; 
 
                                     case 'TIPO_UMIDADE_AR':    
-                                    tipo_informação = "Umidade";
+                                    tipo_informação = "Umidade (%)";
                                     geraGrafico(graficoUmid, tipo_informação, periodos, valores, escala); //passa: canva de temperatura, Temperatura como label superior, periodos como label inferior e valores como dados finais
                                     break;
 
                                     case 'TIPO_VELOCIDADE_VENTO':
-                                    tipo_informação = "Velocidade do Vento";
+                                    tipo_informação = "Velocidade do Vento (km/h)";
                                     geraGrafico(graficoVelVento, tipo_informação, periodos, valores, escala);
                                     break;
 
-
                                     case 'TIPO_VOLUME_CHUVA':
-                                    tipo_informação = "Volume de Chuva";
+                                    tipo_informação = "Volume de Chuva (mm)";
                                     geraGrafico(graficoVolChuva, tipo_informação, periodos, valores, escala);
 
                                     break;
@@ -356,14 +352,13 @@
                             }
                    }).fail(function (jqXHR, textStatus, errorThrown) {
                     // Tratamento de erro
-                    $(card_id).text("Erro leitura");
                     console.log("Ocorreu um erro - " + errorThrown);
                 });
     }
 
 
         function handleAjax(card_id, estacao_id, tipo_dados)
-    { console.log("tipo de dados: " + tipo_dados);
+    { 
                  $.ajax({
                         url: "{$BASE_URL}/AdminLeituras/getUltimaLeituraRegistrada",
                         dataType: "json",
@@ -374,12 +369,11 @@
                      },
                 }).done(function (data)
                  {
-                    console.log(data);
                     if(data.length == 0)
                     {
                         $(card_id).text("Erro leitura");
                         $('#leitura_label').text('Não foram localizados dados para essa estação:');
-                        console.log("Nãp há dados registrados para essa estação");
+                        console.log("Não há dados registrados para essa estação");
                         return;
                     }  
                     else {
@@ -398,8 +392,8 @@
 
         function GetData() //organzia a data no padrão do Bd
     {  
-        let dataInicial = $( "#dataInicial").val(); //Guarda esse valor numa variavel
-        let dataFinal = $( "#dataFinal" ).val(); //Guarda esse valor numa variavel
+        let dataInicial = $( "#dataInicial").val(); 
+        let dataFinal = $( "#dataFinal" ).val(); 
 
         let partesDataHora = dataInicial.replace(/\//g, ' ').split(' '); // dividindo a data em partes (dia, mês e ano e hora)
 
@@ -511,8 +505,7 @@
     function configureDateTimePicker(escala) 
     {
             let valorAnteriorData = null;
-
-            let padraoConfig = {
+            let padraoConfig = { //configuração padrão 
                 format: 'd/m/Y H:i',
                 step: 1,
                 maxDate: '0',
@@ -520,37 +513,30 @@
                 onClose: function(dp, $input) {
                     let novoValorData = $input.val();
                     if (novoValorData !== valorAnteriorData) {
-                        console.log("é diferente");
-
                         ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA"].forEach(function (tipo) {
                             carregarGraficoPorTipo(tipo, {$estacao.id});
                         });
-
                         valorAnteriorData = novoValorData;
                         return;
                     }
                     else {
                         return;
                     }
-
                 }
-            }; //configuração padrão 
-
+            }; 
             if (escala === "ESCALA_MINUTO") {
-                let formattedLastHour = new Date(Date.now() - 60 * 60 * 1000).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }).toString();
-                organizaLabelDataHora();
-
+                organizaLabelDataHora("minuto");    
+                let formattedLastHour = new Date(Date.now() - 6*60 * 60 * 1000).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }).toString();            
                 let minutoConfig = {
                     ...padraoConfig,
                     minTime: formattedLastHour,
                     minDate: '0', //Não deixa selecionar datas antes do dia atual
                     maxTime: 0,
-                    minDate: '0', //Não deixa selecionar datas antes do dia atual
-                    datepicker:false
+                    datepicker:true
                 };
                 $('.datetimepicker').datetimepicker('destroy');
                 $('.datetimepicker').datetimepicker(minutoConfig);
-            } 
+             } 
             else {
                 let outraEscalaConfig = {
                     ...padraoConfig
@@ -561,15 +547,23 @@
     }
 
 
-     function organizaLabelDataHora(){
+     function organizaLabelDataHora(tipoOrganizado){
         let dataAtual = new Date();
         let dataHoraAtual = ("0" + dataAtual.getDate()).slice(-2) + "/" + ("0" + (dataAtual.getMonth() + 1)).slice(-2) + "/" + dataAtual.getFullYear() + " " + ("0" + dataAtual.getHours()).slice(-2) + ":" + ("0" + dataAtual.getMinutes()).slice(-2);
         $('#dataFinal').val(dataHoraAtual);
-
-        let dataInicial = new Date();
-        dataInicial.setHours(dataAtual.getHours() - 24) //dataInicial definida como mesmo dia, uma hora antes da hora atual
-        let dataHoraInicial = ("0" + dataInicial.getDate()).slice(-2) + "/" + ("0" + (dataInicial.getMonth() + 1)).slice(-2) + "/" + dataInicial.getFullYear() + " " + ("0" + dataInicial.getHours()).slice(-2) + ":" + ("0" + dataInicial.getMinutes()).slice(-2);
-        $('#dataInicial').val(dataHoraInicial);
+            
+        if (tipoOrganizado == 'padrao' ) {
+                let dataInicial = new Date();
+                dataInicial.setHours(dataAtual.getHours() - 24) //dataInicial definida como mesmo dia, uma hora antes da hora atual
+                let dataHoraInicial = ("0" + dataInicial.getDate()).slice(-2) + "/" + ("0" + (dataInicial.getMonth() + 1)).slice(-2) + "/" + dataInicial.getFullYear() + " " + ("0" + dataInicial.getHours()).slice(-2) + ":" + ("0" + dataInicial.getMinutes()).slice(-2);
+                $('#dataInicial').val(dataHoraInicial);
+        }
+        else if (tipoOrganizado == 'minuto') {
+                let dataInicial = new Date();
+                dataInicial.setHours(dataAtual.getHours() - 6) //dataInicial definida como mesmo dia, 6 horas antes da hora atual
+                let dataHoraInicial = ("0" + dataInicial.getDate()).slice(-2) + "/" + ("0" + (dataInicial.getMonth() + 1)).slice(-2) + "/" + dataInicial.getFullYear() + " " + ("0" + dataInicial.getHours()).slice(-2) + ":" + ("0" + dataInicial.getMinutes()).slice(-2);
+                $('#dataInicial').val(dataHoraInicial);
+        }
 
      }
 
@@ -583,6 +577,58 @@
                         
         });
 
+        //////BOTÕES FACILITADORES DE SELECÃO DE DIA MES E SEMANA ////////
+    function selecionaDiaAtual(){
+        let dataAtual = new Date();
+        let dataHoraAtual = ("0" + dataAtual.getDate()).slice(-2) + "/" + ("0" + (dataAtual.getMonth() + 1)).slice(-2) + "/" + dataAtual.getFullYear() + " " + ("0" + dataAtual.getHours()).slice(-2) + ":" + ("0" + dataAtual.getMinutes()).slice(-2);
+       $('#dataFinal').val(dataHoraAtual);
+
+        let dataInicial = new Date();
+        dataInicial.setHours(0,0,0,0) //horario de 00:00
+        let dataHoraInicial = ("0" + dataInicial.getDate()).slice(-2) + "/" + ("0" + (dataInicial.getMonth() + 1)).slice(-2) + "/" + dataInicial.getFullYear() + " " + ("0" + dataInicial.getHours()).slice(-2) + ":" + ("0" + dataInicial.getMinutes()).slice(-2);
+        $('#dataInicial').val(dataHoraInicial);
+
+        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA"].forEach(function (tipo) {
+            carregarGraficoPorTipo(tipo, {$estacao.id}); });
+
+    }
+
+    function selecionaMesAtual(){
+        let dataAtual = new Date();
+        let dataHoraAtual = ("0" + dataAtual.getDate()).slice(-2) + "/" + ("0" + (dataAtual.getMonth() + 1)).slice(-2) + "/" + dataAtual.getFullYear() + " " + ("0" + dataAtual.getHours()).slice(-2) + ":" + ("0" + dataAtual.getMinutes()).slice(-2);
+       $('#dataFinal').val(dataHoraAtual);
+
+       let dataInicial = new Date();
+       dataInicial.setHours(0,0,0,0) //horario de 00:00
+       dataInicial.setDate(1);
+        let dataHoraInicial = ("0" + dataInicial.getDate()).slice(-2) + "/" + ("0" + (dataInicial.getMonth() + 1)).slice(-2) + "/" + dataInicial.getFullYear() + " " + ("0" + dataInicial.getHours()).slice(-2) + ":" + ("0" + dataInicial.getMinutes()).slice(-2);
+        $('#dataInicial').val(dataHoraInicial);
+
+        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA"].forEach(function (tipo) {
+            carregarGraficoPorTipo(tipo, {$estacao.id}); });
+
+    }
+
+    function selecionaSemanaAtual(){ //considera o primeiro dia da semana como domingo 
+        let dataAtual = new Date();
+        let dataHoraAtual = ("0" + dataAtual.getDate()).slice(-2) + "/" + ("0" + (dataAtual.getMonth() + 1)).slice(-2) + "/" + dataAtual.getFullYear() + " " + ("0" + dataAtual.getHours()).slice(-2) + ":" + ("0" + dataAtual.getMinutes()).slice(-2);
+       $('#dataFinal').val(dataHoraAtual);
+
+       let dataInicial = new Date();
+       dataInicial.setHours(0,0,0,0) //horario de 00:00
+       let diaAtual = dataInicial.getDay();
+       let inicioSemana = new Date(dataInicial);
+       inicioSemana.setDate(dataInicial.getDate() - diaAtual)
+       let dataHoraInicial = ("0" + inicioSemana.getDate()).slice(-2) + "/" + ("0" + (inicioSemana.getMonth() + 1)).slice(-2) + "/" + inicioSemana.getFullYear() + " " + ("0" + dataInicial.getHours()).slice(-2) + ":" + ("0" + dataInicial.getMinutes()).slice(-2);
+        $('#dataInicial').val(dataHoraInicial);
+
+        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA"].forEach(function (tipo) {
+            carregarGraficoPorTipo(tipo, {$estacao.id}); });
+
+    }
+
+
+    
 
   $(function () {
 
@@ -593,7 +639,7 @@
 
 
         /////Organização de data e tempo atual no placeholder de datainicial e datafinal: bug - data estava certa, horário errado em relação ao atual //////
-        organizaLabelDataHora()
+        organizaLabelDataHora('padrao')
       
             //COLOCA OS DADOS NOS CARDS 
             const parametrosHandleAjax = [
