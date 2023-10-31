@@ -54,7 +54,6 @@
                             <div class="col-sm-12 col-md-4 col-xl-2">
                                 <label>Informa&ccedil;&atilde;o</label>
                                 <select class="form-control form-control-sm change_controller" id="tipo_informacao" >
-                                    <option value="">Selecione</option>
                                 </select>
                             </div>
 
@@ -90,7 +89,6 @@
             $("#estacao_selecionada").multiselect({
                 includeSelectAllOption: true,
                 buttonWidth: '100%'
-
             });
         });
 
@@ -102,9 +100,9 @@
         <script>
             ///// Atualiza o select de tipos de informação
             const tiposInformacao = {
+                "volume_chuva": "Volume de Chuva (mm³)",
                 "temperatura": "Temperatura (°C)",
                 "velocidade_vento": "Velocidade do Vento (km/h)",
-                "volume_chuva": "Volume de Chuva (mm³)",
                 "umidade_ar": "Umidade do Ar (%)"
             };
 
@@ -123,41 +121,45 @@
 
             //Funções de tratativa de dados:
             function GetTipoDados() {
-                let tipo_informacao = $("#tipo_informacao").val(); //Guarda esse valor numa variavel
+                let tipo_informacao = $("#tipo_informacao").val(); //temperatura, umidade, etc
                 if (tipo_informacao == "") {
-                    throw new Error('Necessário informar o tipo de dados desejado');
-                    return;
+                    let tipo_dados = "TIPO_VOLUME_CHUVA";
+                    console.log("Dado de volume de chuva selecionado por padrão");
+                    return tipo_dados; // Quando o usuário não selecionar nada, por padrão, o gráfico vai iniciar com o volume de chuva que é a info mais importante pro monitoramento
                 }
+                else {
+                    let tipo_dados;
+                        switch (tipo_informacao)
+                        {
+                            case 'temperatura':
+                                tipo_dados = "TIPO_TEMPERATURA";
+                                break;
+                            case 'volume_chuva':
+                                tipo_dados = "TIPO_VOLUME_CHUVA";
+                                break;
+                            case 'umidade_ar':
+                                tipo_dados = "TIPO_UMIDADE_AR";
+                                break;
+                            case 'velocidade_vento':
+                                tipo_dados = "TIPO_VELOCIDADE_VENTO";
+                                break;
+                                default:
+                                tipo_dados = "TIPO_VOLUME_CHUVA";
+                                console.log(`Erro na seleção de dados. Selecionado padrão default "volume de chuvas"`);
 
-                let tipo_dados;
-                switch (tipo_informacao)
-                {
-                    case 'temperatura':
-                        tipo_dados = "TIPO_TEMPERATURA";
-                        break;
-                    case 'volume_chuva':
-                        tipo_dados = "TIPO_VOLUME_CHUVA";
-                        break;
-                    case 'umidade_ar':
-                        tipo_dados = "TIPO_UMIDADE_AR";
-                        break;
-                    case 'velocidade_vento':
-                        tipo_dados = "TIPO_VELOCIDADE_VENTO";
-                        break;
-
+                        }
+                        return tipo_dados;
                 }
-                return tipo_dados;
+               
             }
 
 
             function GetEstacao() { //função que pega a descriçao da estação selecionada
-                let estacao = $("#estacao_selecionada").val(); //Guarda esse valor numa variavel
-
+                let estacao = $("#estacao_selecionada").val(); 
                 let estacao_infos = new Array(); //Array com a estação selecionada e sua descrição
                 estacao_infos.push(estacao); //estacao_infos[0] == ID da estação
 
-
-                if (estacao !== null) {
+                if (Object.keys(estacao).length > 0) {
                     var selectedOptions = [];
                     estacao.forEach(function (value) {
                         var selectedOption = $('#estacao_selecionada option[value="' + value + '"]'); //obj de seleção
@@ -165,12 +167,12 @@
                         selectedOptions.push(descricao);
                     });
 
-                    resultado = [estacao, selectedOptions]  //estação = indice // selectedOption = texto da estação
+                  let  resultado = [estacao, selectedOptions]  //estação = indice // selectedOption = texto da estação
                     return resultado;
                 } else {
                     GerarGrafico(0, 0, "Nenhuma estação selecionada", 0);
                     throw new Error('Necessário informar a estação');
-                    return;
+                    return null;
                 }
             }
 
@@ -233,6 +235,7 @@
                 } catch (e) {
                     console.log(e.message)
                 }
+        
 
                 try {
                     $.ajax({
@@ -247,7 +250,7 @@
                             tipo_dados: tipo_dados},
 
                         success: function (data) {
-
+                           
                             //salva as keys/chaves como os periodos de tempo (no model: o dado vem como 2023=>20.55, ou seja, key = periodo
                             const periodos = Object.keys(data).map(function (key) {
                                 return key;
@@ -264,7 +267,6 @@
 
                         error: function (req, status, error)
                         {
-                            console.log(data);
                             console.log("Ocorreu um erro no AJAX - " + error);
                         }
                     });
