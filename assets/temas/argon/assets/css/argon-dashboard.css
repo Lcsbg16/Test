@@ -57,6 +57,32 @@
 *::after {
   box-sizing: border-box;
 }
+/* Inicio Alterações Jaque 02/11************/
+html, body {  
+  margin: 0;
+  padding: 0;
+}
+html, body, .main-content, .main-content .container-fluid-mapa , 
+.main-content .container-fluid-mapa .row, .main-content .container-fluid-mapa .row .col,
+ .main-content .container-fluid-mapa .row .col .card.shadow { 
+  height: 100%;
+}
+
+.card-body-top{
+  height: 15%;
+  max-height: 16%;
+  min-height: 15%;
+}
+
+.card-body-bottom{
+  height: 100%;
+  padding-top: 0!important;
+  padding-bottom: 0!important;
+
+}
+
+/* Fim Alterações Jaque 02/11************/
+
 
 html {
   font-family: sans-serif;
@@ -4963,7 +4989,7 @@ input[type="button"].btn-block {
 
 .card-body {
   flex: 1 1 auto;
-  padding: 1.5rem;
+  padding: 1rem;
 }
 
 .card-title {
@@ -16833,6 +16859,41 @@ textarea[resize="horizontal"] {
     color: rgba(255, 255, 255, 0.95);
   }
 }
+
+/* INICIO CRIAÇÃO DO MECANISMO LATERAL DA NAVBAR -> JAQUE 02/11*/ 
+
+.menu-lateral-expandido{ /* Configurações para quando o menu estiver aberto */
+  min-width: 270px!important;
+  max-width: 270px!important;
+  width: 270px!important;
+  overflow-y: auto!important;
+
+}
+
+
+@media screen and (min-width: 768px) {
+  .esconder {
+    display: none;
+  }
+  
+  .menu-lateral-expandido .esconder{
+    display: block;
+  }  
+  
+  #sidenav-main {
+    width: 60px;
+    min-width: 60px;
+    max-width: 60px;
+    overflow-y: hidden;
+    z-index: 2147483647;
+  }
+
+  .main-content{
+    margin-left: 62px!important;
+  }
+}
+
+/*FIM CRIAÇÃO DO MECANISMO LATERAL DA NAVBAR -> JAQUE 02/11*/ 
 
 .navbar-vertical {
   box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15) !important;

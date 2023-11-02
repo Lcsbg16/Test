@@ -16,7 +16,7 @@
     <style>
         #map{
             width: 100%;
-            height: 470px;
+            height: 99%;
         }
         #estacao_selecionada + .btn-group .multiselect { /*ALTERAÇÃO DO CSS DO MULTISELECT BUTTON - SELECIONAR MULTIPLAS ESTAÇÕES*/
             /* Deixando modelo do selecionar camada */
@@ -28,11 +28,11 @@
     </style>
     {* /leaflet *}
 
-    <div class="container-fluid mt-3">
+    <div class="container-fluid container-fluid-mapa mt-3">
         <div class="row">
             <div class="col">
                 <div class="card shadow">
-                    <div class="card-body">
+                    <div class="card-body card-body-top">
                         <div class="row justify-content-center"> 
                         <div class="col-5 form-group">
                             <label for="camada_id">Camada:</label>
@@ -52,10 +52,8 @@
                         </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="card shadow">
-                    <div class="card-body">
+                
+                    <div class="card-body card-body-bottom">
                         {if $estacoes}
                             <div id="map"></div>
                         {else}
