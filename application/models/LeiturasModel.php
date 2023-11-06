@@ -15,7 +15,7 @@ class LeiturasModel extends BaseModel
 
         $this->db->from('leitura');
         if ($filtros)
-        {
+        {   
             $estacoes       = $filtros->getEstacoes();
             $dataInicial    = $filtros->getDataInicial();
             $dataFinal      = $filtros->getDataFinal();
@@ -349,7 +349,6 @@ class LeiturasModel extends BaseModel
                     throw new Exception('É necessário informar o tipo de informação desejada.');
             }
 
-// Utilize a consulta SQL desejada
             $this->db->select("COALESCE({$colunaTipoInformacao}, 0) AS 'valor', datahora")
                     ->order_by("datahora", "DESC")
                     ->limit(1);
