@@ -377,13 +377,13 @@
                         return;
                     }  
                     else {
-                            $(card_id).text(parseFloat(data[0].valor).toFixed(2));
+                            $(card_id).text(parseFloat(data[0].valor).toFixed(2).replace('.', ','));
                              let [dataOriginal, hora] = data[0].datahora.split(' ');
                             let [ano, mes, dia] = dataOriginal.split('-');
                            $('#leitura_label').text(dia + "/" + mes + "/" + ano + " - " + hora );
                         }
                 }).fail(function (jqXHR, textStatus, errorThrown) 
-                    { // Tratamento de erro
+                    { 
                     $(card_id).text("Erro leitura");
                     console.log("Ocorreu um erro - " + errorThrown);
                      });

@@ -60,11 +60,11 @@ class AdminLeituras extends BaseCrudController
     {
         $this->load->model('LeiturasModel');
 
-        $estacao     = $this->input->post('estacao_selecionada'); // estação selecionada
-        $dataInicial = $this->input->post('data_inicial'); // data inicial
-        $dataFinal   = $this->input->post('data_final'); // data final
-        $escala      = $this->input->post('escala'); // escala escolhida
-        $tipo_dados  = $this->input->post('tipo_dados'); // tipo de dados
+        $estacao     = $this->input->post('estacao_selecionada');
+        $dataInicial = $this->input->post('data_inicial'); 
+        $dataFinal   = $this->input->post('data_final');
+        $escala      = $this->input->post('escala'); 
+        $tipo_dados  = $this->input->post('tipo_dados'); 
 
         $filtros  = new FiltrosLeitura();
         $filtros->setEstacoes($estacao);
@@ -80,14 +80,15 @@ class AdminLeituras extends BaseCrudController
 
     public function getUltimaLeituraRegistrada()
     {
-        $estacao    = $this->input->post('estacao_selecionada'); // estação selecionada
-        $tipo_dados = $this->input->post('tipo_dados'); // tipo de dados
+        $estacao    = $this->input->post('estacao_selecionada'); 
+        $tipo_dados = $this->input->post('tipo_dados'); 
 
         $this->load->model('LeiturasModel');
         $filtros  = new FiltrosLeitura();
         $filtros->setEstacoes($estacao);
         $filtros->setTipoInformacao(constant("FiltrosLeitura::$tipo_dados"));
         $leituras = $this->LeiturasModel->getUltimaLeituraRegistrada($filtros);
+        
         $this->jsonOutput($leituras);
     }
 
