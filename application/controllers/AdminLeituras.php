@@ -51,7 +51,7 @@ class AdminLeituras extends BaseCrudController
 
         $velocidade_ms = $row->velocidade_vento;
 
-        $velocidade_kmh = $velocidade_kmh = Conversao::velVentoParakmH($velocidade_ms);
+        $velocidade_kmh = Conversao::velVentoParakmH($velocidade_ms);
 
         return $velocidade_kmh;
     }
@@ -134,7 +134,6 @@ class AdminLeituras extends BaseCrudController
             $filename = 'leituras.csv';
             header('Content-Type: text/csv');
             header('Content-Disposition: attachment; filename="' . $filename . '"');
-<<<<<<< HEAD
         
             $output = fopen('php://output', 'w');
         
@@ -144,7 +143,7 @@ class AdminLeituras extends BaseCrudController
                 fputcsv($output, $row, $separador);
             }
         
-=======
+
 
             $output = fopen('php://output', 'w');
 
@@ -197,7 +196,6 @@ class AdminLeituras extends BaseCrudController
                 fputcsv($output, $leituraArquivo, $separador);
             }
 
->>>>>>> b7cf0adc752d4e3677dacc7705c567081035cde5
             fclose($output);
             exit;
         }
