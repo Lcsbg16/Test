@@ -1,7 +1,7 @@
-<nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white" id="sidenav-main">
+<nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white" id="sidenav-main" onmouseover="expandirMenu(this)" onmouseleave="retrairMenu(this)">
     <div class="container-fluid">
         <!-- Toggler -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidenav-collapse-main" aria-controls="sidenav-main" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidenav-collapse-main" aria-controls="sidenav-main" aria-expanded="false" aria-label="Toggle navigation" >
             <span class="navbar-toggler-icon"></span>
         </button>
         <!-- Brand -->
@@ -78,7 +78,7 @@
                     <!-- Divider -->
                     <hr class="my-3">
                     <!-- Heading -->
-                    <h6 class="navbar-heading text-muted">{$mAtual->getTitulo()}</h6>
+                    <h6 class="navbar-heading text-muted esconder">{$mAtual->getTitulo()}</h6>
                 {/if}
 
                 <ul class="navbar-nav">
@@ -88,7 +88,7 @@
                                 {if $fAtual->getUrl()}
                                     <a class="nav-link  active " href="{$fAtual->getUrl()}">
                                     {/if}
-                                    <i class="ni ni-{$fAtual->getIcone()|default:'app'} text-primary {if $fAtual->getCor()}text-{$fAtual->getCor()}{/if}"></i> {$fAtual->getTitulo()}
+                                    <i class="ni ni-{$fAtual->getIcone()|default:'app'} text-primary {if $fAtual->getCor()}text-{$fAtual->getCor()}{/if}"></i> <span class="esconder">{$fAtual->getTitulo()} </span>
                                     {if $fAtual->getUrl()}
                                     </a>
                                 {/if}
@@ -105,3 +105,16 @@
         </div>
     </div>
 </nav>
+<script type="text/javascript">
+function expandirMenu(x) {
+    if (window.innerWidth > 768) { // Adicione a condição para telas maiores que 768 pixels
+  x.classList.add("menu-lateral-expandido");
+}
+}
+
+function retrairMenu(x) {
+    x.scrollTop = 0;
+  x.classList.remove("menu-lateral-expandido");
+}
+
+</script>

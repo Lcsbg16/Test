@@ -48,7 +48,7 @@ class AdminLeituras extends BaseCrudController
     public function _callback_converterVelocidadeVento($value, $row)
     {
         $this->load->model('LeiturasModel');
-        
+
         $velocidade_ms = $row->velocidade_vento;
 
         $velocidade_kmh = $velocidade_kmh = Conversao::velVentoParakmH($velocidade_ms);
@@ -100,12 +100,10 @@ class AdminLeituras extends BaseCrudController
         if ($this->input->get('escala'))
         {
             $estacoes      = $this->input->get('estacoes');
-            $dataInicial   = $this->input->get('dataInicial');
-            $dataFinal     = $this->input->get('dataFinal');
+            $dataInicial   = $this->input->get('data_inicial');
+            $dataFinal     = $this->input->get('data_final');
             $colunaPeriodo = $this->input->get('escala');
-
-            $classe        = new ReflectionClass('FiltrosLeitura');
-            $colunaPeriodo = $classe->getConstant($colunaPeriodo);
+            $estacao       = $this->input->get('estacao');
 
             if ($estacoes)
             {
@@ -126,14 +124,17 @@ class AdminLeituras extends BaseCrudController
             {
                 $filtros->setEscala($colunaPeriodo);
             }
-            
-            $leituras = $this->LeiturasModel->getLeiturasPorEscala($filtros);
+
+            $filtros->setEstacoes($estacao);
+
+            $leituras = $this->LeiturasModel->getLeiturasPorEscala($filtros, false);
 
             $csvData = $this->LeiturasModel->exportarLeiturasParaCSV($filtros);
 
             $filename = 'leituras.csv';
             header('Content-Type: text/csv');
             header('Content-Disposition: attachment; filename="' . $filename . '"');
+<<<<<<< HEAD
         
             $output = fopen('php://output', 'w');
         
@@ -143,6 +144,60 @@ class AdminLeituras extends BaseCrudController
                 fputcsv($output, $row, $separador);
             }
         
+=======
+
+            $output = fopen('php://output', 'w');
+
+            $separador = ';';
+
+            $header = array(
+                'periodo',
+                'estacao_identificador',
+                'estacao_descricao',
+                'estacao_endereco',
+                'estacao_latitude',
+                'estacao_longitude',
+                'temperatura',
+                'umidade_ar',
+                'velocidade_vento',
+                'rajada_vento',
+                'volume_chuva'
+            );
+
+            fputcsv($output, $header, $separador);
+
+            while ($leitura = $leituras->unbuffered_row('array'))
+            {
+
+
+                // Converter velocidade do vento para km/h
+                $leitura['velocidade_vento'] = Conversao::velVentoParakmH($leitura['velocidade_vento']);
+                $leitura['rajada_vento']     = Conversao::velVentoParakmH($leitura['rajada_vento']);
+
+                //Substituindo o separador decimal de . para ,
+                $leitura['velocidade_vento'] = str_replace('.', ',', $leitura['velocidade_vento']);
+                $leitura['temperatura']      = str_replace('.', ',', $leitura['temperatura']);
+                $leitura['umidade_ar']       = str_replace('.', ',', $leitura['umidade_ar']);
+                $leitura['volume_chuva']     = str_replace('.', ',', $leitura['volume_chuva']);
+
+                $leituraArquivo = [
+                    $leitura['periodo'],
+                    $leitura['estacao_identificador'],
+                    $leitura['estacao_descricao'],
+                    $leitura['estacao_endereco'],
+                    $leitura['estacao_latitude'],
+                    $leitura['estacao_longitude'],
+                    $leitura['temperatura'],
+                    $leitura['umidade_ar'],
+                    $leitura['velocidade_vento'],
+                    $leitura['rajada_vento'],
+                    $leitura['volume_chuva']
+                ];
+
+                fputcsv($output, $leituraArquivo, $separador);
+            }
+
+>>>>>>> b7cf0adc752d4e3677dacc7705c567081035cde5
             fclose($output);
             exit;
         }
@@ -155,6 +210,5 @@ class AdminLeituras extends BaseCrudController
         $variaveisView['leituras']      = $leituras;
 
         $this->loadSmartyView('ExportarLeituras/index', $variaveisView);
-
     }
 }

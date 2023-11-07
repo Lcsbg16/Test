@@ -14,6 +14,10 @@
             text-align: left !important;
             height: calc(1.8125rem + 2px);
         }
+
+        .col-xl-personalizado{
+           max-width: 14.2857%; /* 100% / 7 elementos */
+        }
     </style>
 
     <div class="container-fluid mt-3">
@@ -22,7 +26,7 @@
                 <div class="card shadow">
                     <div class="card-body">
                         <div class="row my-3">
-                            <div class="col-sm-12 col-md-4 col-xl-2">
+                            <div class="col-sm-12 col-md-4 col-xl-personalizado">
                                 <label>Esta&ccedil;&atilde;o</label>
                                 <select class="form-control form-control-sm change_controller" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada -->
                                     {foreach $estacoes as $eAtual}
@@ -33,15 +37,15 @@
 
                                 </select>
                             </div>
-                            <div class="col-sm-12 col-md-4 col-xl-2">
+                            <div class="col-sm-12 col-md-4 col-xl-personalizado">
                                 <label>Data Inicial</label>
                                 <input class="form-control form-control-sm datepicker" value="{'-5 days'|strtotime|date_format:'%d/%m/%Y'}" id="dataInicial">
                             </div>
-                            <div class="col-sm-12 col-md-4 col-xl-2">
+                            <div class="col-sm-12 col-md-4 col-xl-personalizado">
                                 <label>Data Final</label>
                                 <input class="form-control form-control-sm datepicker" value='{$smarty.now|date_format:'%d/%m/%Y'}' id="dataFinal">
                             </div>
-                            <div class="col-sm-12 col-md-4 col-xl-2">
+                            <div class="col-sm-12 col-md-4 col-xl-personalizado">
                                 <label>Escala</label>
                                 <select class="form-control form-control-sm change_controller" id="escala_selecionada" >
                                     <option value="">Selecione</option>
@@ -51,14 +55,13 @@
                                     <option value="mes">M&ecirc;s</option>
                                 </select>
                             </div>
-                            <div class="col-sm-12 col-md-4 col-xl-2">
+                            <div class="col-sm-12 col-md-4 col-xl-personalizado">
                                 <label>Informa&ccedil;&atilde;o</label>
                                 <select class="form-control form-control-sm change_controller" id="tipo_informacao" >
-                                    <option value="">Selecione</option>
                                 </select>
                             </div>
 
-                            <div class="col-sm-12 col-md-4 col-xl-2">
+                            <div class="col-sm-12 col-md-4 col-xl-personalizado">
                                 <label>Tipo de Gr&aacute;fico</label>
                                 <select id="tipoGrafico" class="form-control form-control-sm">
                                     <option value="bar" >Barras</option>
@@ -66,6 +69,14 @@
                                     <option value="radar">Radar</option>
                                 </select>
                             </div>
+
+                            <div class="col-sm-12 col-md-4 col-xl-personalizado align-items-center">
+                        <label>Seleção Rápida</label><br>
+                    <button type="button" class="btn btn-sm btn-primary" style="height: 30px; margin: 0 !important; justify-content: center;" onclick="selecionaDiaAtual()">Dia</button>
+                    <button type="button" class="btn btn-sm btn-primary" style="height: 30px; margin: 0 !important; justify-content: center;" onclick="selecionaSemanaAtual()">Semana</button>
+                    <button type="button" class="btn btn-sm btn-primary" style="height: 30px; margin: 0 !important; justify-content: center;" onclick="selecionaMesAtual()">Mês</button>
+
+                    </div>
 
                         </div>
                     </div>
@@ -90,7 +101,6 @@
             $("#estacao_selecionada").multiselect({
                 includeSelectAllOption: true,
                 buttonWidth: '100%'
-
             });
         });
 
@@ -100,11 +110,51 @@
     {literal}
 
         <script>
-            ///// Atualiza o select de tipos de informação
+
+//////BOTÕES FACILITADORES DE SELECÃO DE DIA MES E SEMANA ////////
+function selecionaDiaAtual(){
+        let dataAtual = new Date();
+        let dataFinalAtual = ("0" + dataAtual.getDate()).slice(-2) + "/" + ("0" + (dataAtual.getMonth() + 1)).slice(-2) + "/" + dataAtual.getFullYear();
+        $('#dataFinal').val(dataFinalAtual);
+
+        let dataInicial = new Date();
+        let dataInicialCorrigida = ("0" + dataInicial.getDate()).slice(-2) + "/" + ("0" + (dataInicial.getMonth() + 1)).slice(-2) + "/" + dataInicial.getFullYear();
+        $('#dataInicial').val(dataInicialCorrigida);
+        HandleAjax();
+    }
+
+    function selecionaMesAtual(){
+        let dataAtual = new Date();
+        let dataFinalAtual = ("0" + dataAtual.getDate()).slice(-2) + "/" + ("0" + (dataAtual.getMonth() + 1)).slice(-2) + "/" + dataAtual.getFullYear();
+        $('#dataFinal').val(dataFinalAtual);
+
+        let dataInicial = new Date();
+        dataInicial.setDate(1);
+        let dataInicialCorrigida = ("0" + dataInicial.getDate()).slice(-2) + "/" + ("0" + (dataInicial.getMonth() + 1)).slice(-2) + "/" + dataInicial.getFullYear();
+        $('#dataInicial').val(dataInicialCorrigida);
+        HandleAjax();
+    }
+
+    function selecionaSemanaAtual(){ //considera o primeiro dia da semana como domingo 
+        let dataAtual = new Date();
+        let dataFinalAtual = ("0" + dataAtual.getDate()).slice(-2) + "/" + ("0" + (dataAtual.getMonth() + 1)).slice(-2) + "/" + dataAtual.getFullYear();
+        $('#dataFinal').val(dataFinalAtual);
+
+        let dataInicial = new Date();
+        let diaAtual = dataInicial.getDay();
+        let inicioSemana = new Date(dataInicial);
+        inicioSemana.setDate(dataInicial.getDate() - diaAtual)
+        let dataInicialCorrigida = ("0" + inicioSemana.getDate()).slice(-2) + "/" + ("0" + (inicioSemana.getMonth() + 1)).slice(-2) + "/" + inicioSemana.getFullYear();
+        $('#dataInicial').val(dataInicialCorrigida);
+        HandleAjax();
+    }
+
+
+   /////////// ///// Atualiza o select de tipos de informação
             const tiposInformacao = {
+                "volume_chuva": "Volume de Chuva (mm³)",
                 "temperatura": "Temperatura (°C)",
                 "velocidade_vento": "Velocidade do Vento (km/h)",
-                "volume_chuva": "Volume de Chuva (mm³)",
                 "umidade_ar": "Umidade do Ar (%)"
             };
 
@@ -123,41 +173,45 @@
 
             //Funções de tratativa de dados:
             function GetTipoDados() {
-                let tipo_informacao = $("#tipo_informacao").val(); //Guarda esse valor numa variavel
+                let tipo_informacao = $("#tipo_informacao").val(); //temperatura, umidade, etc
                 if (tipo_informacao == "") {
-                    throw new Error('Necessário informar o tipo de dados desejado');
-                    return;
+                    let tipo_dados = "TIPO_VOLUME_CHUVA";
+                    console.log("Dado de volume de chuva selecionado por padrão");
+                    return tipo_dados; // Quando o usuário não selecionar nada, por padrão, o gráfico vai iniciar com o volume de chuva que é a info mais importante pro monitoramento
                 }
+                else {
+                    let tipo_dados;
+                        switch (tipo_informacao)
+                        {
+                            case 'temperatura':
+                                tipo_dados = "TIPO_TEMPERATURA";
+                                break;
+                            case 'volume_chuva':
+                                tipo_dados = "TIPO_VOLUME_CHUVA";
+                                break;
+                            case 'umidade_ar':
+                                tipo_dados = "TIPO_UMIDADE_AR";
+                                break;
+                            case 'velocidade_vento':
+                                tipo_dados = "TIPO_VELOCIDADE_VENTO";
+                                break;
+                                default:
+                                tipo_dados = "TIPO_VOLUME_CHUVA";
+                                console.log(`Erro na seleção de dados. Selecionado padrão default "volume de chuvas"`);
 
-                let tipo_dados;
-                switch (tipo_informacao)
-                {
-                    case 'temperatura':
-                        tipo_dados = "TIPO_TEMPERATURA";
-                        break;
-                    case 'volume_chuva':
-                        tipo_dados = "TIPO_VOLUME_CHUVA";
-                        break;
-                    case 'umidade_ar':
-                        tipo_dados = "TIPO_UMIDADE_AR";
-                        break;
-                    case 'velocidade_vento':
-                        tipo_dados = "TIPO_VELOCIDADE_VENTO";
-                        break;
-
+                        }
+                        return tipo_dados;
                 }
-                return tipo_dados;
+               
             }
 
 
             function GetEstacao() { //função que pega a descriçao da estação selecionada
-                let estacao = $("#estacao_selecionada").val(); //Guarda esse valor numa variavel
-
+                let estacao = $("#estacao_selecionada").val(); 
                 let estacao_infos = new Array(); //Array com a estação selecionada e sua descrição
                 estacao_infos.push(estacao); //estacao_infos[0] == ID da estação
 
-
-                if (estacao !== null) {
+                if (Object.keys(estacao).length > 0) {
                     var selectedOptions = [];
                     estacao.forEach(function (value) {
                         var selectedOption = $('#estacao_selecionada option[value="' + value + '"]'); //obj de seleção
@@ -165,12 +219,12 @@
                         selectedOptions.push(descricao);
                     });
 
-                    resultado = [estacao, selectedOptions]  //estação = indice // selectedOption = texto da estação
+                  let  resultado = [estacao, selectedOptions]  //estação = indice // selectedOption = texto da estação
                     return resultado;
                 } else {
                     GerarGrafico(0, 0, "Nenhuma estação selecionada", 0);
                     throw new Error('Necessário informar a estação');
-                    return;
+                    return null;
                 }
             }
 
@@ -233,6 +287,7 @@
                 } catch (e) {
                     console.log(e.message)
                 }
+        
 
                 try {
                     $.ajax({
@@ -247,7 +302,7 @@
                             tipo_dados: tipo_dados},
 
                         success: function (data) {
-
+                           
                             //salva as keys/chaves como os periodos de tempo (no model: o dado vem como 2023=>20.55, ou seja, key = periodo
                             const periodos = Object.keys(data).map(function (key) {
                                 return key;
@@ -264,7 +319,6 @@
 
                         error: function (req, status, error)
                         {
-                            console.log(data);
                             console.log("Ocorreu um erro no AJAX - " + error);
                         }
                     });
