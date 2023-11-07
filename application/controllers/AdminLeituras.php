@@ -129,46 +129,20 @@ class AdminLeituras extends BaseCrudController
             
             $leituras = $this->LeiturasModel->getLeiturasPorEscala($filtros);
 
+            $csvData = $this->LeiturasModel->exportarLeiturasParaCSV($filtros);
+
             $filename = 'leituras.csv';
             header('Content-Type: text/csv');
             header('Content-Disposition: attachment; filename="' . $filename . '"');
-    
+        
             $output = fopen('php://output', 'w');
-    
+        
             $separador = ';';
-    
-            $header = array(
-                'id',
-                'datahora',
-                'estacao_identificador',
-                'estacao_descricao',
-                'estacao_endereco',
-                'estacao_latitude',
-                'estacao_longitude',
-                'temperatura',
-                'umidade_ar',
-                'velocidade_vento',
-                'direcao_vento',
-                'volume_chuva',
-                'datahora_cadastro'
-                );
-    
-    
-            fputcsv($output, $header, $separador);
-    
-            foreach ($leituras as $leitura)
-            {
-                // Converter velocidade do vento para km/h
-                $leitura['velocidade_vento'] = Conversao::velVentoParakmH($leitura['velocidade_vento']);
-
-                //Substituindo o separador decimal de . para ,
-                $leitura['velocidade_vento'] = str_replace('.', ',', $leitura['velocidade_vento']);
-                $leitura['temperatura'] = str_replace('.', ',', $leitura['temperatura']);
-                $leitura['umidade_ar'] = str_replace('.', ',', $leitura['umidade_ar']);
-                $leitura['volume_chuva'] = str_replace('.', ',', $leitura['volume_chuva']);
-                fputcsv($output, $leitura, $separador);
+        
+            foreach ($csvData as $row) {
+                fputcsv($output, $row, $separador);
             }
-    
+        
             fclose($output);
             exit;
         }
