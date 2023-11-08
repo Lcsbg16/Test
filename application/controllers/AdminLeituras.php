@@ -51,7 +51,7 @@ class AdminLeituras extends BaseCrudController
 
         $velocidade_ms = $row->velocidade_vento;
 
-        $velocidade_kmh = $velocidade_kmh = Conversao::velVentoParakmH($velocidade_ms);
+        $velocidade_kmh = Conversao::velVentoParakmH($velocidade_ms);
 
         return $velocidade_kmh;
     }
@@ -129,9 +129,21 @@ class AdminLeituras extends BaseCrudController
 
             $leituras = $this->LeiturasModel->getLeiturasPorEscala($filtros, false);
 
+            $csvData = $this->LeiturasModel->exportarLeiturasParaCSV($filtros);
+
             $filename = 'leituras.csv';
             header('Content-Type: text/csv');
             header('Content-Disposition: attachment; filename="' . $filename . '"');
+        
+            $output = fopen('php://output', 'w');
+        
+            $separador = ';';
+        
+            foreach ($csvData as $row) {
+                fputcsv($output, $row, $separador);
+            }
+        
+
 
             $output = fopen('php://output', 'w');
 

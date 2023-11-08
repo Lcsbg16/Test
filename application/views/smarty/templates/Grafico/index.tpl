@@ -14,6 +14,10 @@
             text-align: left !important;
             height: calc(1.8125rem + 2px);
         }
+
+        .col-xl-personalizado{
+           max-width: 14.2857%; /* 100% / 7 elementos */
+        }
     </style>
 
     <div class="container-fluid mt-3">
@@ -22,7 +26,7 @@
                 <div class="card shadow">
                     <div class="card-body">
                         <div class="row my-3">
-                            <div class="col-sm-12 col-md-4 col-xl-2">
+                            <div class="col-sm-12 col-md-4 col-xl-personalizado">
                                 <label>Esta&ccedil;&atilde;o</label>
                                 <select class="form-control form-control-sm change_controller" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada -->
                                     {foreach $estacoes as $eAtual}
@@ -33,15 +37,15 @@
 
                                 </select>
                             </div>
-                            <div class="col-sm-12 col-md-4 col-xl-2">
+                            <div class="col-sm-12 col-md-4 col-xl-personalizado">
                                 <label>Data Inicial</label>
                                 <input class="form-control form-control-sm datepicker" value="{'-5 days'|strtotime|date_format:'%d/%m/%Y'}" id="dataInicial">
                             </div>
-                            <div class="col-sm-12 col-md-4 col-xl-2">
+                            <div class="col-sm-12 col-md-4 col-xl-personalizado">
                                 <label>Data Final</label>
                                 <input class="form-control form-control-sm datepicker" value='{$smarty.now|date_format:'%d/%m/%Y'}' id="dataFinal">
                             </div>
-                            <div class="col-sm-12 col-md-4 col-xl-2">
+                            <div class="col-sm-12 col-md-4 col-xl-personalizado">
                                 <label>Escala</label>
                                 <select class="form-control form-control-sm change_controller" id="escala_selecionada" >
                                     <option value="">Selecione</option>
@@ -51,13 +55,13 @@
                                     <option value="mes">M&ecirc;s</option>
                                 </select>
                             </div>
-                            <div class="col-sm-12 col-md-4 col-xl-2">
+                            <div class="col-sm-12 col-md-4 col-xl-personalizado">
                                 <label>Informa&ccedil;&atilde;o</label>
                                 <select class="form-control form-control-sm change_controller" id="tipo_informacao" >
                                 </select>
                             </div>
 
-                            <div class="col-sm-12 col-md-4 col-xl-2">
+                            <div class="col-sm-12 col-md-4 col-xl-personalizado">
                                 <label>Tipo de Gr&aacute;fico</label>
                                 <select id="tipoGrafico" class="form-control form-control-sm">
                                     <option value="bar" >Barras</option>
@@ -65,6 +69,14 @@
                                     <option value="radar">Radar</option>
                                 </select>
                             </div>
+
+                            <div class="col-sm-12 col-md-4 col-xl-personalizado align-items-center">
+                        <label>Seleção Rápida</label><br>
+                    <button type="button" class="btn btn-sm btn-primary" style="height: 30px; margin: 0 !important; justify-content: center;" onclick="selecionaDiaAtual()">Dia</button>
+                    <button type="button" class="btn btn-sm btn-primary" style="height: 30px; margin: 0 !important; justify-content: center;" onclick="selecionaSemanaAtual()">Semana</button>
+                    <button type="button" class="btn btn-sm btn-primary" style="height: 30px; margin: 0 !important; justify-content: center;" onclick="selecionaMesAtual()">Mês</button>
+
+                    </div>
 
                         </div>
                     </div>
@@ -98,7 +110,47 @@
     {literal}
 
         <script>
-            ///// Atualiza o select de tipos de informação
+
+//////BOTÕES FACILITADORES DE SELECÃO DE DIA MES E SEMANA ////////
+function selecionaDiaAtual(){
+        let dataAtual = new Date();
+        let dataFinalAtual = ("0" + dataAtual.getDate()).slice(-2) + "/" + ("0" + (dataAtual.getMonth() + 1)).slice(-2) + "/" + dataAtual.getFullYear();
+        $('#dataFinal').val(dataFinalAtual);
+
+        let dataInicial = new Date();
+        let dataInicialCorrigida = ("0" + dataInicial.getDate()).slice(-2) + "/" + ("0" + (dataInicial.getMonth() + 1)).slice(-2) + "/" + dataInicial.getFullYear();
+        $('#dataInicial').val(dataInicialCorrigida);
+        HandleAjax();
+    }
+
+    function selecionaMesAtual(){
+        let dataAtual = new Date();
+        let dataFinalAtual = ("0" + dataAtual.getDate()).slice(-2) + "/" + ("0" + (dataAtual.getMonth() + 1)).slice(-2) + "/" + dataAtual.getFullYear();
+        $('#dataFinal').val(dataFinalAtual);
+
+        let dataInicial = new Date();
+        dataInicial.setDate(1);
+        let dataInicialCorrigida = ("0" + dataInicial.getDate()).slice(-2) + "/" + ("0" + (dataInicial.getMonth() + 1)).slice(-2) + "/" + dataInicial.getFullYear();
+        $('#dataInicial').val(dataInicialCorrigida);
+        HandleAjax();
+    }
+
+    function selecionaSemanaAtual(){ //considera o primeiro dia da semana como domingo 
+        let dataAtual = new Date();
+        let dataFinalAtual = ("0" + dataAtual.getDate()).slice(-2) + "/" + ("0" + (dataAtual.getMonth() + 1)).slice(-2) + "/" + dataAtual.getFullYear();
+        $('#dataFinal').val(dataFinalAtual);
+
+        let dataInicial = new Date();
+        let diaAtual = dataInicial.getDay();
+        let inicioSemana = new Date(dataInicial);
+        inicioSemana.setDate(dataInicial.getDate() - diaAtual)
+        let dataInicialCorrigida = ("0" + inicioSemana.getDate()).slice(-2) + "/" + ("0" + (inicioSemana.getMonth() + 1)).slice(-2) + "/" + inicioSemana.getFullYear();
+        $('#dataInicial').val(dataInicialCorrigida);
+        HandleAjax();
+    }
+
+
+   /////////// ///// Atualiza o select de tipos de informação
             const tiposInformacao = {
                 "volume_chuva": "Volume de Chuva (mm³)",
                 "temperatura": "Temperatura (°C)",

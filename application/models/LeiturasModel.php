@@ -101,7 +101,7 @@ class LeiturasModel extends BaseModel
             $this->db->order_by('periodo', $filtros->getDirecao());
             $resultado = $this->db->get();
 
-//echo $this->db->last_query();
+            //echo $this->db->last_query();
 
             $resultadoArray = $resultado->result_array();
             $retorno        = [];
@@ -109,7 +109,7 @@ class LeiturasModel extends BaseModel
             {
                 if ($tipoInformacao === FiltrosLeitura::TIPO_VELOCIDADE_VENTO)
                 {
-// Converte a velocidade do vento de m/s para km/h se for o tipo de informação 'velocidade_vento'
+                    // Converte a velocidade do vento de m/s para km/h se for o tipo de informação 'velocidade_vento'
                     $linha['valor'] = Conversao::velVentoParakmH($linha['valor']);
                 }
                 $retorno[$linha['periodo']] = $linha['valor'];
@@ -531,17 +531,8 @@ class LeiturasModel extends BaseModel
         return $linha["velocidade_maxima"];
     }
 
-    public function getAllLeituras()
-    {
-        $this->db->select('leitura.id, leitura.datahora, estacao.identificador as estacao_identificador, estacao.descricao as estacao_descricao,
-                           estacao.endereco as estacao_edereco, estacao.latitude as estacao_latitude, estacao.longitude as estacao_longitude,
-                           leitura.temperatura, leitura.umidade_ar, leitura.velocidade_vento, leitura.dir_vento, leitura.volume_chuva,datahora_cadastro'); // Adiciona os campos de estacao
-        $this->db->from('leitura');
-        $this->db->join('estacao', 'leitura.estacao_id = estacao.id');
-        $this->db->order_by('leitura.id', 'ASC');
-        $query = $this->db->get();
-        return $query->result_array();
-    }
+
+    
 
     public function calcularAlertaPluviometria($leitura)
     {

@@ -15,7 +15,7 @@
     <style>
         #map{
             width: 100%;
-            height: 400px;
+            height: 99%;
         }
         #estacao_selecionada + .btn-group .multiselect { /*ALTERAÇÃO DO CSS DO MULTISELECT BUTTON - SELECIONAR MULTIPLAS ESTAÇÕES*/
             /* Deixando modelo do selecionar camada */
@@ -26,11 +26,11 @@
     </style>
     {* /leaflet *}
 
-    <div class="container-fluid mt-3">
+    <div class="container-fluid container-fluid-mapa mt-3">
         <div class="row">
             <div class="col">
                 <div class="card shadow">
-                    <div class="card-body">
+                    <div class="card-body card-body-top">
                         <label>Esta&ccedil;&atilde;o</label>
                         <select class="form-control form-control-sm change_controller" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada -->
                             {foreach $estacoes as $eAtual}
@@ -40,7 +40,7 @@
                         </select>
                     </div>
 
-                    <div class="card-body">
+                    <div class="card-body card-body-bottom">
                         {if $estacoes}
                             <div id="map"></div>
                         {else}
