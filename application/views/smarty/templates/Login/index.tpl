@@ -39,18 +39,24 @@
         <!-- Header -->
         <div class="header bg-gradient-primary py-7 py-lg-8">
             <div class="container">
-                <div class="header-body text-center mb-2">
+                <div class="header-body text-center mb-3">
                     <div class="row justify-content-center">
                         <div class="col-lg-5 col-md-6">
                             <h1 class="text-white">Seja Bem-vindo!!</h1>
-                            <p>
-                                <img src="{$BASE_URL}assets/images/logo-unidade.png">
-                            </p>
-                            {*<p class="text-lead text-light">Use these awesome forms to login or create new account in your project for free.</p>*}
+                            <div class="d-flex justify-content-center"> <!-- Use a classe d-flex para criar um contêiner flexível -->
+                                <div class="mx-2">
+                                    <img src="{$BASE_URL}assets/images/logo-unidade.png" class="img-fluid" style="max-width: 210px;">
+                                </div>
+                                <div class="mx-2">
+                                    <img src="{$BASE_URL}assets/images/ufrj-horizontal-negativa-telas.png" class="img-fluid" style="max-width: 210px;">
+                                </div>
+                                <div class="mx-2" style="margin-top: 20px;">
+                                    <img src="{$BASE_URL}assets/images/logo-prefeitura.png" class="img-fluid" style="max-width: 210px;">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
             </div>
             <div class="separator separator-bottom separator-skew zindex-100">
                 <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -58,6 +64,7 @@
                 </svg>
             </div>
         </div>
+
         <!-- Page content -->
         <div class="container mt--8 pb-5">
             <div class="row justify-content-center">
