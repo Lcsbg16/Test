@@ -10,6 +10,12 @@ class LeiturasModel extends BaseModel
     const PLUVIOMETRIA_NIVEL_ALERTA        = 'alerta';
     const PLUVIOMETRIA_NIVEL_ALERTA_MAXIMO = 'alerta_maximo';
 
+    public function inserirLeitura($estacaoId, $dadosLeitura)
+    {
+        $dadosLeitura['estacao_id'] = $estacaoId;
+        return $this->db->insert('leitura', $dadosLeitura);
+    }
+
     public function calcularEstatisticasPorPeriodo(FiltrosLeitura $filtros)
     {
 
@@ -530,9 +536,6 @@ class LeiturasModel extends BaseModel
 
         return $linha["velocidade_maxima"];
     }
-
-
-    
 
     public function calcularAlertaPluviometria($leitura)
     {
