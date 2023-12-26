@@ -43,15 +43,9 @@
                     <div class="row justify-content-center">
                         <div class="col-lg-5 col-md-6">
                             <h1 class="text-white">Seja Bem-vindo!!</h1>
-                            <div class="d-flex justify-content-center"> <!-- Use a classe d-flex para criar um contêiner flexível -->
+                            <div class="d-flex justify-content-center"> 
                                 <div class="mx-2">
                                     <img src="{$BASE_URL}assets/images/logo-unidade.png" class="img-fluid" style="max-width: 210px;">
-                                </div>
-                                <div class="mx-2">
-                                    <img src="{$BASE_URL}assets/images/ufrj-horizontal-negativa-telas.png" class="img-fluid" style="max-width: 210px;">
-                                </div>
-                                <div class="mx-2" style="margin-top: 20px;">
-                                    <img src="{$BASE_URL}assets/images/logo-prefeitura.png" class="img-fluid" style="max-width: 210px;">
                                 </div>
                             </div>
                         </div>
@@ -109,9 +103,16 @@
                         <div class="col-6 text-right">
                             {*<a href="#" class="text-light"><small>Create new account</small></a>*}
                         </div>
+                            <div class="mx-2">
+                                <img src="{$BASE_URL}assets/images/ufrj-horizontal-negativa-telas.png" class="img-fluid" style="max-width: 210px;">
+                            </div>
+                            <div class="mx-2" style="margin-top: 20px;">
+                                <img src="{$BASE_URL}assets/images/logo-prefeitura-branco.png" class="img-fluid" style="max-width: 210px;">
+                            </div>
+                        </div>
                     </div>
-                </div>
             </div>
+
         </div>
         <footer class="py-5">
             <div class="container">
