@@ -9,11 +9,14 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-sm">
-                                <img class="img-fluid" src="{$BASE_URL}assets/images/logo-prefeitura.png">
+                            <div class="col-sm" style="margin-top: 20px;">
+                                <img class="img-fluid" src="{$BASE_URL}assets/images/logo-prefeitura.png" style="max-width: 250px;">
                             </div>
                             <div class="col-sm">
-                                <img class="img-fluid" src="{$BASE_URL}assets/images/logo-unidade.png">
+                                <img class="img-fluid" src="{$BASE_URL}assets/images/logo-unidade.png" style="max-width: 210px;">
+                            </div>
+                            <div class="col-sm">
+                                <img class="img-fluid" src="{$BASE_URL}assets/images/logo-ufrj.png" style="max-width: 250px;">
                             </div>
                         </div>
                     </div>
