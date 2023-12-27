@@ -330,7 +330,7 @@
 
                                     case 'TIPO_UMIDADE_AR':    
                                     tipo_informação = "Umidade (%)";
-                                    geraGrafico(graficoUmid, tipo_informação, periodos, valores, escala); //passa: canva de temperatura, Temperatura como label superior, periodos como label inferior e valores como dados finais
+                                    geraGrafico(graficoUmid, tipo_informação, periodos, valores, escala); 
                                     break;
 
                                     case 'TIPO_VELOCIDADE_VENTO':

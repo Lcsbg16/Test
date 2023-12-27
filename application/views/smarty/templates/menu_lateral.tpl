@@ -5,8 +5,8 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <!-- Brand -->
-        <a class="navbar-brand pt-0" href="{$BASE_URL}">
-            <img src="{$BASE_URL}/assets/temas/argon/assets/img/brand/blue.png" class="navbar-brand-img d-none d-sm-block" alt="...">
+        <a class="navbar-brand pt-0" href="{$BASE_URL}" style="margin-left: -7px; padding: 0; min-width: 45px; min-height: 45px;">
+            <img src="{$BASE_URL}/assets/temas/argon/assets/img/brand/blue-gout.png" class="navbar-brand-img d-none d-sm-block" id="logoImagem" alt="...">
             <img src="{$BASE_URL}/assets/temas/argon/assets/img/brand/blue-xs.png" class="navbar-brand-img d-block d-sm-none" alt="...">
         </a>
         <!-- User -->
@@ -107,14 +107,18 @@
 </nav>
 <script type="text/javascript">
 function expandirMenu(x) {
-    if (window.innerWidth > 768) { // Adicione a condição para telas maiores que 768 pixels
+    if (window.innerWidth > 768) { 
   x.classList.add("menu-lateral-expandido");
+  let logoImagem = document.getElementById('logoImagem');
+  logoImagem.src="{$BASE_URL}/assets/temas/argon/assets/img/brand/blue-xs.png"; 
 }
 }
 
 function retrairMenu(x) {
     x.scrollTop = 0;
   x.classList.remove("menu-lateral-expandido");
+  let logoImagem = document.getElementById('logoImagem');
+  logoImagem.src="{$BASE_URL}/assets/temas/argon/assets/img/brand/blue-gout.png"; 
 }
 
 </script>
