@@ -330,7 +330,7 @@
 
                                     case 'TIPO_UMIDADE_AR':    
                                     tipo_informação = "Umidade (%)";
-                                    geraGrafico(graficoUmid, tipo_informação, periodos, valores, escala); //passa: canva de temperatura, Temperatura como label superior, periodos como label inferior e valores como dados finais
+                                    geraGrafico(graficoUmid, tipo_informação, periodos, valores, escala); 
                                     break;
 
                                     case 'TIPO_VELOCIDADE_VENTO':
@@ -377,7 +377,7 @@
                         return;
                     }  
                     else {
-                            $(card_id).text(parseFloat(data[0].valor).toFixed(2));
+                            $(card_id).text(parseFloat(data[0].valor).toFixed(2).replace('.', ','));
                              let [dataOriginal, hora] = data[0].datahora.split(' ');
                             let [ano, mes, dia] = dataOriginal.split('-');
                            $('#leitura_label').text(dia + "/" + mes + "/" + ano + " - " + hora );
