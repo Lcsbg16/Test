@@ -80,6 +80,7 @@ class Api extends BaseController
                 ];
 
                 $this->LeiturasModel->inserirLeitura($estacao['id'], $dadosLeitura);
+                echo 'OK';
             }
             else
             {
