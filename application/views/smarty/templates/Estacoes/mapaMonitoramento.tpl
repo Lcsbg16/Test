@@ -93,7 +93,7 @@
                             popupContent += "\
                         <br><strong>Temperatura:</strong> " + (feature.properties.ultimaLeitura.temperatura ? parseFloat(feature.properties.ultimaLeitura.temperatura).toFixed(2).replace(".", ",") + " &#176;C" : "Sem registro") + "\
                         <br><strong>Umidade do ar:</strong> " + (feature.properties.ultimaLeitura.umidade_ar ? parseFloat(feature.properties.ultimaLeitura.umidade_ar).toFixed(2).replace(".", ",") + "%" : "Sem registro") + "\
-                        <br><strong>Velocidade do vento:</strong> " + (feature.properties.ultimaLeitura.velocidade_vento ? parseFloat(feature.properties.ultimaLeitura.velocidade_vento).toFixed(2).replace(".", ",") + " m/s" : "Sem registro") + "\
+                        <br><strong>Velocidade do vento:</strong> " + (feature.properties.ultimaLeitura.velocidade_vento ? parseFloat(feature.properties.ultimaLeitura.velocidade_vento).toFixed(2).replace(".", ",") + " km/h" : "Sem registro") + "\
                         <br><strong>Direção do vento:</strong> " + (feature.properties.ultimaLeitura.dir_vento ? feature.properties.ultimaLeitura.dir_vento + "&#176;" : "Sem registro") + "\
                         <br><strong>Volume de chuva:</strong> " + (feature.properties.ultimaLeitura.volume_chuva ? parseFloat(feature.properties.ultimaLeitura.volume_chuva).toFixed(2).replace(".", ",") + " mm&sup3;" : "Sem registro") + "\
                             ";
