@@ -79,7 +79,18 @@ class Api extends BaseController
                     'payload'           => json_encode($postData)
                 ];
 
+                $this->db->db_debug = FALSE;
                 $this->LeiturasModel->inserirLeitura($estacao['id'], $dadosLeitura);
+
+                $error = $this->db->error();
+                if ($error['code'])
+                {
+                    http_response_code(500);
+                    echo var_dump($error['message']);
+                    return;
+                }
+
+                echo 'OK';
             }
             else
             {
