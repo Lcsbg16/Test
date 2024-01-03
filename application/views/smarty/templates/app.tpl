@@ -10,7 +10,7 @@
             {$titulo_pagina|default:$APPLICATION_TITLE}
         </title>
         <!-- Favicon -->
-        <link href="{$BASE_URL}/assets/temas/argon/assets/img/brand/favicon.png" rel="icon" type="image/png">
+        <link href="{$BASE_URL}/assets/temas/argon/assets/img/brand/favicon.ico" rel="icon" type="image/png">
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
 
