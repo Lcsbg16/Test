@@ -29,43 +29,72 @@
     {* /leaflet *}
 
     <div class="container-fluid container-fluid-mapa mt-3">
-        <div class="row">
+        <div class="row" style="height: auto;" >
             <div class="col">
                 <div class="card shadow">
-                    <div class="card-body card-body-top">
+                    <div class="card-body card-body-top" style="padding-bottom: 0;">
                         <div class="row justify-content-center"> 
-                        <div class="col-5 form-group">
-                            <label for="camada_id">Camada:</label>
-                            <select class="form-control form-control-sm change_controller" id="camada_id" name="camada_id">
-                                {html_options options=$camadas}
-                            </select>
-                        </div>
-                        <div class="col-5 form-group">
-
-                            <label for="estacao_selecionada">Esta&ccedil;&otilde;es Ativas:</label>
-                            <select class="form-control form-control-sm change_controller" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada -->
-                                {foreach $estacoes as $eAtual}
-                                    <option value="{$eAtual.id}" selected id="estacao_descricao"> {$eAtual.descricao} ({$eAtual.identificador})</option>
-                                {/foreach}
-
-                            </select>
-                        </div>
-                        </div>
-                    </div>
-                
-                    <div class="card-body card-body-bottom">
-                        {if $estacoes}
-                            <div id="map"></div>
-                        {else}
-                            <div class="alert alert-warning">
-                                N&atilde;o h&aacute; esta&ccedil;&otilde;es cadastradas no sistema para o seu n&iacute;vel de acesso.
+                            <div class="col-lg-4 col-sm-12 form-group">
+                                <label for="camada_id">Camada:</label>
+                                <select class="form-control form-control-sm change_controller" id="camada_id" name="camada_id">
+                                    {html_options options=$camadas}
+                                </select>
                             </div>
-                        {/if}
+                            <div class="col-lg-4 col-sm-12 form-group">
+                                <label for="estacao_selecionada">Esta&ccedil;&otilde;es Ativas:</label>
+                                <select class="form-control form-control-sm change_controller" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada -->
+                                    {foreach $estacoes as $eAtual}
+                                        <option value="{$eAtual.id}" selected id="estacao_descricao"> {$eAtual.descricao} ({$eAtual.identificador})</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                            <div class="col-lg-2 col-sm-12  form-group d-flex justify-content-center align-items-center" style="margin: 0;">
+                            <!-- Botão de abertura do Modal -->
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#legendasModal" style="margin: 21px!important;"> Legendas </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+            <div class="row" >
+                <div class="col">
+                <div class="card shadow">
+                <div class="card-body card-body-bottom">
+                {if $estacoes}
+                    <div id="map"></div>
+                {else}
+                    <div class="alert alert-warning">
+                        N&atilde;o h&aacute; esta&ccedil;&otilde;es cadastradas no sistema para o seu n&iacute;vel de acesso.
+                    </div>
+                {/if}
+            </div>
+                </div>
+                </div>
+            </div>
+
     </div>
+
+    <!-- Modal para as legendas -->
+        <div class="modal fade" id="legendasModal" tabindex="-1" role="dialog" aria-labelledby="legendasModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="legendasModalLabel">Legendas: </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                ...
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+            </div>
+        </div>
+
     {if $estacoes}
 
         <script>

@@ -90,6 +90,23 @@ class EstacoesModel extends BaseModel
     }
 
     /**
+     * Retorna um array com os dados de uma estação, buscando-se pelo identificador (string)
+     *
+     * @param string $identificador
+     * @return array
+     */
+    public function getEstacaoPorIdentificador($identificador)
+    {
+        $estacao = $this->db->where('identificador', $identificador)
+                ->get('estacao')
+                ->row_array();
+
+        $estacao['online'] = $this->getEstacaoOnline($estacao['id']);
+
+        return $estacao;
+    }
+
+    /**
      * Checa se uma estação está online
      *
      * @param int $estacaoId Id da estação
@@ -203,7 +220,6 @@ class EstacoesModel extends BaseModel
     private function getConfiguracoesCamada($leitura, $camada)
     {
         $this->load->model('LeiturasModel');
-//$cores         = ['#4DB600', '#FF0000', '#FFAA00', '#FCFF22', '#D200DF'];
 
         switch ($camada)
         {

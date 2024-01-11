@@ -2144,7 +2144,7 @@ textarea.form-control {
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  /*margin-bottom: 1.5rem;*/ /*JAQUE: remoção da margem inferior*/
 }
 
 .form-text {
@@ -16869,7 +16869,6 @@ textarea[resize="horizontal"] {
   overflow-y: auto!important;
 
 }
-
 
 @media screen and (min-width: 768px) {
   .esconder {
