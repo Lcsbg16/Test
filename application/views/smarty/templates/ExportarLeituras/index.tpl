@@ -16,7 +16,7 @@
                                     <label>Estação</label><br>
                                     <select id="estacoesSelect" class="form-control form-control-sm" name="estacao[]" multiple>
                                         {foreach $estacoes as $eAtual}
-                                            <option value="{$eAtual.id}">{$eAtual.descricao} ({$eAtual.identificador})</option>
+                                            <option value="{$eAtual.id}" {if !$eAtual.ativa}disabled{/if}>{$eAtual.descricao} ({$eAtual.identificador})</option>
                                         {/foreach}
                                     </select>
                                 </div>

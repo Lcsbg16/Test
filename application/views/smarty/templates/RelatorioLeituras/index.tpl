@@ -16,11 +16,7 @@
                                     <label>Estação</label><br>
                                     <select id="estacoesSelect" class="form-control form-control-sm" name="estacoes[]" multiple>
                                         {foreach $estacoes as $eAtual}
-                                            {if $eAtual.ativa == 0}
-                                                <option value="{$eAtual.id}" id="estacao_descricao" style="color: red;" {if isset($smarty.get.estacoes) && in_array($eAtual.id, $smarty.get.estacoes)} selected {/if}> {$eAtual.descricao} ({$eAtual.identificador})</option>
-                                            {else}
-                                                <option value="{$eAtual.id}" id="estacao_descricao" {if isset($smarty.get.estacoes) && in_array($eAtual.id, $smarty.get.estacoes)} selected {/if}> {$eAtual.descricao} ({$eAtual.identificador})</option>
-                                            {/if}
+                                            <option value="{$eAtual.id}" id="estacao_descricao" {if isset($smarty.get.estacoes) && in_array($eAtual.id, $smarty.get.estacoes)} selected {/if} {if !$eAtual.ativa}disabled{/if}> {$eAtual.descricao} ({$eAtual.identificador})</option>
                                         {/foreach}
                                     </select>
                                 </div>
@@ -124,3 +120,5 @@
                                         });
     </script>
 {/block}
+
+
