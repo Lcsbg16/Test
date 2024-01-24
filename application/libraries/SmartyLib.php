@@ -21,6 +21,8 @@ class SmartyLib extends Smarty
 
         $ci = & get_instance();
 
+        $this->error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED;
+
         $this->compile_dir  = APPPATH . "cache/templates_c";
         $this->template_dir = APPPATH . "views/smarty/templates";
         $this->assign('APPPATH', APPPATH);
@@ -95,7 +97,6 @@ class SmartyLib extends Smarty
             return $this->fetch($template);
         }
     }
-
 }
 
 // END Smarty Class
