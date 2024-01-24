@@ -105,6 +105,6 @@ class Estacoes extends BasePrivateController
 
     public function getLegendaMonitoramento($camada)
     {
-        return 'Legenda não disponível.';
+        $this->jsonOutput('Legenda não disponível');
     }
 }
