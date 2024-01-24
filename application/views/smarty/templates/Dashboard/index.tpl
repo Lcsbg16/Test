@@ -7,7 +7,7 @@
         <div class="header-body">
             <!-- Card stats -->
             <div class="row" id="cards_row">
-                
+
             </div>
         </div>
     </div>
@@ -85,7 +85,7 @@
                             <div class="col">
                                 <h3 class="ml-2">Sem ocorrências registradas no momento.</h3>
                             </div>
-                        {else}      
+                        {else}
                             <table class="table align-items-center table-flush">
                                 <thead class="thead-light">
                                     <tr>
@@ -114,50 +114,55 @@
                                     {/foreach}
                                 </tbody>
                             </table>
-                        {/if}    
+                        {/if}
                     </div>
                 </div>
             </div>
         </div>
         <!-- /tabelas -->
-<script>
-        function geraCards(url, largura)
-         {
-                $.ajax({
-                url: url+"/"+largura,
-                method: 'GET',
-                success: function(response) {
-                    $('#cards_row').append(response);
-                    console.log(response);//
-                },
-                error: function(error) {
-                    console.error('Erro na requisição AJAX:', error);
+        <script>
+
+            {literal}
+                function geraCards(url, largura, id)
+                {
+                    var idDoCard = 'card_' + id;
+                    htmlDoCardVazio = '<div class="col-xl-' + largura + ' col-lg-6" id="' + idDoCard + '"></div>';
+                    $('#cards_row').append(htmlDoCardVazio);
+                    $.ajax({
+                        url: url + "/" + largura,
+                        method: 'GET',
+                        success: function (response) {
+                            $('#' + idDoCard).html(response)
+                            console.log(response);//
+                        },
+                        error: function (error) {
+                            console.error('Erro na requisição AJAX:', error);
+                        }
+                    });
                 }
-            });
-        }
 
-    // Lista de dicionários para montagem de cards:
-    var listaCards = [
-        { id: 1, url: '{$BASE_URL}/Dashboard/cardContagemEstacoes', largura: '12' }, 
-        { id: 2, url: '{$BASE_URL}/Dashboard/cardEstacoesAtivas', largura: '3' },
-        { id: 3, url: '{$BASE_URL}/Dashboard/cardEstacoesOffline', largura: '3' },
-        { id: 4, url: '{$BASE_URL}/Dashboard/cardTemperaturaMedia', largura: '3' },
-        { id: 5, url: '{$BASE_URL}/Dashboard/cardTemperaturaMinima', largura: '3' },
-        { id: 6, url: '{$BASE_URL}/Dashboard/cardTemperaturaMaxima', largura: '3' },
-        { id: 7, url: '{$BASE_URL}/Dashboard/cardVolumeChuvaMinimo', largura: '3' },   
-        { id: 8, url: '{$BASE_URL}/Dashboard/cardVolumeChuvaMaximo', largura: '3' },
-        { id: 9, url: '{$BASE_URL}/Dashboard/cardVelocidadeMinimaVento', largura: '3' },
-        { id: 10, url: '{$BASE_URL}/Dashboard/cardVelocidadeMaximaVento', largura: '3' },
+                // Lista de dicionários para montagem de cards:
+                var listaCards = [
+                    {id: 1, url: BASE_URL + '/Dashboard/cardContagemEstacoes', largura: '12'},
+                    {id: 2, url: BASE_URL + '/Dashboard/cardEstacoesAtivas', largura: '3'},
+                    {id: 3, url: BASE_URL + '/Dashboard/cardEstacoesOffline', largura: '3'},
+                    {id: 4, url: BASE_URL + '/Dashboard/cardTemperaturaMedia', largura: '3'},
+                    {id: 5, url: BASE_URL + '/Dashboard/cardTemperaturaMinima', largura: '3'},
+                    {id: 6, url: BASE_URL + '/Dashboard/cardTemperaturaMaxima', largura: '3'},
+                    {id: 7, url: BASE_URL + '/Dashboard/cardVolumeChuvaMinimo', largura: '3'},
+                    {id: 8, url: BASE_URL + '/Dashboard/cardVolumeChuvaMaximo', largura: '3'},
+                    {id: 9, url: BASE_URL + '/Dashboard/cardVelocidadeMinimaVento', largura: '3'},
+                    {id: 10, url: BASE_URL + '/Dashboard/cardVelocidadeMaximaVento', largura: '3'},
+                ];
+                listaCards.forEach(card => {
+                    geraCards(card.url, card.largura, card.id);
+                });
 
+            {/literal}
+        </script>
 
-        ]; 
-        listaCards.forEach(card => {
-        geraCards(card.url, card.largura);});
-
-    </script>
-
-</body>
+    </body>
 </html>
 
-    </div>
+</div>
 {/block}

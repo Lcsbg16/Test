@@ -1,6 +1,6 @@
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js"></script>
 
-<div class="col-xl-{$largura} col-lg-6" x-data="{ volumeChuva: {$vol_chuva_min} }">
+<div  x-data="{ volumeChuva: {$vol_chuva_min} }">
     <div class="card card-stats mb-4 mb-xl-4">
         <div class="card-body">
             <div class="row">

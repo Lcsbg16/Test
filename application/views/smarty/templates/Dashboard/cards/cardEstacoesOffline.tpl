@@ -1,4 +1,3 @@
-<div class="col-xl-{$largura} col-lg-6">
 <div class="card card-stats mb-4 mb-xl-4">
     <div class="card-body">
         <div class="row">
@@ -13,5 +12,4 @@
             </div>
         </div>
     </div>
-</div>
 </div>
