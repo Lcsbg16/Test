@@ -143,7 +143,7 @@
 
                 // Lista de dicionários para montagem de cards:
                 var listaCards = [
-                    {id: 1, url: BASE_URL + '/Dashboard/cardContagemEstacoes', largura: '12'},
+                    {id: 1, url: BASE_URL + '/Dashboard/cardContagemEstacoes', largura: '3'},
                     {id: 2, url: BASE_URL + '/Dashboard/cardEstacoesAtivas', largura: '3'},
                     {id: 3, url: BASE_URL + '/Dashboard/cardEstacoesOffline', largura: '3'},
                     {id: 4, url: BASE_URL + '/Dashboard/cardTemperaturaMedia', largura: '3'},
