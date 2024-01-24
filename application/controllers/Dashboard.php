@@ -36,101 +36,100 @@ class Dashboard extends BasePrivateController
         $this->loadSmartyView('Dashboard/index', $variaveisView);
     }
 
-    public function cardContagemEstacoes($largura){
-        $this->load->model('EstacoesModel'); 
-        $variaveisView = [];
-        $variaveisView['qtde_estacoes']         = $this->EstacoesModel->getContagemEstacoes();
-        $variaveisView['largura']         = $largura;
+    public function cardContagemEstacoes($largura)
+    {
+        $this->load->model('EstacoesModel');
+        $variaveisView                  = [];
+        $variaveisView['qtde_estacoes'] = $this->EstacoesModel->getContagemEstacoes();
+        $variaveisView['largura']       = $largura;
         $this->loadSmartyView('Dashboard/cards/cardContagemdeEstacoes', $variaveisView);
-
     }
 
-    public function cardEstacoesAtivas($largura){
-        $this->load->model('EstacoesModel'); 
-        $variaveisView = [];
-        $variaveisView['qtde_estacoes_online']  = $this->EstacoesModel->getQtdeEstacoesOnline();
-        $variaveisView['largura']         = $largura;
+    public function cardEstacoesAtivas($largura)
+    {
+        $this->load->model('EstacoesModel');
+        $variaveisView                         = [];
+        $variaveisView['qtde_estacoes_online'] = $this->EstacoesModel->getQtdeEstacoesOnline();
+        $variaveisView['largura']              = $largura;
         $this->loadSmartyView('Dashboard/cards/cardEstacoesAtivas', $variaveisView);
-
     }
 
-    public function cardEstacoesOffline($largura){
-        $this->load->model('EstacoesModel'); 
-        $variaveisView = [];
+    public function cardEstacoesOffline($largura)
+    {
+        $this->load->model('EstacoesModel');
+        $variaveisView                          = [];
         $variaveisView['qtde_estacoes_offline'] = $this->EstacoesModel->getQtdeEstacoesOffline();
-        $variaveisView['largura']         = $largura;
+        $variaveisView['largura']               = $largura;
         $this->loadSmartyView('Dashboard/cards/cardEstacoesOffline', $variaveisView);
-
     }
 
-    public function cardTemperaturaMedia($largura){
+    public function cardTemperaturaMedia($largura)
+    {
         $this->load->model('LeiturasModel');
-        $variaveisView = [];
-        $variaveisView['temperatura_media']     = $this->LeiturasModel->getUltimaTemperaturaMedia();
-        $variaveisView['largura']         = $largura;
+        $variaveisView                      = [];
+        $variaveisView['temperatura_media'] = $this->LeiturasModel->getUltimaTemperaturaMedia();
+        $variaveisView['largura']           = $largura;
 
         $this->loadSmartyView('Dashboard/cards/cardTemperaturaMedia', $variaveisView);
-
     }
 
-    public function cardTemperaturaMinima($largura){
+    public function cardTemperaturaMinima($largura)
+    {
         $this->load->model('LeiturasModel');
-        $variaveisView = [];
+        $variaveisView                       = [];
         $variaveisView['temperatura_minima'] = $this->LeiturasModel->getTemperaturaMinima();
-        $variaveisView['largura']         = $largura;
+        $variaveisView['largura']            = $largura;
 
         $this->loadSmartyView('Dashboard/cards/cardTemperaturaMinima', $variaveisView);
-
     }
 
-    public function cardTemperaturaMaxima($largura){
+    public function cardTemperaturaMaxima($largura)
+    {
         $this->load->model('LeiturasModel');
-        $variaveisView = [];
+        $variaveisView                       = [];
         $variaveisView['temperatura_maxima'] = $this->LeiturasModel->getTemperaturaMaxima();
-        $variaveisView['largura']         = $largura;
+        $variaveisView['largura']            = $largura;
 
         $this->loadSmartyView('Dashboard/cards/cardTemperaturaMaxima', $variaveisView);
-
     }
 
-    public function cardVolumeChuvaMinimo($largura){
+    public function cardVolumeChuvaMinimo($largura)
+    {
         $this->load->model('LeiturasModel');
-        $variaveisView = [];
+        $variaveisView                  = [];
         $variaveisView['vol_chuva_min'] = $this->LeiturasModel->getVolumeChuvaMinimo();
-        $variaveisView['largura']         = $largura;
+        $variaveisView['largura']       = $largura;
 
         $this->loadSmartyView('Dashboard/cards/cardVolumeChuvaMinimo', $variaveisView);
-
     }
 
-    public function cardVolumeChuvaMaximo($largura){
+    public function cardVolumeChuvaMaximo($largura)
+    {
         $this->load->model('LeiturasModel');
-        $variaveisView = [];
+        $variaveisView                  = [];
         $variaveisView['vol_chuva_max'] = $this->LeiturasModel->getVolumeChuvaMaxima();
-        $variaveisView['largura']         = $largura;
+        $variaveisView['largura']       = $largura;
 
         $this->loadSmartyView('Dashboard/cards/cardVolumeChuvaMaximo', $variaveisView);
-
-
     }
-    public function cardVelocidadeMinimaVento($largura){
+
+    public function cardVelocidadeMinimaVento($largura)
+    {
         $this->load->model('LeiturasModel');
-        $variaveisView = [];
+        $variaveisView                      = [];
         $variaveisView['velocidade_minima'] = Conversao::velVentoParakmH($this->LeiturasModel->getVelocidadeMinima());
-        $variaveisView['largura']         = $largura;
+        $variaveisView['largura']           = $largura;
 
         $this->loadSmartyView('Dashboard/cards/cardVelocidadeMinimaVento', $variaveisView);
-
     }
-    public function cardVelocidadeMaximaVento($largura){
+
+    public function cardVelocidadeMaximaVento($largura)
+    {
         $this->load->model('LeiturasModel');
-        $variaveisView = [];
+        $variaveisView                      = [];
         $variaveisView['velocidade_maxima'] = Conversao::velVentoParakmH($this->LeiturasModel->getVelocidadeMaxima());
-        $variaveisView['largura']         = $largura;
+        $variaveisView['largura']           = $largura;
 
         $this->loadSmartyView('Dashboard/cards/cardVelocidadeMaximaVento', $variaveisView);
-
     }
-    
-
 }
