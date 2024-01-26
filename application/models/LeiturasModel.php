@@ -381,7 +381,7 @@ class LeiturasModel extends BaseModel
                                     leitura L1
                             WHERE
                                     L1.estacao_id = E.id
-                                    AND datahora >= '" . date('Y-m-d') . " 00:00:00'
+                                    AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
                                     datahora DESC
                             LIMIT 1
@@ -417,7 +417,7 @@ class LeiturasModel extends BaseModel
                                     leitura L1
                             WHERE
                                     L1.estacao_id = E.id
-                                    AND datahora >= '" . date('Y-m-d') . " 00:00:00'
+                                    AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
                                     datahora DESC
                             LIMIT 1
@@ -452,7 +452,7 @@ class LeiturasModel extends BaseModel
                             leitura L1
                     WHERE
                             L1.estacao_id = E.id
-                            AND datahora >= '" . date('Y-m-d') . " 00:00:00'
+                            AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                     ORDER BY
                             datahora DESC
                     LIMIT 1
@@ -487,7 +487,7 @@ class LeiturasModel extends BaseModel
                                     leitura L1
                             WHERE
                                     L1.estacao_id = E.id
-                                    AND datahora >= '" . date('Y-m-d') . " 00:00:00'
+                                    AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
                                     datahora DESC
                             LIMIT 1
@@ -522,7 +522,7 @@ class LeiturasModel extends BaseModel
                                     leitura L1
                             WHERE
                                 L1.estacao_id = E.id
-                                AND datahora >= '" . date('Y-m-d') . " 00:00:00'
+                                AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
                                     datahora DESC
                             LIMIT 1
@@ -557,7 +557,7 @@ class LeiturasModel extends BaseModel
                                 leitura L1
                             WHERE
                                 L1.estacao_id = E.id
-                                AND datahora >= '" . date('Y-m-d') . " 00:00:00'
+                                AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
                                 datahora DESC
                             LIMIT 1
@@ -592,7 +592,7 @@ class LeiturasModel extends BaseModel
                                     leitura L1
                             WHERE
                                 L1.estacao_id = E.id
-                                AND datahora >= '" . date('Y-m-d') . " 00:00:00'
+                                AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
                                     datahora DESC
                             LIMIT 1
