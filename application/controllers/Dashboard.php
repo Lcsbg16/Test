@@ -7,6 +7,11 @@ require_once 'BasePrivateController.php';
 class Dashboard extends BasePrivateController
 {
 
+    public function __construct()
+    {
+        $this->acoesPublicas[] = 'carregarCards';
+    }
+
     public function index()
     {
         $this->load->model('OcorrenciasModel');
