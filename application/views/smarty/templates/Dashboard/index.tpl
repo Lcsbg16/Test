@@ -1,6 +1,6 @@
 {extends file = 'app_logado.tpl'}
 {assign var=header_especial value=true}
-{assign var=refresh_automatico value=60}
+{assign var=refresh_automatico value=75}
 {block name='conteudo_header'}
     <!-- estatisticas_gerais -->
     <div class="container-fluid">
