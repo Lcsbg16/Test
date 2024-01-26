@@ -27,6 +27,25 @@ abstract class BaseController extends CI_Controller
     {
         parent::__construct();
         $this->load->model('LoginModel');
+        $this->limparCacheBancoDeDados();
+    }
+
+    private function limparCacheBancoDeDados()
+    {
+        // Define o intervalo em segundos para limpar o cache (por exemplo, a cada 3600 segundos = 1 hora)
+        $interval_seconds = 50;
+
+        // Obtém o tempo da última limpeza do cache a partir do cache
+        $ultima_limpeza_cache_bd = $this->cache->get('ultima_limpeza_cache_bd');
+
+        // Verifica se é necessário limpar o cache com base no tempo armazenado no cache
+        if (!$ultima_limpeza_cache_bd || (time() - $ultima_limpeza_cache_bd) > $interval_seconds)
+        {
+            clear_database_cache();
+
+            // Atualiza o tempo da última limpeza do cache no cache
+            $this->cache->save('ultima_limpeza_cache_bd', time(), $interval_seconds);
+        }
     }
 
     protected function flashMessage($message, $type = 'info')
@@ -121,29 +140,26 @@ abstract class BaseController extends CI_Controller
         $this->email->send();
         $this->smartylib->assign('mensagem', $mensagem);
         $mensagemFinal = $this->smartylib->view('BaseController/enviarEmailEsqueciSenha', [], true);
-    
+
         if ($nomeRemetente)
         {
             $this->EmailUtil->setNomeRemetente($nomeRemetente);
         }
-    
+
         if ($replyTo)
         {
             $this->EmailUtil->setReplyTo($replyTo);
         }
-    
+
         $this->EmailUtil->enviarEmail($assunto, $destinatario, $mensagemFinal, $nomeRemetente, $replyTo);
         //echo "Enviado com sucesso para $email";
     }
-    
-
 
     public function jsonOutput($output)
     {
         header('Content-type: application/json');
         $this->load->view('json_output', ['output' => $output]);
     }
-
 }
 
 class ViolacaoDeSeguranca extends Exception

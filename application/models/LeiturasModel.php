@@ -21,7 +21,7 @@ class LeiturasModel extends BaseModel
 
         $this->db->from('leitura');
         if ($filtros)
-        {   
+        {
             $estacoes       = $filtros->getEstacoes();
             $dataInicial    = $filtros->getDataInicial();
             $dataFinal      = $filtros->getDataFinal();
@@ -366,6 +366,11 @@ class LeiturasModel extends BaseModel
 
     public function getUltimaTemperaturaMedia()
     {
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_on();
+        }
+
         $this->db->from('estacao E')
                 ->select("
                     AVG(
@@ -385,11 +390,23 @@ class LeiturasModel extends BaseModel
                     AS temperatura_media
                 ");
         $linha = $this->db->get()->row_array();
+
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_off();
+        }
+
         return $linha['temperatura_media'];
     }
 
     public function getVolumeChuvaMinimo()
     {
+
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_on();
+        }
+
         $this->db->from("estacao E")
                 ->select("
                     MIN(
@@ -409,11 +426,22 @@ class LeiturasModel extends BaseModel
                     AS vol_chuva_min
                 ");
         $linha = $this->db->get()->row_array();
+
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_off();
+        }
+
         return $linha['vol_chuva_min'];
     }
 
     public function getVolumeChuvaMaxima()
     {
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_on();
+        }
+
         $this->db->from('estacao E')
                 ->select("
             MAX(
@@ -433,11 +461,22 @@ class LeiturasModel extends BaseModel
             AS vol_chuva_max
         ");
         $linha = $this->db->get()->row_array();
+
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_off();
+        }
+
         return $linha['vol_chuva_max'];
     }
 
     public function getTemperaturaMinima()
     {
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_on();
+        }
+
         $this->db->from('estacao E')
                 ->select("
                     MIN(
@@ -458,11 +497,21 @@ class LeiturasModel extends BaseModel
                 ");
         $linha = $this->db->get()->row_array();
 
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_off();
+        }
+
         return $linha['temperatura_minima'];
     }
 
     public function getTemperaturaMaxima()
     {
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_on();
+        }
+
         $this->db->from('estacao E')
                 ->select("
                     MAX(
@@ -483,11 +532,21 @@ class LeiturasModel extends BaseModel
                 ");
         $linha = $this->db->get()->row_array();
 
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_off();
+        }
+
         return $linha['temperatura_maxima'];
     }
 
     public function getVelocidadeMinima()
     {
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_on();
+        }
+
         $this->db->from("estacao E")
                 ->select("
                     MIN(
@@ -508,11 +567,21 @@ class LeiturasModel extends BaseModel
                     ");
         $linha = $this->db->get()->row_array();
 
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_off();
+        }
+
         return $linha["velocidade_minima"];
     }
 
     public function getVelocidadeMaxima()
     {
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_on();
+        }
+
         $this->db->from("estacao E")
                 ->select("
                     MAX(
@@ -532,6 +601,11 @@ class LeiturasModel extends BaseModel
                     AS velocidade_maxima
                     ");
         $linha = $this->db->get()->row_array();
+
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_off();
+        }
 
         return $linha["velocidade_maxima"];
     }
