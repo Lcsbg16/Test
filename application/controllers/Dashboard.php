@@ -9,8 +9,8 @@ class Dashboard extends BasePrivateController
 
     public function __construct()
     {
-        parent::__construct();
         $this->acoesPublicas[] = 'carregarCards';
+        return parent::__construct();
     }
 
     public function index()
