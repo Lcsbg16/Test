@@ -26,6 +26,8 @@ abstract class BaseController extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'file'));
+
         $this->load->model('LoginModel');
         $this->limparCacheBancoDeDados();
     }

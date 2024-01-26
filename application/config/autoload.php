@@ -80,7 +80,7 @@ $autoload['libraries'] = array('database', 'parametros', 'session', 'SmartyLib',
   |	$autoload['drivers'] = array('cache' => 'cch');
   |
  */
-$autoload['drivers'] = array('cache');
+$autoload['drivers'] = array();
 
 /*
   | -------------------------------------------------------------------
