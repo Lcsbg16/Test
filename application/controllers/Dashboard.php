@@ -128,7 +128,7 @@ class Dashboard extends BasePrivateController
     {
         $this->load->model('LeiturasModel');
         $variaveisView                      = [];
-        $variaveisView['velocidade_minima'] = Conversao::velVentoParakmH($this->LeiturasModel->getVelocidadeMinima());
+        $variaveisView['velocidade_minima'] = $this->LeiturasModel->getVelocidadeMinima() !== NULL ? Conversao::velVentoParakmH($this->LeiturasModel->getVelocidadeMinima()) : NULL;
 
         $this->loadSmartyView('Dashboard/cards/cardVelocidadeMinimaVento', $variaveisView);
     }
@@ -137,7 +137,7 @@ class Dashboard extends BasePrivateController
     {
         $this->load->model('LeiturasModel');
         $variaveisView                      = [];
-        $variaveisView['velocidade_maxima'] = Conversao::velVentoParakmH($this->LeiturasModel->getVelocidadeMaxima());
+        $variaveisView['velocidade_maxima'] = $this->LeiturasModel->getVelocidadeMaxima() ? Conversao::velVentoParakmH($this->LeiturasModel->getVelocidadeMaxima()) : NULL;
 
         $this->loadSmartyView('Dashboard/cards/cardVelocidadeMaximaVento', $variaveisView);
     }

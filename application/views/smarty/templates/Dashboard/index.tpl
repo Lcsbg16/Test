@@ -38,7 +38,7 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th scope="col">Data</th>
-                                    <th scope="col">Estação</th>
+                                    <th scope="col">Esta&ccedil;&atilde;o</th>
                                     <th scope="col">Evento</th>
                                 </tr>
                             </thead>
