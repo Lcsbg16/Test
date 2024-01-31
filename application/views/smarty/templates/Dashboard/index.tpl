@@ -172,47 +172,45 @@
 
                 function carregarCardsAlerta()
                 {
+                    var alturaCards = $('#alert_cards_row').height();
+
                     url = BASE_URL + 'Dashboard/listaCardsAlerta/';
                     $.ajax({
                         url: url,
                         method: 'GET',
                         success: function (response) {
-                            response.forEach(card => {
+                            if (response.length >0) {
+                            $('#alert_cards_row').css('min-height', alturaCards + 'px'); 
+                            $('#alert_cards_row').empty();
+                                response.forEach(card => {
                                 desenharCardAlerta(card.url, card.largura, card.id, card.corAlerta);
-                            });
+                            })}
+                            else {
+                          $('#alert_cards_row').css('min-height', '0');
+                          $('#alert_cards_row').empty()}               
                         },
                         error: function (error) {
                             console.error('Erro na requisição AJAX:', error);
                         }
                     });
 
-
-
                 }
 
-
-
-                function desenharCardAlerta(url, largura, AlertaId, cor) {
+               function desenharCardAlerta(url, largura, AlertaId, cor) {
                     $('#loading_animation').show();
-
-
                     $.ajax({
                         url: url,
                         method: 'GET',
                         success: function (response) {
                             $('#loading_animation').hide();
-                            $('#alert_cards_row').empty(); // Remove todos os cards de alerta
 
                             let idCardAlerta = 'alerta_' + AlertaId;
 
                             let cardAlerta = '<div class="col-xl-' + largura + ' col-lg-6" id="' + idCardAlerta + '"><div class="card card-stats mb-4 mb-xl-4"><div class="card-body">' + response + '</div></div></div>';
                             $('#alert_cards_row').append(cardAlerta);
 
-                            setTimeout(function () { //causa dismetria entre a atualização do card e atualização da cor, levando ao efeito de "piscar"
-                                $('#' + idCardAlerta).find('.card').css('background-color', cor);
-                            }, 250);
-
-
+                            $('#' + idCardAlerta).find('.card').addClass('blink_card').css('animation', 'blink_' + idCardAlerta + ' 2s linear infinite');
+                            $('#classeCardAlerta').append('<style>@keyframes blink_' + idCardAlerta + ' { 0% { background-color:' + cor + '; } 50% { background-color: white; } 100% { background-color: ' + cor + '; } }</style>');
                         },
                         error: function (error) {
                             console.error('Erro na requisição AJAX:', error);
@@ -220,7 +218,7 @@
                     });
 
 
-                }
+            }
 
                 //Att dos cards e do card de alertas
                 function atualizarCards()
