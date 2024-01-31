@@ -156,7 +156,7 @@
                 }
                 criarCardsVazios(); //inicializa o esqueleto vazio dos cards
 
-                function geraCards(url, id)
+                function desenharCardsMonitoramento(url, id)
                 {
                     $.ajax({
                         url: url,
@@ -176,7 +176,7 @@
                 ];
 
 
-                function geraCardsAlerta(url, largura, AlertaId, cor) {
+                function desenharCardsAlerta(url, largura, AlertaId, cor) {
                     $('#loading_animation').show();
 
 
@@ -207,18 +207,18 @@
                 }
 
                 //Att dos cards e do card de alertas
-                function atualizaCards()
+                function atualizarCards()
                 {
                     listaCards.forEach(card => {
-                        geraCards(card.url, card.id);
+                        desenharCardsMonitoramento(card.url, card.id);
                     });
 
                     listaCardsAlerta.forEach(card => {
-                        geraCardsAlerta(card.url, card.largura, card.id, card.corAlerta);
+                        desenharCardsAlerta(card.url, card.largura, card.id, card.corAlerta);
                     });
                 }
-                atualizaCards();
-                setInterval(atualizaCards, 2000);
+                atualizarCards();
+                setInterval(atualizarCards, 10000);
 
 
             {/literal}
