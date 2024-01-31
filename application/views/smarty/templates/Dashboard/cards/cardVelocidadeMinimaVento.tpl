@@ -2,7 +2,7 @@
     <div class="col">
         <h5 class="card-title text-uppercase text-muted mb-0">Vel. Min. do Vento</h5>
         <span class="h2 font-weight-bold mb-0">
-            {if $velocidade_minima == NULL}
+            {if $velocidade_minima === NULL}
                 -
             {else}
                 {$velocidade_minima|number_format:1:","} km/h
