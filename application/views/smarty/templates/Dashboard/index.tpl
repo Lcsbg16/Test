@@ -185,16 +185,10 @@
                             console.error('Erro na requisição AJAX:', error);
                         }
                     });
-
-
-
                 }
-
-
 
                 function desenharCardAlerta(url, largura, AlertaId, cor) {
                     $('#loading_animation').show();
-
 
                     $.ajax({
                         url: url,
@@ -211,15 +205,11 @@
                             setTimeout(function () { //causa dismetria entre a atualização do card e atualização da cor, levando ao efeito de "piscar"
                                 $('#' + idCardAlerta).find('.card').css('background-color', cor);
                             }, 250);
-
-
                         },
                         error: function (error) {
                             console.error('Erro na requisição AJAX:', error);
                         }
                     });
-
-
                 }
 
                 //Att dos cards e do card de alertas
