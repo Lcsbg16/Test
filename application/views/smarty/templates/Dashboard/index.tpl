@@ -156,7 +156,7 @@
                 }
                 criarCardsVazios(); //inicializa o esqueleto vazio dos cards
 
-                function desenharCardsMonitoramento(url, id)
+                function desenharCardMonitoramento(url, id)
                 {
                     $.ajax({
                         url: url,
@@ -170,13 +170,29 @@
                     });
                 }
 
-                // Lista de dicionários para montagem de cards de alerta:
-                var listaCardsAlerta = [
-                    {id: 1, url: BASE_URL + '/Dashboard/cardAlertas', largura: '3', corAlerta: "green"}
-                ];
+                function carregarCardsAlerta()
+                {
+                    url = BASE_URL + 'Dashboard/listaCardsAlerta/';
+                    $.ajax({
+                        url: url,
+                        method: 'GET',
+                        success: function (response) {
+                            response.forEach(card => {
+                                desenharCardAlerta(card.url, card.largura, card.id, card.corAlerta);
+                            });
+                        },
+                        error: function (error) {
+                            console.error('Erro na requisição AJAX:', error);
+                        }
+                    });
 
 
-                function desenharCardsAlerta(url, largura, AlertaId, cor) {
+
+                }
+
+
+
+                function desenharCardAlerta(url, largura, AlertaId, cor) {
                     $('#loading_animation').show();
 
 
@@ -210,12 +226,10 @@
                 function atualizarCards()
                 {
                     listaCards.forEach(card => {
-                        desenharCardsMonitoramento(card.url, card.id);
+                        desenharCardMonitoramento(card.url, card.id);
                     });
 
-                    listaCardsAlerta.forEach(card => {
-                        desenharCardsAlerta(card.url, card.largura, card.id, card.corAlerta);
-                    });
+                    carregarCardsAlerta();
                 }
                 atualizarCards();
                 setInterval(atualizarCards, 10000);

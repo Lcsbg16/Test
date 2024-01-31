@@ -50,6 +50,15 @@ abstract class BasePrivateController extends BaseController
                 return;
             }
         }
+        $this->carregarAlertas();
+    }
+
+    private function carregarAlertas()
+    {
+        $this->load->library('Monitoramento/Alerta/AlertaSubject');
+
+        $this->load->library('Monitoramento/Alerta/AlertaPluviometriaObserver');
+        $this->alertasubject->attach($this->alertapluviometriaobserver);
     }
 
     protected function checaPermissaoUsuarioLogado($permissao)

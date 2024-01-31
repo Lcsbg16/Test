@@ -1,6 +1,6 @@
 <?php
 
-class MonitoramentoSubject extends CI_Model
+class MonitoramentoSubject
 {
 
     /**
@@ -19,7 +19,7 @@ class MonitoramentoSubject extends CI_Model
         unset($this->observers[$indice]);
     }
 
-    public function getNotificacoes()
+    public function getMonitoramentos()
     {
         return $this->notifyObservers();
     }
