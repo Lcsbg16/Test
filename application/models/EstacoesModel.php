@@ -224,12 +224,7 @@ class EstacoesModel extends BaseModel
         switch ($camada)
         {
             case FiltrosLeitura::TIPO_VOLUME_CHUVA:
-                $coresPluviometria = [
-                    LeiturasModel::PLUVIOMETRIA_NIVEL_ATENCAO       => '#fe9900',
-                    LeiturasModel::PLUVIOMETRIA_NIVEL_ALERTA        => '#fe0000',
-                    LeiturasModel::PLUVIOMETRIA_NIVEL_ALERTA_MAXIMO => '#7030a0',
-                    LeiturasModel::PLUVIOMETRIA_NIVEL_NORMALIDADE   => '#7eff2c'
-                ];
+                $coresPluviometria = $this->LeiturasModel->getCoresNiveisAlertasPluviometria();
                 $nivel             = $this->LeiturasModel->calcularAlertaPluviometria($leitura);
                 $corDaEstacao      = $coresPluviometria[$nivel];
 
@@ -328,12 +323,17 @@ class EstacoesModel extends BaseModel
         return $query->result_array();
     }
 
-    private function getUltimoRegistro($estacaoId) //pega o ultimo registro de cada estação para atualizar o mapa de monitoamento a cada 30seg
+    public function getUltimoRegistro($estacaoId) //pega o ultimo registro de cada estação para atualizar o mapa de monitoamento a cada 30seg
     {
         return $this->db->where('estacao_id', $estacaoId)
                         ->order_by('datahora', 'desc')
                         ->limit(1)
                         ->get('v_leitura_calculada')
                         ->row_array();
+    }
+
+    public function getURLMonitoramentoEstacao($idEstacao)
+    {
+        return base_url('Estacoes/monitoramentoIndividual/' . $idEstacao);
     }
 }

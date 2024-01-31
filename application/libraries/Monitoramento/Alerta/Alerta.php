@@ -1,8 +1,8 @@
 <?php
 
-require_once APPPATH . 'libraries/Monitoramento/Monitoramento.php';
+require_once APPPATH . 'libraries/Monitoramento/EntidadeMonitoramento.php';
 
-class Alerta extends Monitoramento
+class Alerta extends EntidadeMonitoramento
 {
 
     private $cor;

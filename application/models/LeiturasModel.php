@@ -10,6 +10,26 @@ class LeiturasModel extends BaseModel
     const PLUVIOMETRIA_NIVEL_ALERTA        = 'alerta';
     const PLUVIOMETRIA_NIVEL_ALERTA_MAXIMO = 'alerta_maximo';
 
+    public function getCoresNiveisAlertasPluviometria()
+    {
+        return [
+            LeiturasModel::PLUVIOMETRIA_NIVEL_ATENCAO       => COR_PLUVIOMETRIA_NIVEL_ATENCAO,
+            LeiturasModel::PLUVIOMETRIA_NIVEL_ALERTA        => COR_PLUVIOMETRIA_NIVEL_ALERTA,
+            LeiturasModel::PLUVIOMETRIA_NIVEL_ALERTA_MAXIMO => COR_PLUVIOMETRIA_NIVEL_ALERTA_MAXIMO,
+            LeiturasModel::PLUVIOMETRIA_NIVEL_NORMALIDADE   => COR_PLUVIOMETRIA_NIVEL_NORMALIDADE
+        ];
+    }
+
+    public function getNomesNiveisAlertasPluviometria()
+    {
+        return [
+            LeiturasModel::PLUVIOMETRIA_NIVEL_ATENCAO       => 'nível de atenção',
+            LeiturasModel::PLUVIOMETRIA_NIVEL_ALERTA        => 'nível de alerta',
+            LeiturasModel::PLUVIOMETRIA_NIVEL_ALERTA_MAXIMO => 'nível de alerta máximo',
+            LeiturasModel::PLUVIOMETRIA_NIVEL_NORMALIDADE   => 'nível de normalidade'
+        ];
+    }
+
     public function inserirLeitura($estacaoId, $dadosLeitura)
     {
         $dadosLeitura['estacao_id'] = $estacaoId;
@@ -21,7 +41,7 @@ class LeiturasModel extends BaseModel
 
         $this->db->from('leitura');
         if ($filtros)
-        {   
+        {
             $estacoes       = $filtros->getEstacoes();
             $dataInicial    = $filtros->getDataInicial();
             $dataFinal      = $filtros->getDataFinal();

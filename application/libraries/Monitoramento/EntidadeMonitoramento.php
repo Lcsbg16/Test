@@ -5,6 +5,7 @@ class EntidadeMonitoramento
 
     protected $titulo;
     protected $mensagem;
+    private $cardHTML;
 
     public function getTitulo()
     {
@@ -24,5 +25,15 @@ class EntidadeMonitoramento
     public function setMensagem($mensagem): void
     {
         $this->mensagem = $mensagem;
+    }
+
+    public function getCardHTML()
+    {
+        return $this->cardHTML;
+    }
+
+    public function setCardHTML($cardHTML): void
+    {
+        $this->cardHTML = $cardHTML;
     }
 }

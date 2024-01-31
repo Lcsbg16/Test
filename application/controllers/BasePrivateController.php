@@ -9,6 +9,8 @@ require_once 'BaseController.php';
 
 /**
  * Base class for all private controllers (available just for logged users)
+ *
+ * @property AlertaSubject $alertasubject 
  */
 abstract class BasePrivateController extends BaseController
 {

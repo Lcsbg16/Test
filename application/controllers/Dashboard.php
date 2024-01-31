@@ -7,6 +7,12 @@ require_once 'BasePrivateController.php';
 class Dashboard extends BasePrivateController
 {
 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->session->cardsAlertaDashboard = [];
+    }
+
     public function index()
     {
         $this->load->model('OcorrenciasModel');
@@ -15,22 +21,8 @@ class Dashboard extends BasePrivateController
 
         $variaveisView = [];
 
-        $variaveisView['titulo_pagina']         = 'Painel de Controle';
-        $variaveisView['ocorrencias']           = $this->OcorrenciasModel->getOcorrencias(5);
-        $variaveisView['qtde_estacoes']         = $this->EstacoesModel->getContagemEstacoes();
-        $variaveisView['qtde_estacoes_online']  = $this->EstacoesModel->getQtdeEstacoesOnline();
-        $variaveisView['qtde_estacoes_offline'] = $this->EstacoesModel->getQtdeEstacoesOffline();
-        $variaveisView['temperatura_media']     = $this->LeiturasModel->getUltimaTemperaturaMedia();
-
-        $variaveisView['vol_chuva_min'] = $this->LeiturasModel->getVolumeChuvaMinimo();
-        $variaveisView['vol_chuva_max'] = $this->LeiturasModel->getVolumeChuvaMaxima();
-
-        $variaveisView['temperatura_minima'] = $this->LeiturasModel->getTemperaturaMinima();
-        $variaveisView['temperatura_maxima'] = $this->LeiturasModel->getTemperaturaMaxima();
-
-        //$variaveisView['velocidade_minima'] = $this->LeiturasModel->converterVelocidadeVentoKMH($this->LeiturasModel->getVelocidadeMinima());
-        $variaveisView['velocidade_minima'] = Conversao::velVentoParakmH($this->LeiturasModel->getVelocidadeMinima());
-        $variaveisView['velocidade_maxima'] = Conversao::velVentoParakmH($this->LeiturasModel->getVelocidadeMaxima());
+        $variaveisView['titulo_pagina'] = 'Painel de Controle';
+        $variaveisView['ocorrencias']   = $this->OcorrenciasModel->getOcorrencias(5);
 
         $variaveisView['eventos'] = $this->EstacoesModel->getEventos(5);
         $this->loadSmartyView('Dashboard/index', $variaveisView);
@@ -38,16 +30,38 @@ class Dashboard extends BasePrivateController
 
     public function listaCardsAlerta()
     {
-        $cards = [
-            [
-                'id'        => 1,
-                'url'       => base_url('/Dashboard/cardAlertas'),
+        $cards            = [];
+        $alertasDashboard = [];
+
+        $alertas = $this->alertasubject->getMonitoramentos();
+        foreach ($alertas as $index => $alertaAtual)
+        {
+            $alertasDashboard[] = $alertaAtual;
+            $cards[]            = [
+                'id'        => $index,
+                'url'       => base_url('/Dashboard/cardAlerta/' . $index),
                 'largura'   => 3,
-                'corAlerta' => 'green'
-            ]
-        ];
+                'corAlerta' => $alertaAtual->getCor()
+            ];
+        }
+        $this->session->alertasDashboard = $alertasDashboard;
+
+        /* $cards = [
+          [
+          'id'        => 1,
+          'url'       => base_url('/Dashboard/cardAlertas'),
+          'largura'   => 3,
+          'corAlerta' => 'green'
+          ]
+          ]; */
 
         $this->jsonOutput($cards);
+    }
+
+    public function cardAlerta($indiceAlerta)
+    {
+        $alerta = unserialize(serialize($this->session->alertasDashboard[$indiceAlerta]));
+        echo $alerta->getCardHTML();
     }
 
     public function cardAlertas()
