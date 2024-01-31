@@ -6,7 +6,7 @@
         </span>
     </div>
     <div class="col-auto">
-        <div class="icon icon-shape bg-gradient-gray text-white rounded-circle shadow">
+        <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
             <i class="fas fa-cloud-rain"></i>
         </div>
     </div>

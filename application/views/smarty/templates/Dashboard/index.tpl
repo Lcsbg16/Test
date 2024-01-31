@@ -179,15 +179,16 @@
                         url: url,
                         method: 'GET',
                         success: function (response) {
-                            if (response.length >0) {
-                            $('#alert_cards_row').css('min-height', alturaCards + 'px'); 
-                            $('#alert_cards_row').empty();
+                            if (response.length > 0) {
+                                $('#alert_cards_row').css('min-height', alturaCards + 'px');
+                                $('#alert_cards_row').empty();
                                 response.forEach(card => {
-                                desenharCardAlerta(card.url, card.largura, card.id, card.corAlerta);
-                            })}
-                            else {
-                          $('#alert_cards_row').css('min-height', '0');
-                          $('#alert_cards_row').empty()}               
+                                    desenharCardAlerta(card.url, card.largura, card.id, card.corAlerta);
+                                })
+                            } else {
+                                $('#alert_cards_row').css('min-height', '0');
+                                $('#alert_cards_row').empty()
+                            }
                         },
                         error: function (error) {
                             console.error('Erro na requisição AJAX:', error);
@@ -198,19 +199,19 @@
                 function desenharCardAlerta(url, largura, AlertaId, cor) {
                     $('#loading_animation').show();
 
+                    let idCardAlerta = 'alerta_' + AlertaId;
+                    let cardAlerta = '<div class="col-xl-' + largura + ' col-lg-6" id="' + idCardAlerta + '"><div class="card card-stats mb-4 mb-xl-4"><div class="card-body" id="card_alerta_body_' + idCardAlerta + '"></div></div></div>';
+                    $('#alert_cards_row').append(cardAlerta);
+
                     $.ajax({
                         url: url,
                         method: 'GET',
                         success: function (response) {
                             $('#loading_animation').hide();
-
-                            let idCardAlerta = 'alerta_' + AlertaId;
-
-                            let cardAlerta = '<div class="col-xl-' + largura + ' col-lg-6" id="' + idCardAlerta + '"><div class="card card-stats mb-4 mb-xl-4"><div class="card-body">' + response + '</div></div></div>';
-                            $('#alert_cards_row').append(cardAlerta);
+                            $('#card_alerta_body_' + idCardAlerta).html(response);
 
                             $('#' + idCardAlerta).find('.card').addClass('blink_card').css('animation', 'blink_' + idCardAlerta + ' 2s linear infinite');
-                            $('#classeCardAlerta').append('<style>@keyframes blink_' + idCardAlerta + ' { 0% { background-color:' + cor + '; } 50% { background-color: white; } 100% { background-color: ' + cor + '; } }</style>');
+                            $('#classeCardAlerta').append('<style>@keyframes blink_' + idCardAlerta + ' { 0% { background-color:' + cor + '; } 30% { background-color: white; } 100% { background-color: ' + cor + '; } }</style>');
                         },
                         error: function (error) {
                             console.error('Erro na requisição AJAX:', error);
@@ -218,7 +219,7 @@
                     });
 
 
-            }
+                }
 
                 //Att dos cards e do card de alertas
                 function atualizarCards()
