@@ -323,12 +323,18 @@ class EstacoesModel extends BaseModel
         return $query->result_array();
     }
 
-    public function getUltimoRegistro($estacaoId) //pega o ultimo registro de cada estação para atualizar o mapa de monitoamento a cada 30seg
+    public function getUltimoRegistro($estacaoId, $limiteTempoEmMinutos = NULL) //pega o ultimo registro de cada estação para atualizar o mapa de monitoamento a cada 30seg
     {
-        return $this->db->where('estacao_id', $estacaoId)
-                        ->order_by('datahora', 'desc')
-                        ->limit(1)
-                        ->get('v_leitura_calculada')
+        $this->db->where('estacao_id', $estacaoId)
+                ->order_by('datahora', 'desc')
+                ->limit(1);
+
+        if ($limiteTempoEmMinutos !== NULL)
+        {
+            $this->db->where('datahora >= date_sub(now(), INTERVAL ' . $limiteTempoEmMinutos . ' MINUTE)');
+        }
+
+        return $this->db->get('v_leitura_calculada')
                         ->row_array();
     }
 
