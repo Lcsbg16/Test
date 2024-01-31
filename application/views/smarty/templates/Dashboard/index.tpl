@@ -7,10 +7,10 @@
             <!-- Card stats -->
             <div class="row" id="alert_cards_row">
                 <div id="loading_animation" style="display: none; margin: 12px; padding: 12px;">
-                <i class="fas fa-spinner fa-spin" style="color: white;"></i> 
-                <span style="color: white;">Carregando...</span>
+                    <i class="fas fa-spinner fa-spin" style="color: white;"></i>
+                    <span style="color: white;">Carregando...</span>
 
-            </div>
+                </div>
             </div>
             <div class="row" id="cards_row">
 
@@ -130,10 +130,10 @@
 
             {literal}
 
-                                                    /*  MONTAGEM DOS CARDS DO PAINEL */ 
+                /*  MONTAGEM DOS CARDS DO PAINEL */
 
-       // Lista de dicionários para montagem de cards:
-          var listaCards = [
+                // Lista de dicionários para montagem de cards:
+                var listaCards = [
                     {id: 1, url: BASE_URL + '/Dashboard/cardContagemEstacoes', largura: '3'},
                     {id: 2, url: BASE_URL + '/Dashboard/cardEstacoesAtivas', largura: '3'},
                     {id: 3, url: BASE_URL + '/Dashboard/cardEstacoesOffline', largura: '3'},
@@ -146,12 +146,12 @@
                     {id: 10, url: BASE_URL + '/Dashboard/cardVelocidadeMaximaVento', largura: '3'},
                 ];
 
-                function criarCardsVazios() 
+                function criarCardsVazios()
                 {
                     listaCards.forEach(card => {
                         var idDoCard = 'card_' + card.id;
-                        var htmlDoCardVazio = '<div class="col-xl-' + card.largura + ' col-lg-6" id="' + idDoCard + '"></div>';
-                        $('#cards_row').append(htmlDoCardVazio) 
+                        var htmlDoCardVazio = '<div class="col-xl-' + card.largura + ' col-lg-6" id="' + idDoCard + '"><div class="card card-stats mb-4 mb-xl-4"><div class="card-body"></div></div></div>';
+                        $('#cards_row').append(htmlDoCardVazio)
                     });
                 }
                 criarCardsVazios(); //inicializa o esqueleto vazio dos cards
@@ -162,7 +162,7 @@
                         url: url,
                         method: 'GET',
                         success: function (response) {
-                            $('#' + 'card_' + id).html(response);
+                            $('#' + 'card_' + id).find(".card-body").html(response);
                         },
                         error: function (error) {
                             console.error('Erro na requisição AJAX:', error);
@@ -170,55 +170,55 @@
                     });
                 }
 
-                        // Lista de dicionários para montagem de cards de alerta:
+                // Lista de dicionários para montagem de cards de alerta:
                 var listaCardsAlerta = [
                     {id: 1, url: BASE_URL + '/Dashboard/cardAlertas', largura: '3', corAlerta: "green"}
                 ];
 
 
-                function geraCardsAlerta(url, largura, AlertaId, cor){
-        $('#loading_animation').show();
-      
-        setTimeout(function() {
+                function geraCardsAlerta(url, largura, AlertaId, cor) {
+                    $('#loading_animation').show();
+
+
                     $.ajax({
                         url: url,
                         method: 'GET',
                         success: function (response) {
-                        $('#loading_animation').hide();
-                        $('#alert_cards_row').empty(); // Remove todos os cards de alerta
+                            $('#loading_animation').hide();
+                            $('#alert_cards_row').empty(); // Remove todos os cards de alerta
 
-                        let idCardAlerta = 'alerta_' + AlertaId;
-                
-                        let cardAlerta = '<div class="col-xl-' + largura + ' col-lg-6" id="' + idCardAlerta + '">' + response + '</div>';
-                         $('#alert_cards_row').append(cardAlerta);
+                            let idCardAlerta = 'alerta_' + AlertaId;
 
-                         setTimeout(function() { //causa dismetria entre a atualização do card e atualização da cor, levando ao efeito de "piscar"
-                          $('#' + idCardAlerta).find('.card').css('background-color', cor);
-                          }, 250);
+                            let cardAlerta = '<div class="col-xl-' + largura + ' col-lg-6" id="' + idCardAlerta + '">' + response + '</div>';
+                            $('#alert_cards_row').append(cardAlerta);
 
-                           
+                            setTimeout(function () { //causa dismetria entre a atualização do card e atualização da cor, levando ao efeito de "piscar"
+                                $('#' + idCardAlerta).find('.card').css('background-color', cor);
+                            }, 250);
+
+
                         },
                         error: function (error) {
                             console.error('Erro na requisição AJAX:', error);
                         }
                     });
-                    }, 2000); // Atraso de 1 segundo no ajax para aparecer a animação de carregamento
+
 
                 }
 
-                //Att dos cards e do card de alertas 
-                        function atualizaCards()
-                         {
-                            listaCards.forEach(card => {
-                                geraCards(card.url, card.id);
-                            });
+                //Att dos cards e do card de alertas
+                function atualizaCards()
+                {
+                    listaCards.forEach(card => {
+                        geraCards(card.url, card.id);
+                    });
 
-                            listaCardsAlerta.forEach(card => {
-                                geraCardsAlerta(card.url, card.largura, card.id, card.corAlerta);
-                            });
-                        }
-                        atualizaCards();
-                        setInterval(atualizaCards, 2000);
+                    listaCardsAlerta.forEach(card => {
+                        geraCardsAlerta(card.url, card.largura, card.id, card.corAlerta);
+                    });
+                }
+                atualizaCards();
+                setInterval(atualizaCards, 2000);
 
 
             {/literal}
