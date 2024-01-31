@@ -1,237 +1,19 @@
 {extends file = 'app_logado.tpl'}
 {assign var=header_especial value=true}
-{assign var=refresh_automatico value=30}
 {block name='conteudo_header'}
     <!-- estatisticas_gerais -->
     <div class="container-fluid">
         <div class="header-body">
             <!-- Card stats -->
-            <div class="row">
-                <div class="col-xl-3 col-lg-6">
-                    <div class="card card-stats mb-4 mb-xl-4">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">Esta&ccedil;&otilde;es Ativas</h5>
-                                    <span class="h2 font-weight-bold mb-0">{$qtde_estacoes}</span>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="icon icon-shape bg-gradient-gray    text-white rounded-circle shadow">
-                                        <i class="fas fa-fan"></i>
-                                    </div>
-                                </div>
-                            </div>
+            <div class="row" id="alert_cards_row">
+                <div id="loading_animation" style="display: none; margin: 12px; padding: 12px;">
+                <i class="fas fa-spinner fa-spin" style="color: white;"></i> 
+                <span style="color: white;">Carregando...</span>
 
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6">
-                    <div class="card card-stats mb-4 mb-xl-4">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">Esta&ccedil;&otilde;es Online</h5>
-                                    <span class="h2 font-weight-bold mb-0">{$qtde_estacoes_online}</span>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
-                                        <i class="fas fa-fan"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6">
-                    <div class="card card-stats mb-4 mb-xl-4">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">Esta&ccedil;&otilde;es Offline</h5>
-                                    <span class="h2 font-weight-bold mb-0">{$qtde_estacoes_offline}</span>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
-                                        <i class="fas fa-fan"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            </div>
+            </div>
+            <div class="row" id="cards_row">
 
-
-
-                <div class="col-xl-3 col-lg-6">
-                    <div class="card card-stats mb-4 mb-xl-4">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">Temperatura M&eacute;dia</h5>
-                                    <span class="h2 font-weight-bold mb-0">
-                                        {if $temperatura_media === NULL}
-                                            -
-                                        {else}
-                                            {$temperatura_media|number_format:1:","}&deg;C
-                                        {/if}
-                                    </span>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
-                                        <i class="fas fa-temperature-half"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6">
-                    <div class="card card-stats mb-4 mb-xl-4">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">Temperatura M&iacute;nima</h5>
-
-                                    <span class="h2 font-weight-bold mb-0">
-                                        {if $temperatura_minima === NULL}
-                                            -
-                                        {else}
-                                            {$temperatura_minima|number_format:1:","}&deg;C
-                                        {/if}
-                                    </span>
-
-                                </div>
-                                <div class="col-auto">
-                                    <div class="icon icon-shape bg-blue text-white rounded-circle shadow">
-                                        <i class="fas fa-temperature-empty"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6">
-                    <div class="card card-stats mb-4 mb-xl-4">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">Temperatura M&aacute;xima</h5>
-
-                                    <span class="h2 font-weight-bold mb-0">
-                                        {if $temperatura_maxima === NULL}
-                                            -
-                                        {else}
-                                            {$temperatura_maxima|number_format:1:","}&deg;C
-                                        {/if}
-                                    </span>
-
-                                </div>
-                                <div class="col-auto">
-                                    <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
-                                        <i class="fas fa-temperature-full"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6">
-                    <div class="card card-stats mb-4 mb-xl-4">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">Volume Min. Chuva</h5>
-                                    <span class="h2 font-weight-bold mb-0">
-                                        {if $vol_chuva_min === NULL}
-                                            -
-                                        {else}
-                                            {$vol_chuva_min|number_format:1:","}mm
-                                        {/if}
-                                    </span>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="icon icon-shape bg-gradient-blue text-white rounded-circle shadow">
-                                        <i class="fas fa-cloud-rain"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6">
-                    <div class="card card-stats mb-4 mb-xl-4">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">Volume M&aacute;x. Chuva</h5>
-                                    <span class="h2 font-weight-bold mb-0">
-                                        {if $vol_chuva_max === NULL}
-                                            -
-                                        {else}
-                                            {$vol_chuva_max|number_format:1:","}mm
-                                        {/if}
-                                    </span>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="icon icon-shape bg-gradient-gray text-white rounded-circle shadow">
-                                        <i class="fas fa-cloud-rain"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6">
-                    <div class="card card-stats mb-4 mb-xl-4">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">Vel. Min. do Vento</h5>
-                                    <span class="h2 font-weight-bold mb-0">
-                                        {if $velocidade_minima == NULL}
-                                            -
-                                        {else}
-                                            {$velocidade_minima|number_format:1:","} km/h
-                                        {/if}
-                                    </span>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="icon icon-shape bg-green text-white rounded-circle shadow">
-                                        <i class="fas fa-wind"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6">
-                    <div class="card card-stats mb-4 mb-xl-4">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">Vel. M&aacute;x. do Vento</h5>
-                                    <span class="h2 font-weight-bold mb-0">
-                                        {if $velocidade_maxima == NULL}
-                                            -
-                                        {else}
-                                            {$velocidade_maxima|number_format:1:","}km/h
-                                        {/if}
-                                    </span>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="icon icon-shape bg-red text-white rounded-circle shadow">
-                                        <i class="fas fa-wind"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -309,7 +91,7 @@
                             <div class="col">
                                 <h3 class="ml-2">Sem ocorrências registradas no momento.</h3>
                             </div>
-                        {else}      
+                        {else}
                             <table class="table align-items-center table-flush">
                                 <thead class="thead-light">
                                     <tr>
@@ -338,11 +120,112 @@
                                     {/foreach}
                                 </tbody>
                             </table>
-                        {/if}    
+                        {/if}
                     </div>
                 </div>
             </div>
         </div>
         <!-- /tabelas -->
-    </div>
+        <script>
+
+            {literal}
+
+                                                    /*  MONTAGEM DOS CARDS DO PAINEL */ 
+
+       // Lista de dicionários para montagem de cards:
+          var listaCards = [
+                    {id: 1, url: BASE_URL + '/Dashboard/cardContagemEstacoes', largura: '3'},
+                    {id: 2, url: BASE_URL + '/Dashboard/cardEstacoesAtivas', largura: '3'},
+                    {id: 3, url: BASE_URL + '/Dashboard/cardEstacoesOffline', largura: '3'},
+                    {id: 4, url: BASE_URL + '/Dashboard/cardTemperaturaMedia', largura: '3'},
+                    {id: 5, url: BASE_URL + '/Dashboard/cardTemperaturaMinima', largura: '3'},
+                    {id: 6, url: BASE_URL + '/Dashboard/cardTemperaturaMaxima', largura: '3'},
+                    {id: 7, url: BASE_URL + '/Dashboard/cardVolumeChuvaMinimo', largura: '3'},
+                    {id: 8, url: BASE_URL + '/Dashboard/cardVolumeChuvaMaximo', largura: '3'},
+                    {id: 9, url: BASE_URL + '/Dashboard/cardVelocidadeMinimaVento', largura: '3'},
+                    {id: 10, url: BASE_URL + '/Dashboard/cardVelocidadeMaximaVento', largura: '3'},
+                ];
+
+                function criarCardsVazios() 
+                {
+                    listaCards.forEach(card => {
+                        var idDoCard = 'card_' + card.id;
+                        var htmlDoCardVazio = '<div class="col-xl-' + card.largura + ' col-lg-6" id="' + idDoCard + '"></div>';
+                        $('#cards_row').append(htmlDoCardVazio) 
+                    });
+                }
+                criarCardsVazios(); //inicializa o esqueleto vazio dos cards
+
+                function geraCards(url, id)
+                {
+                    $.ajax({
+                        url: url,
+                        method: 'GET',
+                        success: function (response) {
+                            $('#' + 'card_' + id).html(response);
+                        },
+                        error: function (error) {
+                            console.error('Erro na requisição AJAX:', error);
+                        }
+                    });
+                }
+
+                        // Lista de dicionários para montagem de cards de alerta:
+                var listaCardsAlerta = [
+                    {id: 1, url: BASE_URL + '/Dashboard/cardAlertas', largura: '3', corAlerta: "green"}
+                ];
+
+
+                function geraCardsAlerta(url, largura, AlertaId, cor){
+        $('#loading_animation').show();
+      
+        setTimeout(function() {
+                    $.ajax({
+                        url: url,
+                        method: 'GET',
+                        success: function (response) {
+                        $('#loading_animation').hide();
+                        $('#alert_cards_row').empty(); // Remove todos os cards de alerta
+
+                        let idCardAlerta = 'alerta_' + AlertaId;
+                
+                        let cardAlerta = '<div class="col-xl-' + largura + ' col-lg-6" id="' + idCardAlerta + '">' + response + '</div>';
+                         $('#alert_cards_row').append(cardAlerta);
+
+                         setTimeout(function() { //causa dismetria entre a atualização do card e atualização da cor, levando ao efeito de "piscar"
+                          $('#' + idCardAlerta).find('.card').css('background-color', cor);
+                          }, 250);
+
+                           
+                        },
+                        error: function (error) {
+                            console.error('Erro na requisição AJAX:', error);
+                        }
+                    });
+                    }, 2000); // Atraso de 1 segundo no ajax para aparecer a animação de carregamento
+
+                }
+
+                //Att dos cards e do card de alertas 
+                        function atualizaCards()
+                         {
+                            listaCards.forEach(card => {
+                                geraCards(card.url, card.id);
+                            });
+
+                            listaCardsAlerta.forEach(card => {
+                                geraCardsAlerta(card.url, card.largura, card.id, card.corAlerta);
+                            });
+                        }
+                        atualizaCards();
+                        setInterval(atualizaCards, 2000);
+
+
+            {/literal}
+        </script>
+
+    </body>
+</html>
+
+</div>
 {/block}

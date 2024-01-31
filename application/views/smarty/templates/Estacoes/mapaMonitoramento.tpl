@@ -85,8 +85,8 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
                 </div>
-                <div class="modal-body">
-                ...
+                <div class="modal-body" id="modal-body">
+                
                 </div>
                 <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
@@ -99,6 +99,29 @@
 
         <script>
             {literal}
+
+                /*AJAX PARA CARREGAMENTO DAS LEGENDAS NO MODAL*/ 
+                function buscaLegendaCamada(camada) {
+                    let url = BASE_URL + 'Estacoes/getLegendaMonitoramento/' + camada;
+                        $.ajax({
+                            url: url,
+                            dataType: "json",
+                            method: "GET"
+                        }).done(function (data) {
+                            $("#modal-body").html(data);
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                            console.error("Erro na requisição AJAX para gerar as legendas:", errorThrown);
+                        });
+                    }
+
+                    $('#legendasModal').on('shown.bs.modal', function (e) {
+                        let camada =  $('#camada_id').val();
+                        buscaLegendaCamada(camada);
+                    });
+
+                /* FIM DO AJAX PARA CARREGAMENTO DAS LEGENDAS NO MODAL*/
+
+
                 function criaMapa()
                 {
                     var map = L.map('map').setView([-22.368461, -41.774747], 13);
