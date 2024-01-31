@@ -87,7 +87,7 @@ abstract class BaseController extends CI_Controller
         return $this->load->view($view, $variaveis_view, $return);
     }
 
-    protected function loadSmartyView($view, $variaveis_view = array(), $return = false)
+    public function loadSmartyView($view, $variaveis_view = array(), $return = false)
     {
         $variaveis_view = array_merge($variaveis_view, $this->gerarVariaveisViewPadrao());
 

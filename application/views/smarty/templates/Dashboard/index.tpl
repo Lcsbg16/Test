@@ -1,11 +1,17 @@
 {extends file = 'app_logado.tpl'}
 {assign var=header_especial value=true}
-{assign var=refresh_automatico value=90}
 {block name='conteudo_header'}
     <!-- estatisticas_gerais -->
     <div class="container-fluid">
         <div class="header-body">
             <!-- Card stats -->
+            <div class="row" id="alert_cards_row">
+                <div id="loading_animation" style="display: none; margin: 12px; padding: 12px;">
+                    <i class="fas fa-spinner fa-spin" style="color: white;"></i>
+                    <span style="color: white;">Carregando...</span>
+
+                </div>
+            </div>
             <div class="row" id="cards_row">
 
             </div>
@@ -123,23 +129,8 @@
         <script>
 
             {literal}
-                function geraCards(url, largura, id)
-                {
-                    var idDoCard = 'card_' + id;
-                    htmlDoCardVazio = '<div class="col-xl-' + largura + ' col-lg-6" id="' + idDoCard + '"></div>';
-                    $('#cards_row').append(htmlDoCardVazio);
-                    $.ajax({
-                        url: url + "/" + largura,
-                        method: 'GET',
-                        success: function (response) {
-                            $('#' + idDoCard).html(response)
-                            console.log(response);//
-                        },
-                        error: function (error) {
-                            console.error('Erro na requisição AJAX:', error);
-                        }
-                    });
-                }
+
+                /*  MONTAGEM DOS CARDS DO PAINEL */
 
                 // Lista de dicionários para montagem de cards:
                 var listaCards = [
@@ -154,9 +145,94 @@
                     {id: 9, url: BASE_URL + '/Dashboard/cardVelocidadeMinimaVento', largura: '3'},
                     {id: 10, url: BASE_URL + '/Dashboard/cardVelocidadeMaximaVento', largura: '3'},
                 ];
-                listaCards.forEach(card => {
-                    geraCards(card.url, card.largura, card.id);
-                });
+
+                function criarCardsVazios()
+                {
+                    listaCards.forEach(card => {
+                        var idDoCard = 'card_' + card.id;
+                        var htmlDoCardVazio = '<div class="col-xl-' + card.largura + ' col-lg-6" id="' + idDoCard + '"><div class="card card-stats mb-4 mb-xl-4"><div class="card-body"></div></div></div>';
+                        $('#cards_row').append(htmlDoCardVazio)
+                    });
+                }
+                criarCardsVazios(); //inicializa o esqueleto vazio dos cards
+
+                function desenharCardMonitoramento(url, id)
+                {
+                    $.ajax({
+                        url: url,
+                        method: 'GET',
+                        success: function (response) {
+                            $('#' + 'card_' + id).find(".card-body").html(response);
+                        },
+                        error: function (error) {
+                            console.error('Erro na requisição AJAX:', error);
+                        }
+                    });
+                }
+
+                function carregarCardsAlerta()
+                {
+                    var alturaCards = $('#alert_cards_row').height();
+
+                    url = BASE_URL + 'Dashboard/listaCardsAlerta/';
+                    $.ajax({
+                        url: url,
+                        method: 'GET',
+                        success: function (response) {
+                            if (response.length > 0) {
+                                $('#alert_cards_row').css('min-height', alturaCards + 'px');
+                                $('#alert_cards_row').empty();
+                                response.forEach(card => {
+                                    desenharCardAlerta(card.url, card.largura, card.id, card.corAlerta);
+                                })
+                            } else {
+                                $('#alert_cards_row').css('min-height', '0');
+                                $('#alert_cards_row').empty()
+                            }
+                        },
+                        error: function (error) {
+                            console.error('Erro na requisição AJAX:', error);
+                        }
+                    });
+                }
+
+                function desenharCardAlerta(url, largura, AlertaId, cor) {
+                    $('#loading_animation').show();
+
+                    let idCardAlerta = 'alerta_' + AlertaId;
+                    let cardAlerta = '<div class="col-xl-' + largura + ' col-lg-6" id="' + idCardAlerta + '"><div class="card card-stats mb-4 mb-xl-4"><div class="card-body" id="card_alerta_body_' + idCardAlerta + '"></div></div></div>';
+                    $('#alert_cards_row').append(cardAlerta);
+
+                    $.ajax({
+                        url: url,
+                        method: 'GET',
+                        success: function (response) {
+                            $('#loading_animation').hide();
+                            $('#card_alerta_body_' + idCardAlerta).html(response);
+
+                            $('#' + idCardAlerta).find('.card').addClass('blink_card').css('animation', 'blink_' + idCardAlerta + ' 2s linear infinite');
+                            $('#classeCardAlerta').append('<style>@keyframes blink_' + idCardAlerta + ' { 0% { background-color:' + cor + '; } 30% { background-color: white; } 100% { background-color: ' + cor + '; } }</style>');
+                        },
+                        error: function (error) {
+                            console.error('Erro na requisição AJAX:', error);
+                        }
+                    });
+
+
+                }
+
+                //Att dos cards e do card de alertas
+                function atualizarCards()
+                {
+                    listaCards.forEach(card => {
+                        desenharCardMonitoramento(card.url, card.id);
+                    });
+
+                    carregarCardsAlerta();
+                }
+                atualizarCards();
+                setInterval(atualizarCards, 10000);
+
 
             {/literal}
         </script>
