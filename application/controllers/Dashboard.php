@@ -46,15 +46,6 @@ class Dashboard extends BasePrivateController
         }
         $this->session->alertasDashboard = $alertasDashboard;
 
-        /* $cards = [
-          [
-          'id'        => 1,
-          'url'       => base_url('/Dashboard/cardAlertas'),
-          'largura'   => 3,
-          'corAlerta' => 'green'
-          ]
-          ]; */
-
         $this->jsonOutput($cards);
     }
 

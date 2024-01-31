@@ -193,11 +193,11 @@
                             console.error('Erro na requisição AJAX:', error);
                         }
                     });
-
                 }
 
-               function desenharCardAlerta(url, largura, AlertaId, cor) {
+                function desenharCardAlerta(url, largura, AlertaId, cor) {
                     $('#loading_animation').show();
+
                     $.ajax({
                         url: url,
                         method: 'GET',

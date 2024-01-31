@@ -1,7 +1,7 @@
 <div class="row" id="classeCardAlerta" >
     <div class="col">
         <h5 class="card-title text-uppercase text-muted mb-0">Alerta</h5>
-        <span class="h2 font-weight-bold mb-0">
+        <span class="h2 font-weight-bold mb-0 mensagem_card_alerta">
             {$mensagem}
         </span>
     </div>
