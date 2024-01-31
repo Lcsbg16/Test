@@ -189,7 +189,7 @@
 
                             let idCardAlerta = 'alerta_' + AlertaId;
 
-                            let cardAlerta = '<div class="col-xl-' + largura + ' col-lg-6" id="' + idCardAlerta + '">' + response + '</div>';
+                            let cardAlerta = '<div class="col-xl-' + largura + ' col-lg-6" id="' + idCardAlerta + '"><div class="card card-stats mb-4 mb-xl-4"><div class="card-body">' + response + '</div></div></div>';
                             $('#alert_cards_row').append(cardAlerta);
 
                             setTimeout(function () { //causa dismetria entre a atualização do card e atualização da cor, levando ao efeito de "piscar"
