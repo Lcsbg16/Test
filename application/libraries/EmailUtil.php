@@ -46,7 +46,7 @@ class EmailUtil
         try
         {
 
-            $mail = new PHPMailer;
+            $mail = new PHPMailer\PHPMailer\PHPMailer;
 
             //$mail->SMTPDebug = 1;
 
@@ -174,6 +174,8 @@ class EmailEnviado
 /**
  * classe de tratamento excecao
  */
+use PHPMailer\PHPMailer\PHPMailer;
+
 class EmailUtilException extends Exception
 {
 
