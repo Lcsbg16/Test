@@ -26,7 +26,7 @@ class Info extends BasePrivateController
         $variaveisView['velocidade_maxima'] = Conversao::velVentoParakmH($this->LeiturasModel->getVelocidadeMaxima());
 
         // Use a nova função para obter os tempos desde a última leitura apenas para estações ativas
-        $variaveisView['tempos_ultima_leitura'] = $this->LeiturasModel->getTempoUltimaLeituraParaEstacoesAtivas();
+        
 
         $variaveisView['estacoes'] = $this->EstacoesModel->getEstacoes();
         $this->loadSmartyView('Info/index', $variaveisView);
