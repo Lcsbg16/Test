@@ -37,7 +37,7 @@ class AdminParametros extends BaseCrudController
         $crud->field_type('nome', 'readonly');
         $crud->field_type('titulo', 'readonly');
         $crud->field_type('descricao', 'readonly');
-        $crud->field_type('valor', 'readonly');
+        $crud->field_type('valor', 'string');
 
         $this->_crud_output($crud);
     }

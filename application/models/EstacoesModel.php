@@ -127,19 +127,23 @@ class EstacoesModel extends BaseModel
         return $evento['tipo_evento_id'] == $idTipoEventoOnline;
     }
 
-    public function getEstacoes($somenteAtivas = FALSE, $ids = array()) //alteração para aceitar um array de estações a ser buscadas também
+    public function getEstacoes($somenteAtivas = FALSE, $ids = array())
     {
+        $this->db->order_by('ativa', 'DESC'); // Ordenar as ativas para as telas de relatorio
         $this->db->order_by('descricao');
+
         if ($somenteAtivas)
         {
             $this->db->where('ativa', true);
         }
+
         if (!empty($ids))
         {
-            $this->db->where_in('id', $ids); //se houver estaçõesy
+            $this->db->where_in('id', $ids);
         }
-        $estacoes = $this->db->get('estacao')
-                ->result_array();
+
+        $estacoes = $this->db->get('estacao')->result_array();
+
         foreach ($estacoes as $index => $estacaoAtual)
         {
             $estacoes[$index]['online'] = $this->getEstacaoOnline($estacaoAtual['id']);
@@ -147,6 +151,7 @@ class EstacoesModel extends BaseModel
 
         return $estacoes;
     }
+
 
     public function getContagemEstacoes($somenteAtivas = TRUE)
     {
