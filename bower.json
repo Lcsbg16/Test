@@ -19,6 +19,7 @@
     "leaflet": "^1.8.0",
     "jquery-ui": "^1.12.1",
     "jquery": "^2.2.4",
-    "leaflet-search": "^3.0.3"
+    "leaflet-search": "^3.0.3",
+    "alpine": "alpinejs/alpine#^3.13.5"
   }
 }

@@ -37,6 +37,8 @@
 
         <script src="https://kit.fontawesome.com/7731e1bde2.js" crossorigin="anonymous"></script>
 
+        <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js"></script>
+
         <link href="{$BASE_URL}/assets/css/app.css" rel="stylesheet" />
         <script src="{$BASE_URL}/assets/js/app.js"></script>
 
