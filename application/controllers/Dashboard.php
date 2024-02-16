@@ -31,6 +31,23 @@ class Dashboard extends BasePrivateController
         $this->loadSmartyView('Dashboard/index', $variaveisView);
     }
 
+    public function listaOcorrencias(){
+        $this->load->model('OcorrenciasModel');
+        $variaveisView = [];
+        $variaveisView['ocorrencias']   = $this->OcorrenciasModel->getOcorrencias(5);
+        $this->loadSmartyView('Dashboard/ocorrencias/ocorrencias', $variaveisView);
+
+    }
+
+      
+    public function listaEventos(){
+        $this->load->model('EstacoesModel');
+        $variaveisView = [];
+        $variaveisView['eventos'] = $this->EstacoesModel->getEventos(5);
+        $this->loadSmartyView('Dashboard/eventos/eventos', $variaveisView);
+
+    }
+
     public function listaCardsAlerta()
     {
         header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");

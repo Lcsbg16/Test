@@ -39,38 +39,8 @@
                         </div>
                     </div>
 
-                    <div class="table-responsive">
-                        <!-- Projects table -->
-                        <table class="table align-items-center table-flush">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th scope="col">Data</th>
-                                    <th scope="col">Esta&ccedil;&atilde;o</th>
-                                    <th scope="col">Evento</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {foreach $eventos as $evento}
-                                    <tr>
-                                        <th scope="row">
-                                            {$evento.datahora|date_format:'%d/%m %H:%M'}
-                                        </th>
-                                        <td title="{$evento.estacao_identificador} - {$evento.estacao_descricao|escape:'quotes'}">
-                                            {$evento.estacao_descricao|truncate:25:"...":true}
-                                        </td>
-                                        <td>
-                                            {if $evento.tipo_evento_id == 1}
-                                                <i class="fas fa-arrow-down text-danger mr-3"></i>Offline
-                                            {elseif $evento.tipo_evento_id == 2}
-                                                <i class="fas fa-arrow-up text-success mr-3"></i>Online
-                                            {else}
-                                                Tipo de evento desconhecido
-                                            {/if}
-                                        </td>
-                                    </tr>
-                                {/foreach}
-                            </tbody>
-                        </table>
+                    <div class="table-responsive" id="eventos_table">
+                       
                     </div>
                 </div>
             </div>
@@ -86,42 +56,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="table-responsive">
+                    <div class="table-responsive" id="ocorrencias_table">
                         <!-- Projects table -->
-                        {if empty($ocorrencias)}
-                            <div class="col">
-                                <h3 class="ml-2">Sem ocorrências registradas no momento.</h3>
-                            </div>
-                        {else}
-                            <table class="table align-items-center table-flush">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th scope="col">Tipo</th>
-                                        <th scope="col">Data/hora do ocorrido</th>
-                                        <th scope="col">Endere&ccedil;o</th>
-                                        <th scope="col">Descri&ccedil;&atilde;o</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {foreach $ocorrencias as $oAtual}
-                                        <tr>
-                                            <th scope="row">
-                                                <a href="{$oAtual.url}">{$oAtual.tipo_ocorrencia}</a>
-                                            </th>
-                                            <td>
-                                                <a href="{$oAtual.url}">{$oAtual.datahora_ocorrido|date_format:'%d/%m/%Y %H:%M'}</a>
-                                            </td>
-                                            <td title="{$oAtual.endereco}">
-                                                <a href="{$oAtual.url}">{$oAtual.endereco|truncate:30}</a>
-                                            </td>
-                                            <td>
-                                                <a href="{$oAtual.url}">{$oAtual.descricao|truncate:30}</a>
-                                            </td>
-                                        </tr>
-                                    {/foreach}
-                                </tbody>
-                            </table>
-                        {/if}
+                   
                     </div>
                 </div>
             </div>
@@ -130,6 +67,48 @@
         <script>
 
             {literal}
+
+                function carregarOcorrencias()
+                {
+                    url = BASE_URL + 'Dashboard/listaOcorrencias/';
+                    $.ajax({
+                        url: url,
+                        method: 'GET',
+                        success: function (response) {
+                           
+                           $('#ocorrencias_table').html(response);
+
+                        },
+                        error: function (error) {
+                            console.error('Erro na requisição AJAX:', error);
+                        }
+                    });
+                }
+                carregarOcorrencias();
+                setInterval(carregarOcorrencias, 10000);
+
+
+                function carregarEventos()
+                {
+                    url = BASE_URL + 'Dashboard/listaEventos/';
+                    $.ajax({
+                        url: url,
+                        method: 'GET',
+                        success: function (response) {
+                           
+                           $('#eventos_table').html(response);
+
+                        },
+                        error: function (error) {
+                            console.error('Erro na requisição AJAX:', error);
+                        }
+                    });
+                }
+                carregarEventos();
+                setInterval(carregarEventos, 10000);
+
+
+
 
                 /*  MONTAGEM DOS CARDS DO PAINEL */
 
