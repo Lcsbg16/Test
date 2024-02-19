@@ -16,7 +16,7 @@
                                     <label>Estação</label><br>
                                     <select id="estacoesSelect" class="form-control form-control-sm" name="estacoes[]" multiple="multiple">
                                         {foreach $estacoes as $eAtual}
-                                            {assign var=corTexto value=($eAtual.ativa == 1) ? 'black' : 'red'}
+                                            {assign var=corTexto value=($eAtual.ativa == 1) ? 'black' : 'grey'}
                                             <option value="{$eAtual.id}" id="estacao_descricao" {if isset($smarty.get.estacoes) && in_array($eAtual.id, $smarty.get.estacoes)} selected {/if} style="color: {$corTexto}">
                                                 {$eAtual.descricao} ({$eAtual.identificador})
                                             </option>
