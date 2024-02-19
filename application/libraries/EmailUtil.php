@@ -1,8 +1,9 @@
 <?php
 
-/*
- * Desenvolvido pela equipe de desencolvimento de sistemas Tic/Macaé
- */
+use MailerSend\Helpers\Builder\Attachment;
+use MailerSend\Helpers\Builder\EmailParams;
+use MailerSend\Helpers\Builder\Recipient;
+use MailerSend\MailerSend;
 
 class EmailUtil
 {
@@ -33,13 +34,62 @@ class EmailUtil
 
     /**
      *
-     * @param type $assunto assunto do email
-     * @param type $destinatario destinatario do email ou array com lista de destinatários
-     * @param type $mensagem mensagem a ser enviada no email
-     * @param type $email Objeto de email vindo da classe do codeIgniter email
-     * * @param type $remetente nome que aparecerá como remetente do email
+     * @param string $assunto assunto do email
+     * @param string $destinatario destinatario do email ou array com lista de destinatários
+     * @param string $mensagem mensagem a ser enviada no email
+     * @param string $email Objeto de email vindo da classe do codeIgniter email
+     * @param string $remetente nome que aparecerá como remetente do email
      */
-    function enviarEmail($assunto, $destinatario, $mensagem, $remetente = "", $getAnexo = NULL)
+    public function enviarEmail($assunto, $destinatario, $mensagem, $remetente = "", $getAnexo = NULL)
+    {
+        $mensagem .= '<p><small>Aten&ccedil;&atilde;o: N&atilde;o responda a este e-mail.</small></p>';
+
+        if (EMAIL_PROTOCOLO == 'smtp')
+        {
+            return $this->enviarEmailPhpMailer($assunto, $destinatario, $mensagem, $remetente, $getAnexo);
+        }
+        elseif (EMAIL_PROTOCOLO == 'mailersend')
+        {
+            return $this->enviarEmailMailerSend($assunto, $destinatario, $mensagem, $remetente, $getAnexo);
+        }
+        else
+        {
+            throw new Exception('Protocolo de envio de e-mail desconhecido!');
+        }
+    }
+
+    private function enviarEmailMailerSend($assunto, $destinatario, $mensagem, $remetente, $getAnexo)
+    {
+        $mailersend = new MailerSend(['api_key' => EMAIL_MAILERSEND_API_KEY]);
+
+        $recipients = [
+            new Recipient($destinatario, NULL),
+        ];
+
+        if ($getAnexo)
+        {
+            $attachments = [
+                new Attachment(file_get_contents($getAnexo), basename($getAnexo))
+            ];
+        }
+
+        $emailParams = (new EmailParams())
+                ->setFrom($remetente)
+                ->setFromName(EMAIL_FROM_NOME)
+                ->setRecipients($recipients)
+                ->setSubject($assunto)
+                ->setHtml($mensagem)
+                ->setText(strip_tags($mensagem));
+
+        if ($getAnexo)
+        {
+            $emailParams->setAttachments($attachments);
+        }
+
+        return $mailersend->email->send($emailParams);
+    }
+
+    private function enviarEmailPhpMailer($assunto, $destinatario, $mensagem, $remetente, $getAnexo)
     {
         //var_dump(func_get_args());
         $mensagem = $this->processaVariaveis($mensagem);
@@ -91,7 +141,7 @@ class EmailUtil
                 }
             }
 
-            $mensagem      .= '<p><small>Aten&ccedil;&atilde;o: N&atilde;o responda a este e-mail.</small></p>';
+
 //            $mail->FromName = Constante::REMETENTE;
             $mail->Subject = $assunto;
             $mail->Body    = $mensagem;
@@ -174,8 +224,6 @@ class EmailEnviado
 /**
  * classe de tratamento excecao
  */
-use PHPMailer\PHPMailer\PHPMailer;
-
 class EmailUtilException extends Exception
 {
 
