@@ -650,6 +650,60 @@ class LeiturasModel extends BaseModel
         }
     }
 
+    public function getAllLeituras()
+    {
+        $this->db->select('leitura.id, leitura.datahora, estacao.identificador as estacao_identificador, estacao.descricao as estacao_descricao,
+                           estacao.endereco as estacao_edereco, estacao.latitude as estacao_latitude, estacao.longitude as estacao_longitude,
+                           leitura.temperatura, leitura.umidade_ar, leitura.velocidade_vento, leitura.dir_vento, leitura.volume_chuva,datahora_cadastro'); // Adiciona os campos de estacao
+        $this->db->from('leitura');
+        $this->db->join('estacao', 'leitura.estacao_id = estacao.id');
+        //$this->db->order_by('leitura.datahora', 'DESC'); 
+        $this->db->order_by('leitura.id', 'ASC'); 
+        $query = $this->db->get();
+        return $query->result_array();
+    }  
+    
+    public function exportarLeiturasParaCSV($filtros)
+    {
+        $leituras = $this->getLeiturasPorEscala($filtros);
+
+        $csvData = array();
+
+        $header = array(
+            'periodo',
+            'id',
+            'datahora',
+            'estacao_identificador',
+            'estacao_descricao',
+            'estacao_endereco',
+            'estacao_latitude',
+            'estacao_longitude',
+            'temperatura',
+            'umidade_ar',
+            'velocidade_vento',
+            'direcao_vento',
+            'volume_chuva',
+            'datahora_cadastro'
+        );
+
+        $csvData[] = $header;
+
+        foreach ($leituras as $leitura) {
+            // Converter velocidade do vento para km/h
+            $leitura['velocidade_vento'] = Conversao::velVentoParakmH($leitura['velocidade_vento']);
+
+            // Substituir o separador decimal de . para ,
+            $leitura['velocidade_vento'] = number_format($leitura['velocidade_vento'], 2, ',', '');
+            $leitura['temperatura'] = number_format($leitura['temperatura'], 2, ',', '');
+            $leitura['umidade_ar'] = number_format($leitura['umidade_ar'], 2, ',', '');
+            $leitura['volume_chuva'] = number_format($leitura['volume_chuva'], 2, ',', '');
+
+            $csvData[] = $leitura;
+        }
+
+        return $csvData;
+    }
+
     public static function converterVelocidadeVentoKMH($velocidadeMS)
     {
         return number_format($velocidadeMS * 3.6, 1);

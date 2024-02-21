@@ -107,7 +107,7 @@
 
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.16/js/bootstrap-multiselect.min.js"></script>
-    <script type="text/javascript">
+    <script type="text/javascript">    
         $(document).ready(function () {
             $("#estacoesSelect").multiselect({
                 includeSelectAllOption: true,
