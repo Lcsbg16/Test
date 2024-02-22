@@ -347,4 +347,15 @@ class EstacoesModel extends BaseModel
     {
         return base_url('Estacoes/monitoramentoIndividual/' . $idEstacao);
     }
+
+    public function getEstacaoComDadosMeteorologicos()
+    {
+        $this->db->select('estacao.*, leitura.temperatura, leitura.velocidade_vento, leitura.volume_chuva');
+        $this->db->from('estacao');
+        $this->db->join('(SELECT estacao_id, MAX(id) AS max_id FROM leitura GROUP BY estacao_id) AS ultima_leitura', 'estacao.id = ultima_leitura.estacao_id', 'left');
+        $this->db->join('leitura', 'ultima_leitura.max_id = leitura.id', 'left');
+        $this->db->where('estacao.ativa', 1);
+
+        return $this->db->get()->result();
+    }
 }

@@ -17,19 +17,19 @@
     <div class="container">
         <div class="row">
             {foreach $estacoes as $eAtual}
-                {if $eAtual.ativa}
+                {if $eAtual->ativa}
                     <div class="col-md-3">
                         <div class="card bg-light-purple mt-4 custom-card">
-                            <img src="{$BASE_URL}assets/images/estacao.jpeg" class="card-img-top img-fluid" alt="...">
+                            <img src="{$BASE_URL}assets/images/estacao.jpg" class="card-img-top img-fluid" alt="...">
                             <div class="card-body text-center">
-                                <h2 class="card-title" style="color: #6c757d;">{$eAtual.identificador}</h5>
-                               
+                                <h2 class="card-title" style="color: #6c757d;">{$eAtual->identificador}</h5>
+                            
                                 <p class="card-text">Leitura dos dados: Há 2 minutos</p>
-                                <p class="card-text" style="font-size: 3rem;">{$temperatura_media|number_format:1:","}&deg;C</p>
-                                
+                                <p class="card-text" style="font-size: 3rem;">{$eAtual->temperatura|number_format:1:","}&deg;C</p>
+
                                 <div class="card-footer text-muted">
-                                    <p style="margin-bottom: 0;">Vel do vento: {$velocidade_maxima|number_format:1:","} m/s</p>
-                                    <p style="margin-bottom: 0;">Vol acomulado Chuva: {$vol_chuva_max|number_format:1:","} mm</p>
+                                    <p style="margin-bottom: 0;">Vel do vento: {$eAtual->velocidade_vento|number_format:1:","} m/s</p>
+                                    <p style="margin-bottom: 0;">Vol acumulado Chuva: {$eAtual->volume_chuva|number_format:1:","} mm</p>
                                 </div>
                             </div>
                         </div>
