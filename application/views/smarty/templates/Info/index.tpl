@@ -20,7 +20,11 @@
                 {if $eAtual->ativa}
                     <div class="col-md-3">
                         <div class="card bg-light-purple mt-4 custom-card">
-                            <img src="{$BASE_URL}assets/images/estacao.jpg" class="card-img-top img-fluid" alt="...">
+                            {if $eAtual->foto_estacao != null}
+                                <img src="{$BASE_URL}assets/uploads/estacao/{$eAtual->foto_estacao}" class="card-img-top img-fluid" alt="Estação Image">
+                            {else}
+                                <img src="{$BASE_URL}assets/images/estacao.jpg" class="card-img-top img-fluid" alt="Default Image">
+                            {/if}
                             <div class="card-body text-center">
                                 <h2 class="card-title" style="color: #6c757d;">{$eAtual->identificador}</h5>
                             
