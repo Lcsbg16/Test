@@ -78,6 +78,7 @@ class AdminLeituras extends BaseCrudController
         $this->jsonOutput($leituras);
     }
 
+
     public function getUltimaLeituraRegistrada()
     {
         $estacao    = $this->input->post('estacao_selecionada'); 
