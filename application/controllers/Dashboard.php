@@ -31,6 +31,15 @@ class Dashboard extends BasePrivateController
         $this->loadSmartyView('Dashboard/index', $variaveisView);
     }
 
+    public function cardAcumuladoChuvaPorPeriodoGeral()
+    {
+        $this->load->model('LeiturasModel');
+        $variaveisView = [];
+        $variaveisView['acumulados'] = $this->LeiturasModel->getAcumuladoChuvaPorPeriodoGeral();        
+        ///print_r($variaveisView);
+        $this->loadSmartyView('Dashboard/cards/cardAcumuladoChuvaPorPeriodoGeral', $variaveisView );
+    }
+
     public function listaOcorrencias(){
         $this->load->model('OcorrenciasModel');
         $variaveisView = [];

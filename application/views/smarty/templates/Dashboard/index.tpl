@@ -40,7 +40,6 @@
                     </div>
 
                     <div class="table-responsive" id="eventos_table">
-                       
                     </div>
                 </div>
             </div>
@@ -108,11 +107,9 @@
                 setInterval(carregarEventos, 10000);
 
 
+                /////////////  MONTAGEM DOS CARDS DO PAINEL */////////////////
 
-
-                /*  MONTAGEM DOS CARDS DO PAINEL */
-
-                // Lista de dicionários para montagem de cards:
+                /* MONTAGEM DOS CARDS REGULARES*/
                 var listaCards = [
                     {id: 1, url: BASE_URL + '/Dashboard/cardContagemEstacoes', largura: '3'},
                     {id: 2, url: BASE_URL + '/Dashboard/cardEstacoesAtivas', largura: '3'},
@@ -120,10 +117,8 @@
                     {id: 4, url: BASE_URL + '/Dashboard/cardTemperaturaMedia', largura: '3'},
                     {id: 5, url: BASE_URL + '/Dashboard/cardTemperaturaMinima', largura: '3'},
                     {id: 6, url: BASE_URL + '/Dashboard/cardTemperaturaMaxima', largura: '3'},
-                    {id: 7, url: BASE_URL + '/Dashboard/cardVolumeChuvaMinimo', largura: '3'},
-                    {id: 8, url: BASE_URL + '/Dashboard/cardVolumeChuvaMaximo', largura: '3'},
-                    {id: 9, url: BASE_URL + '/Dashboard/cardVelocidadeMinimaVento', largura: '3'},
-                    {id: 10, url: BASE_URL + '/Dashboard/cardVelocidadeMaximaVento', largura: '3'},
+                    {id: 7, url: BASE_URL + '/Dashboard/cardVolumeChuvaMaximo', largura: '3'},
+                    {id: 8, url: BASE_URL + '/Dashboard/cardVelocidadeMaximaVento', largura: '3'},
                 ];
 
                 function criarCardsVazios()
@@ -149,6 +144,39 @@
                         }
                     });
                 }
+
+                /////////* MONTAGEM DO CARD DE ACUMULO DE CHUVA*//////////
+
+
+                function carregarCardAcumuladoChuva()
+                {
+                    url = BASE_URL + 'Dashboard/cardAcumuladoChuvaPorPeriodoGeral/';
+                    $.ajax({
+                        url: url,
+                        method: 'GET',
+                        success: function (response) {
+                            console.log(response);
+                            let responseHTML = $(response);  
+
+                            if (responseHTML.find('.carousel-item').length > 0) {
+                                $('#alert_cards_row').addClass('acumuladoChuvaPorPeriodo');
+                                $('#alert_cards_row').append(response);
+                                console.log("entrou no if");
+                            } else {
+                                console.log(response);
+                                $('#alert_cards_row .acumuladoChuvaPorPeriodo').remove();
+                            }
+                        },
+                        error: function (error) {
+                            console.error('Erro na requisição AJAX:', error);
+                        }
+                    });
+                }
+                carregarCardAcumuladoChuva();
+
+
+
+                ///////* MONTAGEM DOS CARDS DE ALERTA*//////////
 
                 function carregarCardsAlerta()
                 {
@@ -209,6 +237,7 @@
                     });
 
                     carregarCardsAlerta();
+                    carregarCardAcumuladoChuva();
                 }
                 atualizarCards();
                 setInterval(atualizarCards, 10000);
