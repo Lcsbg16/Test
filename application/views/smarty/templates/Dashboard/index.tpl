@@ -240,7 +240,7 @@
                     carregarCardAcumuladoChuva();
                 }
                 atualizarCards();
-                setInterval(atualizarCards, 10000);
+                setInterval(atualizarCards, 120000);
 
 
             {/literal}

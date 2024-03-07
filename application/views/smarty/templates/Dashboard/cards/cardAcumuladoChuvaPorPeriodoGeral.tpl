@@ -1,3 +1,5 @@
+
+
 <div class="col-xl-4 col-lg-6" id="card_acumuladoChuva">
 <div class="card card-stats mb-4 mb-xl-4">
    <div class="card-body" style="max-height: 150px;">
@@ -16,9 +18,9 @@
                      <div class="row d-flex justify-content-center align-items-center">
                         <div class="col-6 d-flex justify-content-center align-items-center flex-column ">
                            <h6 style="font-weight: bolder;"><i class="fas fa-cloud-rain" style="width: 15px; height: 15px; color:blue;"></i>Volume Acumulado de Chuva: </h6>
-                           <h6><strong>1 hora:</strong> {$acumulado->volume_1h}mm</h6>
-                           <h6><strong>24 horas:</strong> {$acumulado->volume_24h}mm</h6>
-                           <h6><strong>96 horas:</strong> {$acumulado->volume_96h}mm</h6>
+                           <h6><strong>1 hora:</strong> {$acumulado->volume_1h|number_format:1:","}mm</h6>
+                           <h6><strong>24 horas:</strong> {$acumulado->volume_24h|number_format:1:","}mm</h6>
+                           <h6><strong>96 horas:</strong> {$acumulado->volume_96h|number_format:1:","}mm</h6>
                         </div>
                         <div class="col-4 d-flex justify-content-center align-items-center flex-column" style="align-self: baseline;">
                            <h6 style="font-weight: bolder;"><i class="fa-solid fa-temperature-three-quarters" style="width: 15px; height: 15px; color:blue;"></i>Temperatura:</h6>
@@ -41,6 +43,12 @@
       </div>
    </div>
 </div>
+<script>
+  $(document).ready(function(){
+    $('#carouselExampleControls').carousel();
+  });
+</script>
+
 <style>
    .carousel-control-prev-icon {
    color: blue; 

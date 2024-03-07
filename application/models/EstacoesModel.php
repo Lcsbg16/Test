@@ -191,7 +191,10 @@ class EstacoesModel extends BaseModel
                         'umidade_ar'         => $ultimoRegistro['umidade_ar'],
                         'velocidade_vento'   => $ultimoRegistro['velocidade_vento'],
                         'dir_vento'          => $ultimoRegistro['dir_vento'],
-                        'volume_chuva'       => $ultimoRegistro['volume_chuva']
+                        'volume_chuva'       => $ultimoRegistro['volume_chuva'],
+                        'volume_acumulado_1h' => $ultimoRegistro['volume_chuva_ac_1h'],
+                        'volume_acumulado_24h' => $ultimoRegistro['volume_chuva_ac_24h'],
+                        'volume_acumulado_96h' => $ultimoRegistro['volume_chuva_ac_96h']
                     ];
                 }
                 else
