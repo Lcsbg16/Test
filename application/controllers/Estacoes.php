@@ -90,17 +90,38 @@ class Estacoes extends BasePrivateController
         echo 'OK';
     }
 
-    public function enviarEmailEvento($nomeEstacao, $evento)
+    public function enviarEmailEvento($estacaoId, $nomeEstacao, $evento)
     {
         $this->load->library('EmailUtil');
+        $this->load->model('EstacoesModel');
 
-        $adminEmail   = ADMIN_EMAIL;
-        $assunto      = "Evento de Estação: $nomeEstacao $evento";
-        $destinatario = $adminEmail;
-        $mensagem     = "A estação $nomeEstacao está $evento.";
-        $remetente    = EMAIL_FROM;
+        $result = $this->EstacaoModel->getEmailsUsuariosPorEstacao($estacaoId);
 
-        $this->emailutil->enviarEmail($assunto, $destinatario, $mensagem, $remetente);
+        // $adminEmail   = ADMIN_EMAIL;
+        // $assunto      = "Evento de Estação: $nomeEstacao $evento";
+        // $destinatario = $usuario->email;
+        // $mensagem     = "A estação $nomeEstacao está $evento.";
+        // $remetente    = EMAIL_FROM;
+
+        // $this->emailutil->enviarEmail($assunto, $destinatario, $mensagem, $remetente);
+
+        if (!empty($result)) {
+            // Monta um array de emails
+            $destinatarios = [];
+            foreach ($result as $row) {
+                $destinatarios[] = $row->email;
+            }
+    
+            // Configuração do e-mail
+            $assunto      = "Evento de Estação: $nomeEstacao $evento";
+            $mensagem     = "A estação $nomeEstacao está $evento.";
+            $remetente    = EMAIL_FROM;
+    
+            // Envia o e-mail para todos os destinatários associados à estação
+            foreach ($destinatarios as $destinatario) {
+                $this->emailutil->enviarEmail($assunto, $destinatario, $mensagem, $remetente);
+            }
+        }
     }
 
     public function getLegendaMonitoramento($camada)
