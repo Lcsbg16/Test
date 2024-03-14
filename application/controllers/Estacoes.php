@@ -106,21 +106,19 @@ class Estacoes extends BasePrivateController
         // $this->emailutil->enviarEmail($assunto, $destinatario, $mensagem, $remetente);
 
         if (!empty($result)) {
-            // Monta um array de emails
-            $destinatarios = [];
-            foreach ($result as $row) {
-                $destinatarios[] = $row->email;
-            }
-    
             // Configuração do e-mail
-            $assunto      = "Evento de Estação: $nomeEstacao $evento";
-            $mensagem     = "A estação $nomeEstacao está $evento.";
-            $remetente    = EMAIL_FROM;
+            $assunto   = "Evento de Estação: $nomeEstacao $evento";
+            $mensagem  = "A estação $nomeEstacao está $evento.";
+            $remetente = EMAIL_FROM;
     
-            // Envia o e-mail para todos os destinatários associados à estação
-            foreach ($destinatarios as $destinatario) {
+            // Monta um array de emails e envia os emails
+            foreach ($result as $row) {
+                $destinatario = $row->email;
                 $this->emailutil->enviarEmail($assunto, $destinatario, $mensagem, $remetente);
             }
+
+            $adminEmail = ADMIN_EMAIL;
+            $this->emailutil->enviarEmail($assunto, $adminEmail, $mensagem, $remetente);
         }
     }
 

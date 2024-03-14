@@ -14,9 +14,12 @@
                             <div class="row my-3">
                                 <div class="col">
                                     <label>Estação</label><br>
-                                    <select id="estacoesSelect" class="form-control form-control-sm" name="estacao[]" multiple>
+                                    <select id="estacoesSelect" class="form-control form-control-sm" name="estacoes[]" multiple="multiple">
                                         {foreach $estacoes as $eAtual}
-                                            <option value="{$eAtual.id}" {if !$eAtual.ativa}disabled{/if}>{$eAtual.descricao} ({$eAtual.identificador})</option>
+                                            {assign var=corTexto value=($eAtual.ativa == 1) ? 'black' : 'grey'}
+                                            <option value="{$eAtual.id}" id="estacao_descricao" {if isset($smarty.get.estacoes) && in_array($eAtual.id, $smarty.get.estacoes)} selected {/if} style="color: {$corTexto}">
+                                                {$eAtual.descricao} ({$eAtual.identificador})
+                                            </option>
                                         {/foreach}
                                     </select>
                                 </div>
@@ -52,9 +55,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.16/js/bootstrap-multiselect.min.js"></script>
     
     <script>
-        $(document).ready(function() {
-            $('#estacoesSelect').multiselect({
-                includeSelectAllOption: true
+        $(document).ready(function () {
+            $("#estacoesSelect").multiselect({
+                includeSelectAllOption: true,
+                buttonWidth: '180px',
+                enableHTML: true
             });
         });
     </script>
