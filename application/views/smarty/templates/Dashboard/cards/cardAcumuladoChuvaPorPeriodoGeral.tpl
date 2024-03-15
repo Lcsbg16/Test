@@ -2,9 +2,9 @@
 
 <div class="col-xl-4 col-lg-6" id="card_acumuladoChuva">
 <div class="card card-stats mb-4 mb-xl-4">
-   <div class="card-body" style="max-height: 150px;">
+   <div class="card-body" style="max-height: 150px; padding: 0!important;">
       <div class="row">
-         <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" style="width: 100%; height: 100%;">
+         <div id="carouselExampleControls" data-interval="10000" class="carousel slide" data-ride="carousel" style="width: 100%; height: 100%;">
             <div class="carousel-inner">
                {foreach $acumulados as $acumulado}
                {if !isset($primeiro)}
@@ -14,6 +14,7 @@
                   <div class="carousel-item">
                      {$primeiro = false}
                      {/if}
+                     <h5 class="card-title text-uppercase text-muted mb-0" style="text-align: center;padding-bottom: 10px; padding: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chuva Agora:</h5>
                      <h5 class="card-title text-uppercase text-muted mb-0" style="text-align: center;padding-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{$acumulado->descricao}</h5>
                      <div class="row d-flex justify-content-center align-items-center">
                         <div class="col-6 d-flex justify-content-center align-items-center flex-column ">
