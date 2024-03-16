@@ -681,50 +681,50 @@ class LeiturasModel extends BaseModel
     }  
     
     public function exportarLeiturasParaCSV($filtros)
-{
-    $leituras = $this->getLeiturasPorEscala($filtros, false);
+    {
+        $leituras = $this->getLeiturasPorEscala($filtros, false);
 
-    $csvData = array();
+        $csvData = array();
 
-    $header = array(
-        'periodo',
-        'estacao_id',
-        'estacao_identificador',
-        'estacao_descricao',
-        'estacao_endereco',
-        'estacao_latitude',
-        'estacao_longitude',
-        'temperatura',
-        'umidade_ar',
-        'velocidade_vento',
-        'rajada_vento',
-        'volume_chuva',
-        'datahora_cadastro'
-    );
+        $header = array(
+            'periodo',
+            'estacao_id',
+            'estacao_identificador',
+            'estacao_descricao',
+            'estacao_endereco',
+            'estacao_latitude',
+            'estacao_longitude',
+            'temperatura',
+            'umidade_ar',
+            'velocidade_vento',
+            'rajada_vento',
+            'volume_chuva',
+            'datahora_cadastro'
+        );
 
-    $csvData[] = $header;
+        $csvData[] = $header;
 
-    while ($leitura = $leituras->unbuffered_row('array')) {
-        // Substituir vírgulas por pontos nas colunas de velocidade do vento e rajada de vento
-        $leitura['velocidade_vento'] = str_replace(',', '.', $leitura['velocidade_vento']);
-        $leitura['rajada_vento'] = str_replace(',', '.', $leitura['rajada_vento']);
-    
-        // Converter velocidade do vento e rajada de vento para km/h
-        $leitura['velocidade_vento'] = self::converterVelocidadeVentoKMH($leitura['velocidade_vento']);
-        $leitura['rajada_vento'] = self::converterVelocidadeVentoKMH($leitura['rajada_vento']);
-    
-        // Substituir o separador decimal de . para ,
-        $leitura = array_map(function ($value) {
-            return str_replace('.', ',', $value);
-        }, $leitura);
+        while ($leitura = $leituras->unbuffered_row('array')) {
+            // Substituir vírgulas por pontos nas colunas de velocidade do vento e rajada de vento
+            $leitura['velocidade_vento'] = str_replace(',', '.', $leitura['velocidade_vento']);
+            $leitura['rajada_vento'] = str_replace(',', '.', $leitura['rajada_vento']);
         
-        // Adicionar a linha ao CSV
-        $csvData[] = $leitura;
-    }
-    //var_dump($csvData);
+            // Converter velocidade do vento e rajada de vento para km/h
+            $leitura['velocidade_vento'] = self::converterVelocidadeVentoKMH($leitura['velocidade_vento']);
+            $leitura['rajada_vento'] = self::converterVelocidadeVentoKMH($leitura['rajada_vento']);
+        
+            // Substituir o separador decimal de . para ,
+            $leitura = array_map(function ($value) {
+                return str_replace('.', ',', $value);
+            }, $leitura);
+            
+            // Adicionar a linha ao CSV
+            $csvData[] = $leitura;
+        }
+        //var_dump($csvData);
 
-    return $csvData;
-}
+        return $csvData;
+    }
 
     public static function converterVelocidadeVentoKMH($velocidadeMS)
     {
