@@ -38,19 +38,26 @@ class LeiturasModel extends BaseModel
 
     public function calcularEstatisticasPorPeriodo(FiltrosLeitura $filtros)
     {
+        $this->load->model('EstacoesModel');
+        $result  = $this->EstacoesModel->getEstacoesComAcessoPorUsuario();
 
         $this->db->from('leitura');
         if ($filtros)
         {
             $estacoes       = $filtros->getEstacoes();
+           
             $dataInicial    = $filtros->getDataInicial();
             $dataFinal      = $filtros->getDataFinal();
             $escala         = $filtros->getEscala();
             $tipoInformacao = $filtros->getTipoInformacao();
-
+           
             if ($estacoes)
             {
+                
                 $this->db->where_in('estacao_id', $estacoes);
+            }else{
+                $imploded = implode(',', array_map('array_pop', $result));
+                $this->db->where_in('estacao_id', explode(',',$imploded));
             }
 
             if ($dataInicial)
@@ -127,9 +134,11 @@ class LeiturasModel extends BaseModel
             $this->db->order_by('periodo', $filtros->getDirecao());
             $resultado = $this->db->get();
 
-            //echo $this->db->last_query();
+           
 
             $resultadoArray = $resultado->result_array();
+
+            //var_dump( $this->db->last_query());
             $retorno        = [];
             foreach ($resultadoArray as $linha)
             {
@@ -682,6 +691,7 @@ class LeiturasModel extends BaseModel
     
     public function exportarLeiturasParaCSV($filtros)
     {
+        
         $leituras = $this->getLeiturasPorEscala($filtros, false);
 
         $csvData = array();

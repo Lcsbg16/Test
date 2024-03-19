@@ -129,6 +129,7 @@ class EstacoesModel extends BaseModel
 
     public function getEstacoes($somenteAtivas = FALSE, $ids = array())
     {
+       
         $this->db->order_by('ativa', 'DESC'); // Ordenar as ativas para as telas de relatorio
         $this->db->order_by('descricao');
 
@@ -159,6 +160,10 @@ class EstacoesModel extends BaseModel
         {
             $this->db->where('ativa', TRUE);
         }
+
+        $result  = $this->getEstacoesComAcessoPorUsuario();
+        $imploded = implode(',', array_map('array_pop', $result));
+        $this->db->where_in('`estacao`.`id`', explode(',',$imploded));
 
         return $this->db->count_all_results('estacao');
     }
@@ -353,12 +358,17 @@ class EstacoesModel extends BaseModel
 
     public function getEstacaoComDadosMeteorologicos()
     {
+        $result  = $this->getEstacoesComAcessoPorUsuario();
+
+        $imploded = implode(',', array_map('array_pop', $result));
+       
+
         $this->db->select('estacao.*, leitura.temperatura, leitura.velocidade_vento, leitura.volume_chuva');
         $this->db->from('estacao');
         $this->db->join('(SELECT estacao_id, MAX(id) AS max_id FROM leitura GROUP BY estacao_id) AS ultima_leitura', 'estacao.id = ultima_leitura.estacao_id', 'left');
         $this->db->join('leitura', 'ultima_leitura.max_id = leitura.id', 'left');
         $this->db->where('estacao.ativa', 1);
-
+        $this->db->where_in('`estacao`.`id`', explode(',',$imploded));
         return $this->db->get()->result();
     }
 
@@ -373,5 +383,26 @@ class EstacoesModel extends BaseModel
             ->result();
     }
 
+
+    public function getEstacoesComAcessoPorUsuario(){
+        $this->load->model('LoginModel');
+
+        $usuario = $this->LoginModel->getDadosUsuarioLogado();
+        $usuario_id = $usuario['id'];
+        $grupos =  implode(", ", $usuario['grupos']);
+
+        $db = $this->db
+        ->distinct()->select('e.id')
+        ->from('estacao e')
+        ->join('usuario_acessa_estacao uas', 'uas.estacao_id = e.id','left')
+        ->join('grupo_acessa_estacao gas', 'gas.estacao_id = e.id','left')
+        ->where('gas.grupo_id in '.'('. $grupos.')')
+        ->or_where('uas.usuario_id', $usuario_id)
+        ->get()
+        ->result_array();
+        
+        return $db;
+
+    }
 
 }
