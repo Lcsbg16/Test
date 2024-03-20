@@ -17,7 +17,11 @@ class Estacoes extends BasePrivateController
         $variaveisView = [];
 
         $variaveisView['titulo_pagina'] = 'Mapa de Estações';
-        $variaveisView['estacoes']      = $this->EstacoesModel->getEstacoes(true);
+
+        $estacoes  = $this->EstacoesModel->getEstacoesComAcessoPorUsuario();  
+        $imploded = implode(',', array_map('array_pop', $estacoes));
+
+        $variaveisView['estacoes']      = $this->EstacoesModel->getEstacoes(true, explode(',',$imploded));
 
         $this->loadSmartyView('Estacoes/mapa', $variaveisView);
     }

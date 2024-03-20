@@ -146,6 +146,7 @@ class Dashboard extends BasePrivateController
 
     public function cardAlertas()
     {
+        $variaveisView                       = [];
         $this->loadSmartyView('Dashboard/cards/cardAlertas', $variaveisView);
     }
 

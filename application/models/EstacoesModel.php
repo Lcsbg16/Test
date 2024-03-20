@@ -5,6 +5,22 @@ require_once 'BaseModel.php';
 class EstacoesModel extends BaseModel
 {
 
+    public $estacoesComAcesso = array();
+
+   
+    public function __construct()
+    {
+       
+        $this->estacoesComAcesso  = $this->getEstacoesComAcessoPorUsuario();
+        parent::__construct();
+    }
+
+    private function filtrarEstacoesComAcesso($fild){
+
+        $imploded = implode(',', array_map('array_pop',  $this->estacoesComAcesso));
+        $this->db->where_in($fild, explode(',',$imploded));
+    }
+    
     /**
      * Retorna a quantidade de estações cujo último evento registrado é de id informado em $tipo_evento_id
      *
@@ -40,7 +56,7 @@ class EstacoesModel extends BaseModel
         {
             $this->db->where('ativa', 1);
         }
-
+        $this->filtrarEstacoesComAcesso('e.id');
 
 
         return $this->db->count_all_results();
@@ -135,6 +151,7 @@ class EstacoesModel extends BaseModel
 
         if ($somenteAtivas)
         {
+            
             $this->db->where('ativa', true);
         }
 
@@ -144,7 +161,7 @@ class EstacoesModel extends BaseModel
         }
 
         $estacoes = $this->db->get('estacao')->result_array();
-
+       
         foreach ($estacoes as $index => $estacaoAtual)
         {
             $estacoes[$index]['online'] = $this->getEstacaoOnline($estacaoAtual['id']);
@@ -331,8 +348,10 @@ class EstacoesModel extends BaseModel
                 ->join('estacao', 'evento.estacao_id = estacao.id')
                 ->order_by('evento.datahora', 'desc')
                 ->limit($limit);
-
+                $this->filtrarEstacoesComAcesso('estacao_id');
+               
         $query = $this->db->get();
+       
         return $query->result_array();
     }
 
