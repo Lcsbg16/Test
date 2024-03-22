@@ -97,12 +97,14 @@ class Estacoes extends BasePrivateController
 
         $result = $this->EstacoesModel->getEmailsUsuariosPorEstacao($estacaoId);
 
-        if (!empty($result)) {
+        if (!empty($result))
+        {
             $assunto   = "Evento de Estação: $nomeEstacao $evento";
             $mensagem  = "A estação $nomeEstacao está $evento.";
             $remetente = EMAIL_FROM;
-        
-            foreach ($result as $row) {
+
+            foreach ($result as $row)
+            {
                 $destinatario = $row->email;
                 $this->emailutil->enviarEmail($assunto, $destinatario, $mensagem, $remetente);
             }
@@ -117,15 +119,13 @@ class Estacoes extends BasePrivateController
         $this->jsonOutput('Legenda não disponível');
     }
 
-
     //Metodo apenas para testar o envio de emails diretamente
     public function testarEnvioEmailEvento()
     {
-        $estacaoId = 45; 
-        $nomeEstacao = "Lucas"; 
-        $evento = "online";
+        $estacaoId   = 45;
+        $nomeEstacao = "Lucas";
+        $evento      = "online";
 
-        
         $this->enviarEmailEvento($estacaoId, $nomeEstacao, $evento);
     }
 }
