@@ -14,7 +14,7 @@
     </style>
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-    <div class="container-fluid container-fluid mt--9">
+    <div class="container">
         <div class="row">
             {foreach $estacoes as $eAtual}
                 {if $eAtual->ativa}
