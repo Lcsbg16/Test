@@ -8,13 +8,13 @@
         }
 
         .custom-card img {
-            height: 200px; 
+            height: 200px;
             object-fit: cover;
         }
     </style>
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-    <div class="container">
+    <div class="container-fluid container-fluid mt--9">
         <div class="row">
             {foreach $estacoes as $eAtual}
                 {if $eAtual->ativa}
@@ -27,14 +27,14 @@
                             {/if}
                             <div class="card-body text-center">
                                 <h2 class="card-title" style="color: #6c757d;">{$eAtual->identificador}</h5>
-                            
-                                <p class="card-text">Leitura dos dados: Há 2 minutos</p>
-                                <p class="card-text" style="font-size: 3rem;">{$eAtual->temperatura|number_format:1:","}&deg;C</p>
 
-                                <div class="card-footer text-muted">
-                                    <p style="margin-bottom: 0;">Vel do vento: {$eAtual->velocidade_vento|number_format:1:","} m/s</p>
-                                    <p style="margin-bottom: 0;">Vol acumulado Chuva: {$eAtual->volume_chuva|number_format:1:","} mm</p>
-                                </div>
+                                    <p class="card-text">Leitura dos dados: Há 2 minutos</p>
+                                    <p class="card-text" style="font-size: 3rem;">{$eAtual->temperatura|number_format:1:","}&deg;C</p>
+
+                                    <div class="card-footer text-muted">
+                                        <p style="margin-bottom: 0;">Vel do vento: {$eAtual->velocidade_vento|number_format:1:","} m/s</p>
+                                        <p style="margin-bottom: 0;">Vol acumulado Chuva: {$eAtual->volume_chuva|number_format:1:","} mm</p>
+                                    </div>
                             </div>
                         </div>
                     </div>
