@@ -90,21 +90,42 @@ class Estacoes extends BasePrivateController
         echo 'OK';
     }
 
-    public function enviarEmailEvento($nomeEstacao, $evento)
+    public function enviarEmailEvento($estacaoId, $nomeEstacao, $evento)
     {
         $this->load->library('EmailUtil');
+        $this->load->model('EstacoesModel');
 
-        $adminEmail   = ADMIN_EMAIL;
-        $assunto      = "Evento de Estação: $nomeEstacao $evento";
-        $destinatario = $adminEmail;
-        $mensagem     = "A estação $nomeEstacao está $evento.";
-        $remetente    = EMAIL_FROM;
+        $result = $this->EstacoesModel->getEmailsUsuariosPorEstacao($estacaoId);
 
-        $this->emailutil->enviarEmail($assunto, $destinatario, $mensagem, $remetente);
+        if (!empty($result))
+        {
+            $assunto   = "Evento de Estação: $nomeEstacao $evento";
+            $mensagem  = "A estação $nomeEstacao está $evento.";
+            $remetente = EMAIL_FROM;
+
+            foreach ($result as $row)
+            {
+                $destinatario = $row->email;
+                $this->emailutil->enviarEmail($assunto, $destinatario, $mensagem, $remetente);
+            }
+
+            $adminEmail = ADMIN_EMAIL;
+            $this->emailutil->enviarEmail($assunto, $adminEmail, $mensagem, $remetente);
+        }
     }
 
     public function getLegendaMonitoramento($camada)
     {
         $this->jsonOutput('Legenda não disponível');
+    }
+
+    //Metodo apenas para testar o envio de emails diretamente
+    public function testarEnvioEmailEvento()
+    {
+        $estacaoId   = 45;
+        $nomeEstacao = "Lucas";
+        $evento      = "online";
+
+        $this->enviarEmailEvento($estacaoId, $nomeEstacao, $evento);
     }
 }

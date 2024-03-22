@@ -193,6 +193,7 @@ class LeiturasModel extends BaseModel
 
             $this->db->select(
                     $colunaPeriodo . ' AS periodo,
+                            E.id as estacao_id,
                             E.identificador as estacao_identificador,
                             E.descricao as estacao_descricao,
                             E.endereco as estacao_endereco,
@@ -201,8 +202,9 @@ class LeiturasModel extends BaseModel
                             AVG(L.temperatura) as temperatura,
                             AVG(L.umidade_ar) as umidade_ar,
                             AVG(L.velocidade_vento) as velocidade_vento,
+                            MAX(L.velocidade_vento) as rajada_vento,
                             SUM(L.volume_chuva) as volume_chuva,
-                            MAX(L.velocidade_vento) as rajada_vento
+                            L.datahora_cadastro as datahora_cadastro
                         ');
 
             $this->db->join('estacao E', 'L.estacao_id = E.id');
@@ -682,14 +684,13 @@ class LeiturasModel extends BaseModel
     
     public function exportarLeiturasParaCSV($filtros)
     {
-        $leituras = $this->getLeiturasPorEscala($filtros);
+        $leituras = $this->getLeiturasPorEscala($filtros, false);
 
         $csvData = array();
 
         $header = array(
             'periodo',
-            'id',
-            'datahora',
+            'estacao_id',
             'estacao_identificador',
             'estacao_descricao',
             'estacao_endereco',
@@ -698,25 +699,31 @@ class LeiturasModel extends BaseModel
             'temperatura',
             'umidade_ar',
             'velocidade_vento',
-            'direcao_vento',
+            'rajada_vento',
             'volume_chuva',
             'datahora_cadastro'
         );
 
         $csvData[] = $header;
 
-        foreach ($leituras as $leitura) {
-            // Converter velocidade do vento para km/h
-            $leitura['velocidade_vento'] = Conversao::velVentoParakmH($leitura['velocidade_vento']);
-
+        while ($leitura = $leituras->unbuffered_row('array')) {
+            // Substituir vírgulas por pontos nas colunas de velocidade do vento e rajada de vento
+            $leitura['velocidade_vento'] = str_replace(',', '.', $leitura['velocidade_vento']);
+            $leitura['rajada_vento'] = str_replace(',', '.', $leitura['rajada_vento']);
+        
+            // Converter velocidade do vento e rajada de vento para km/h
+            $leitura['velocidade_vento'] = self::converterVelocidadeVentoKMH($leitura['velocidade_vento']);
+            $leitura['rajada_vento'] = self::converterVelocidadeVentoKMH($leitura['rajada_vento']);
+        
             // Substituir o separador decimal de . para ,
-            $leitura['velocidade_vento'] = number_format($leitura['velocidade_vento'], 2, ',', '');
-            $leitura['temperatura'] = number_format($leitura['temperatura'], 2, ',', '');
-            $leitura['umidade_ar'] = number_format($leitura['umidade_ar'], 2, ',', '');
-            $leitura['volume_chuva'] = number_format($leitura['volume_chuva'], 2, ',', '');
-
+            $leitura = array_map(function ($value) {
+                return str_replace('.', ',', $value);
+            }, $leitura);
+            
+            // Adicionar a linha ao CSV
             $csvData[] = $leitura;
         }
+        //var_dump($csvData);
 
         return $csvData;
     }
