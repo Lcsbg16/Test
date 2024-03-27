@@ -241,10 +241,14 @@ class LeiturasModel extends BaseModel
         $this->db->where('v_leitura_calculada.volume_chuva_ac_1h IS NOT NULL');
         $this->db->where('v_leitura_calculada.volume_chuva_ac_1h !=', 0);
         $this->db->where('v_leitura_calculada.datahora = (SELECT MAX(datahora) FROM v_leitura_calculada WHERE estacao_id = estacao.id AND datahora >= DATE_SUB(NOW(), INTERVAL 1 HOUR))', NULL, FALSE);
+        if ($estacao !== null) {
+            $this->db->where('estacao.id', $estacao);
+        }
         $this->db->group_by('estacao.id, estacao.descricao');
-
-        return $resultado = $this->db->get()->result();
+    
+        return $this->db->get()->result();
     }
+    
 
     /**
      * Retorna a última leitura obtida de cada estação
