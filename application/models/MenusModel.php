@@ -15,11 +15,11 @@ class MenusModel extends BaseModel
         $principal->adicionarFilho(new MenuItem('Painel de Controle', base_url('Dashboard'), 'tv-2'));
         $principal->adicionarFilho(new MenuItem('Mapa de Estações', base_url('Estacoes/mapa'), 'map-big', 'yellow'));
         $principal->adicionarFilho(new MenuItem('Mapa de Monitoramento', base_url('Estacoes/mapaMonitoramento'), 'map-big', 'orange'));
-        
+        $principal->adicionarFilho(new MenuItem('Visualizar Estações', base_url('Info'), 'grip', 'orange'));
+
         $principal->adicionarFilho(new MenuItem('Gráficos', base_url('grafico'), 'chart-bar-32', 'green'));
         $principal->adicionarFilho(new MenuItem('Reportar Ocorrência', base_url('AdminOcorrencias/index/add'), 'square-pin', 'orange'));
-        
-        
+
         if ($this->LoginModel->checaPermissaoUsuarioLogado('ADMIN'))
         {
             $cadastros = new MenuItem('Cadastros', '');
@@ -34,7 +34,6 @@ class MenusModel extends BaseModel
             $relatorios->adicionarFilho(new MenuItem('Download dados de leitura', base_url('AdminLeituras/exportarLeitura'), 'collection', 'green'));
             $relatorios->adicionarFilho(new MenuItem('Ocorrências', base_url('RelatorioOcorrencias'), 'collection', 'green'));
             $relatorios->adicionarFilho(new MenuItem('Eventos', base_url('AdminEventos'), 'collection', 'green'));
-            
         }
 
         $usuario = new MenuItem('Usuário', '');
@@ -56,7 +55,6 @@ class MenusModel extends BaseModel
 
         return $menus;
     }
-
 }
 
 class MenuItem
@@ -149,5 +147,4 @@ class MenuItem
     {
         $this->icone = $icone;
     }
-
 }

@@ -16,7 +16,7 @@
                                     <label>Estação</label><br>
                                     <select id="estacoesSelect" class="form-control form-control-sm" name="estacoes[]" multiple="multiple">
                                         {foreach $estacoes as $eAtual}
-                                            {assign var=corTexto value=($eAtual.ativa == 1) ? 'black' : 'red'}
+                                            {assign var=corTexto value=($eAtual.ativa == 1) ? 'black' : 'grey'}
                                             <option value="{$eAtual.id}" id="estacao_descricao" {if isset($smarty.get.estacoes) && in_array($eAtual.id, $smarty.get.estacoes)} selected {/if} style="color: {$corTexto}">
                                                 {$eAtual.descricao} ({$eAtual.identificador})
                                             </option>
@@ -107,7 +107,7 @@
 
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.16/js/bootstrap-multiselect.min.js"></script>
-    <script type="text/javascript">
+    <script type="text/javascript">    
         $(document).ready(function () {
             $("#estacoesSelect").multiselect({
                 includeSelectAllOption: true,

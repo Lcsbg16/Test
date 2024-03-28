@@ -193,6 +193,7 @@ class LeiturasModel extends BaseModel
 
             $this->db->select(
                     $colunaPeriodo . ' AS periodo,
+                            E.id as estacao_id,
                             E.identificador as estacao_identificador,
                             E.descricao as estacao_descricao,
                             E.endereco as estacao_endereco,
@@ -201,19 +202,20 @@ class LeiturasModel extends BaseModel
                             AVG(L.temperatura) as temperatura,
                             AVG(L.umidade_ar) as umidade_ar,
                             AVG(L.velocidade_vento) as velocidade_vento,
+                            MAX(L.velocidade_vento) as rajada_vento,
                             SUM(L.volume_chuva) as volume_chuva,
-                            MAX(L.velocidade_vento) as rajada_vento
+                            MAX(L.datahora_cadastro) as datahora_cadastro
                         ');
 
             $this->db->join('estacao E', 'L.estacao_id = E.id');
             $this->db->group_by(
                     $colunaPeriodo . ',
+                            E.id,
                             E.identificador,
                             E.descricao,
                             E.endereco,
                             E.latitude,
                             E.longitude
-
             ');
             $this->db->order_by('periodo', 'ASC');
             $resultado = $this->db->get();
@@ -229,6 +231,24 @@ class LeiturasModel extends BaseModel
             }
         }
     }
+
+    public function getAcumuladoChuvaPorPeriodoGeral() //Acumulos de chuva + descrição da estação + temperatura // jaque
+    {
+
+        $this->db->select('estacao.id AS estacao_id, estacao.descricao AS descricao, v_leitura_calculada.volume_chuva_ac_1h AS volume_1h, v_leitura_calculada.volume_chuva_ac_24h AS volume_24h, v_leitura_calculada.volume_chuva_ac_96h AS volume_96h, v_leitura_calculada.temperatura AS temperatura');
+        $this->db->from('v_leitura_calculada');
+        $this->db->join('estacao', 'estacao.id = v_leitura_calculada.estacao_id');
+        $this->db->where('v_leitura_calculada.volume_chuva_ac_1h IS NOT NULL');
+        $this->db->where('v_leitura_calculada.volume_chuva_ac_1h !=', 0);
+        $this->db->where('v_leitura_calculada.datahora = (SELECT MAX(datahora) FROM v_leitura_calculada WHERE estacao_id = estacao.id AND datahora >= DATE_SUB(NOW(), INTERVAL 1 HOUR))', NULL, FALSE);
+        if ($estacao !== null) {
+            $this->db->where('estacao.id', $estacao);
+        }
+        $this->db->group_by('estacao.id, estacao.descricao');
+    
+        return $this->db->get()->result();
+    }
+    
 
     /**
      * Retorna a última leitura obtida de cada estação
@@ -648,6 +668,67 @@ class LeiturasModel extends BaseModel
         {
             return self::PLUVIOMETRIA_NIVEL_NORMALIDADE;
         }
+    }
+
+    public function getAllLeituras()
+    {
+        $this->db->select('leitura.id, leitura.datahora, estacao.identificador as estacao_identificador, estacao.descricao as estacao_descricao,
+                           estacao.endereco as estacao_edereco, estacao.latitude as estacao_latitude, estacao.longitude as estacao_longitude,
+                           leitura.temperatura, leitura.umidade_ar, leitura.velocidade_vento, leitura.dir_vento, leitura.volume_chuva,datahora_cadastro'); // Adiciona os campos de estacao
+        $this->db->from('leitura');
+        $this->db->join('estacao', 'leitura.estacao_id = estacao.id');
+        //$this->db->order_by('leitura.datahora', 'DESC');
+        $this->db->order_by('leitura.id', 'ASC');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    public function exportarLeiturasParaCSV($filtros)
+    {
+        $leituras = $this->getLeiturasPorEscala($filtros, false);
+
+        $csvData = array();
+
+        $header = array(
+            'periodo',
+            'estacao_id',
+            'estacao_identificador',
+            'estacao_descricao',
+            'estacao_endereco',
+            'estacao_latitude',
+            'estacao_longitude',
+            'temperatura',
+            'umidade_ar',
+            'velocidade_vento',
+            'rajada_vento',
+            'volume_chuva',
+            'datahora_cadastro'
+        );
+
+        $csvData[] = $header;
+
+        while ($leitura = $leituras->unbuffered_row('array'))
+        {
+            // Substituir vírgulas por pontos nas colunas de velocidade do vento e rajada de vento
+            $leitura['velocidade_vento'] = str_replace(',', '.', $leitura['velocidade_vento']);
+            $leitura['rajada_vento']     = str_replace(',', '.', $leitura['rajada_vento']);
+
+            // Converter velocidade do vento e rajada de vento para km/h
+            $leitura['velocidade_vento'] = self::converterVelocidadeVentoKMH($leitura['velocidade_vento']);
+            $leitura['rajada_vento']     = self::converterVelocidadeVentoKMH($leitura['rajada_vento']);
+
+            // Substituir o separador decimal de . para ,
+            $leitura = array_map(function ($value)
+            {
+                return str_replace('.', ',', $value);
+            }, $leitura);
+
+            // Adicionar a linha ao CSV
+            $csvData[] = $leitura;
+        }
+        //var_dump($csvData);
+
+        return $csvData;
     }
 
     public static function converterVelocidadeVentoKMH($velocidadeMS)

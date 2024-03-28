@@ -30,7 +30,9 @@
                                 <label>Esta&ccedil;&atilde;o</label>
                                 <select class="form-control form-control-sm change_controller" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada -->
                                     {foreach $estacoes as $eAtual}
-                                        <option value="{$eAtual.id}" id="estacao_descricao"> {$eAtual.descricao} ({$eAtual.identificador})</option>
+                                        {if $eAtual.ativa}
+                                            <option value="{$eAtual.id}" id="estacao_descricao"> {$eAtual.descricao} ({$eAtual.identificador})</option>
+                                        {/if}
                                     {/foreach}
                                 </select>
                             </div>

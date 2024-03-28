@@ -40,9 +40,19 @@ class AdminEventos extends BaseCrudController
         $crud->unset_edit();
         $crud->unset_clone();
         $crud->order_by('datahora', 'desc');
+
+
+        $estacao_id = $this->input->get('estacao_id');
+
+        if ($estacao_id !== null && is_numeric($estacao_id)) {
+            $this->session->admin_eventos_estacao_id = $estacao_id;
+
+        }
+        $crud->where('estacao_id', $this->session->admin_eventos_estacao_id );
+
         $this->formatar_datahora($crud);
 
-        $this->_crud_output($crud);
+       return $this->_crud_output($crud);
     }
 
     private function formatar_datahora($crud)

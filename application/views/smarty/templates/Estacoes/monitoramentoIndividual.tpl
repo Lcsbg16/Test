@@ -127,7 +127,7 @@
                             <h3 class="mb-0">Eventos</h3>
                         </div>
                         <div class="col text-right">
-                            <a href="http://localhost/telemetria-web/AdminEventos" class="btn btn-sm btn-primary">Ver todos</a>
+                            <a href="{$BASE_URL}AdminEventos/?estacao_id={$estacao.id}" class="btn btn-sm btn-primary">Ver todos</a>
                         </div>
                     </div>
                 </div>
@@ -232,6 +232,7 @@
 
 </div>
 <script>
+
  function GetEscala(){ //função que devolve os dados da escala 
             let escala_selecionada = $( "#escala_selecionada" ).val(); //Valor da escala 
             if(!escala_selecionada){
