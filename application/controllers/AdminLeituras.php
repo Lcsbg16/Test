@@ -33,7 +33,7 @@ class AdminLeituras extends BaseCrudController
 
         // Filtragem data e hora
         var_dump($this->input->get('data_inicial'));
-var_dump($this->input->get('data_final'));
+        var_dump($this->input->get('data_final'));
 
         $data_inicial = $this->input->get('data_inicial');
         $data_final = $this->input->get('data_final');
@@ -41,28 +41,31 @@ var_dump($this->input->get('data_final'));
         // Construção da condição de filtro
         $where = array();
 
-        $this->session->set_userdata('leituras_filtro_data_inicial', null);
-        $this->session->set_userdata('leituras_filtro_data_final', null);   
-        var_dump($data_inicial);
-var_dump($data_final);
+        // $this->session->set_userdata('leituras_filtro_data_inicial', null);
+        // $this->session->set_userdata('leituras_filtro_data_final', null);   
+        // var_dump($data_inicial);
+        // var_dump($data_final);
    
 
-        if (!empty($data_inicial)) {   
+        if (isset($data_inicial)) {   
             $this->session->set_userdata('leituras_filtro_data_inicial', $data_inicial);
         }
         
-        if (!empty($data_final)) {   
+        if (isset($data_final)) {       
             $this->session->set_userdata('leituras_filtro_data_final', $data_final);
         }
         
         if (!empty($this->session->leituras_filtro_data_inicial)) {   
             $data_inicial = date('Y-m-d H:i:s', strtotime($this->session->leituras_filtro_data_inicial));
+            var_dump($data_inicial);
+
             $crud->where('datahora >=', $data_inicial);
         }
         
         if (!empty($this->session->leituras_filtro_data_final)) {   
             // Adicionando 1 minuto para incluir todos os registros até o final do dia selecionado
-            $data_final = date('Y-m-d H:i:s', strtotime($this->session->leituras_filtro_data_final . ' +1 minute'));
+            $data_final = date('Y-m-d H:i:s', strtotime($this->session->leituras_filtro_data_final ));
+            var_dump($data_final);
             $crud->where('datahora <=', $data_final);
         }
 
@@ -293,4 +296,7 @@ var_dump($data_final);
 
         $this->loadSmartyView('ExportarLeituras/index', $variaveisView);
     }
+
+    
 }
+
