@@ -74,46 +74,45 @@ class Estacoes extends BasePrivateController
         header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
         header("Cache-Control: post-check=0, pre-check=0", false);
         header("Pragma: no-cache");
-
+    
         $this->load->model('EstacoesModel');
-
+    
         $eventos = $this->EstacoesModel->monitorarEstacao(5);
         foreach ($eventos as $evento)
         {
             $estacaoId  = $evento['estacao_id'];
             $eventoTipo = $evento['tipo_evento_id'];
             $mensagem   = $evento['mensagem'];
-
+    
             $estacao = $this->EstacoesModel->getEstacao($estacaoId);
-            $this->enviarEmailEvento($estacao['descricao'], $mensagem);
+            $this->enviarEmailEvento($estacaoId, $estacao['descricao'], $mensagem, $eventoTipo); 
         }
         echo 'OK';
     }
-
-    public function enviarEmailEvento($estacaoId, $nomeEstacao, $evento)
+    
+    public function enviarEmailEvento($estacaoId, $nomeEstacao, $evento, $tipoEvento)
     {
         $this->load->library('EmailUtil');
         $this->load->model('EstacoesModel');
-
+    
         $result = $this->EstacoesModel->getEmailsUsuariosPorEstacao($estacaoId);
-
+    
         if (!empty($result))
         {
             $assunto   = "Evento de Estação: $nomeEstacao $evento";
             $mensagem  = "A estação $nomeEstacao está $evento.";
             $remetente = EMAIL_FROM;
-
+    
             foreach ($result as $row)
             {
                 $destinatario = $row->email;
                 $this->emailutil->enviarEmail($assunto, $destinatario, $mensagem, $remetente);
             }
-
+    
             $adminEmail = ADMIN_EMAIL;
             $this->emailutil->enviarEmail($assunto, $adminEmail, $mensagem, $remetente);
         }
     }
-
     public function getLegendaMonitoramento($camada)
     {
         $this->jsonOutput('Legenda não disponível');
