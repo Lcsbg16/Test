@@ -128,4 +128,21 @@ class Estacoes extends BasePrivateController
 
         $this->enviarEmailEvento($estacaoId, $nomeEstacao, $evento);
     }
+
+    public function visualizarEstacoes()
+    {
+        $this->load->model('EstacoesModel');
+        $this->load->model('LeiturasModel');
+        $this->load->model('OcorrenciasModel');
+        
+        $variaveisView = [];
+
+        $variaveisView['titulo_pagina'] = 'Info';
+        $variaveisView['qtde_estacoes'] = $this->EstacoesModel->getContagemEstacoes();
+
+        $variaveisView['estacoes'] = $this->EstacoesModel->getEstacaoComDadosMeteorologicos();
+
+        //var_dump($variaveisView['estacoes']);
+        $this->loadSmartyView('Estacoes/visualizarEstacoes', $variaveisView);
+    }
 }

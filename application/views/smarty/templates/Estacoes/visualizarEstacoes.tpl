@@ -21,14 +21,19 @@
                     <div class="col-md-3">
                         <div class="card bg-light-purple mt-4 custom-card">
                             {if $eAtual->foto_estacao}
-                                <img src="{$BASE_URL}assets/uploads/estacao/{$eAtual->foto_estacao}" class="card-img-top img-fluid" alt="Estação Image">
+                                <a href="{$BASE_URL}Estacoes/monitoramentoIndividual/{$eAtual->id}" style="text-decoration: none;">
+                                    <img src="{$BASE_URL}assets/uploads/estacao/{$eAtual->foto_estacao}" class="card-img-top img-fluid" alt="Estação Image">
+                                </a>
                             {else}
-                                <img src="{$BASE_URL}assets/images/estacao.jpg" class="card-img-top img-fluid" alt="Default Image">
+                                <a href="{$BASE_URL}Estacoes/monitoramentoIndividual/{$eAtual->id}" style="text-decoration: none;">
+                                    <img src="{$BASE_URL}assets/images/estacao.jpg" class="card-img-top img-fluid" alt="Default Image">
+                                </a>    
                             {/if}
                             <div class="card-body text-center">
-                                <h2 class="card-title" style="color: #6c757d;">{$eAtual->identificador}</h5>
+                                    <a href="{$BASE_URL}Estacoes/monitoramentoIndividual/{$eAtual->id}" style="text-decoration: none;">
+                                        <h2 class="card-title" style="color: #6c757d;">{$eAtual->identificador}</h2>
+                                    </a>
 
-                                    <p class="card-text">Leitura dos dados: Há 2 minutos</p>
                                     <p class="card-text" style="font-size: 3rem;">{$eAtual->temperatura|number_format:1:","}&deg;C</p>
 
                                     <div class="card-footer text-muted">
