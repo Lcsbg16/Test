@@ -96,6 +96,8 @@ class AdminLeituras extends BaseCrudController
           $this->adicionaFiltroAcessoEstacao($crud,'`estacao_id`');
 
         $crud->callback_column('velocidade_vento', array($this, '_callback_converterVelocidadeVento'));
+
+        $this->_adicionarCallbacksDePosProcessamentoPadrao($crud);
         $this->_crud_output($crud);
 
     }

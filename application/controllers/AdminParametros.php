@@ -39,6 +39,7 @@ class AdminParametros extends BaseCrudController
         $crud->field_type('descricao', 'readonly');
         $crud->field_type('valor', 'string');
 
+        $this->_adicionarCallbacksDePosProcessamentoPadrao($crud);
         $this->_crud_output($crud);
     }
 

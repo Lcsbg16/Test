@@ -71,6 +71,7 @@ class AdminOcorrencias extends BaseCrudController
         // Filtros
         $this->adicionaFiltros($crud);
 
+        $this->_adicionarCallbacksDePosProcessamentoPadrao($crud);
         $this->_crud_output($crud);
     }
 
