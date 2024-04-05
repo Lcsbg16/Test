@@ -32,8 +32,8 @@ class AdminLeituras extends BaseCrudController
         $crud->set_subject('Leituras');
 
         // Filtragem data e hora
-        var_dump($this->input->get('data_inicial'));
-        var_dump($this->input->get('data_final'));
+        //var_dump($this->input->get('data_inicial'));
+       // var_dump($this->input->get('data_final'));
 
         $data_inicial = $this->input->get('data_inicial');
         $data_final = $this->input->get('data_final');
@@ -92,6 +92,8 @@ class AdminLeituras extends BaseCrudController
         // Relacionamentos
         $crud->set_relation('estacao_id', 'estacao', 'identificador');
 
+          // Filtros
+          $this->adicionaFiltroAcessoEstacao($crud,'`estacao_id`');
 
         $crud->callback_column('velocidade_vento', array($this, '_callback_converterVelocidadeVento'));
         $this->_crud_output($crud);
@@ -150,6 +152,8 @@ class AdminLeituras extends BaseCrudController
         $filtros->setEscala(constant("FiltrosLeitura::$escala"));
         $filtros->setTipoInformacao(constant("FiltrosLeitura::$tipo_dados"));
         $filtros->setDirecao(FiltrosLeitura::DIRECAO_ASC);
+        
+        $leituras = $this->LeiturasModel->calcularEstatisticasPorPeriodo($filtros);
         if ($dataInicial && $dataFinal) 
         {
             $leituras = $this->LeiturasModel->getLeiturasPorIntervaloDeDatas($dataInicial, $dataFinal);
@@ -183,6 +187,8 @@ class AdminLeituras extends BaseCrudController
     {
         $this->load->model('LeiturasModel');
         $this->load->model('EstacoesModel');
+        $result  = $this->EstacoesModel->getEstacoesComAcessoPorUsuario();
+
         $variaveisView = [];
         $filtros = new FiltrosLeitura();
     
@@ -195,6 +201,10 @@ class AdminLeituras extends BaseCrudController
     
             if ($estacoes) {
                 $filtros->setEstacoes($estacoes);
+            }else{
+                $imploded = implode(',', array_map('array_pop', $result));
+                $this->db->where_in('estacao_id', explode(',',$imploded));
+                $filtros->setEstacoes(explode(',',$imploded));
             }
     
             if ($dataInicial) {
@@ -231,8 +241,10 @@ class AdminLeituras extends BaseCrudController
         } else {
             $leituras = [];
         }
-    
-        $variaveisView['estacoes'] = $this->EstacoesModel->getEstacoes();
+
+        $estacoes  = $this->EstacoesModel->getEstacoesComAcessoPorUsuario();  
+        $imploded = implode(',', array_map('array_pop', $estacoes));
+        $variaveisView['estacoes'] = $this->EstacoesModel->getEstacoes(false, explode(',',$imploded));
         $variaveisView['titulo_pagina'] = 'Exportar Leituras';
         $variaveisView['leituras'] = $leituras;
     

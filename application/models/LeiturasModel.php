@@ -10,6 +10,17 @@ class LeiturasModel extends BaseModel
     const PLUVIOMETRIA_NIVEL_ALERTA        = 'alerta';
     const PLUVIOMETRIA_NIVEL_ALERTA_MAXIMO = 'alerta_maximo';
 
+    public $estacoesComAcesso = array();
+
+    public function __construct()
+    {
+        $this->load->model('EstacoesModel');
+        $this->estacoesComAcesso  = $this->EstacoesModel->getEstacoesComAcessoPorUsuario();
+        parent::__construct();
+    }
+
+    
+
     public function getCoresNiveisAlertasPluviometria()
     {
         return [
@@ -35,22 +46,33 @@ class LeiturasModel extends BaseModel
         $dadosLeitura['estacao_id'] = $estacaoId;
         return $this->db->insert('leitura', $dadosLeitura);
     }
+    private function filtrarEstacoesComAcesso($fild){
+        $imploded = implode(',', array_map('array_pop',  $this->estacoesComAcesso));
+        $this->db->where_in($fild, explode(',',$imploded));
+    }
 
     public function calcularEstatisticasPorPeriodo(FiltrosLeitura $filtros)
     {
+       
 
         $this->db->from('leitura');
         if ($filtros)
         {
             $estacoes       = $filtros->getEstacoes();
+           
             $dataInicial    = $filtros->getDataInicial();
             $dataFinal      = $filtros->getDataFinal();
             $escala         = $filtros->getEscala();
             $tipoInformacao = $filtros->getTipoInformacao();
-
+           
             if ($estacoes)
             {
+                
                 $this->db->where_in('estacao_id', $estacoes);
+            }else{
+                $this->filtrarEstacoesComAcesso('estacao_id');
+               // $imploded = implode(',', array_map('array_pop',  $this->estacoesComAcesso));
+               // $this->db->where_in('estacao_id', explode(',',$imploded));
             }
 
             if ($dataInicial)
@@ -127,9 +149,11 @@ class LeiturasModel extends BaseModel
             $this->db->order_by('periodo', $filtros->getDirecao());
             $resultado = $this->db->get();
 
-            //echo $this->db->last_query();
+           
 
             $resultadoArray = $resultado->result_array();
+
+            //var_dump( $this->db->last_query());
             $retorno        = [];
             foreach ($resultadoArray as $linha)
             {
@@ -157,6 +181,8 @@ class LeiturasModel extends BaseModel
             if ($estacoes)
             {
                 $this->db->where_in('estacao_id', $estacoes);
+            }else{
+                $this->filtrarEstacoesComAcesso('estacao_id');
             }
 
             if ($dataInicial)
@@ -241,9 +267,10 @@ class LeiturasModel extends BaseModel
         $this->db->where('v_leitura_calculada.volume_chuva_ac_1h IS NOT NULL');
         $this->db->where('v_leitura_calculada.volume_chuva_ac_1h !=', 0);
         $this->db->where('v_leitura_calculada.datahora = (SELECT MAX(datahora) FROM v_leitura_calculada WHERE estacao_id = estacao.id AND datahora >= DATE_SUB(NOW(), INTERVAL 1 HOUR))', NULL, FALSE);
-        if ($estacao !== null) {
-            $this->db->where('estacao.id', $estacao);
-        }
+       // if ($estacao !== null) {
+        //    $this->db->where('estacao.id', $estacao);
+       // }
+        $this->filtrarEstacoesComAcesso('estacao_id');
         $this->db->group_by('estacao.id, estacao.descricao');
     
         return $this->db->get()->result();
@@ -276,6 +303,8 @@ class LeiturasModel extends BaseModel
             if ($estacoes)
             {
                 $this->db->where_in('estacao_id', $estacoes);
+            }else{
+                $this->filtrarEstacoesComAcesso('estacao_id');
             }
 
             if ($dataInicial)
@@ -363,6 +392,8 @@ class LeiturasModel extends BaseModel
             if ($estacoes)
             {
                 $this->db->where_in('estacao_id', $estacoes);
+            }else{
+                $this->filtrarEstacoesComAcesso('estacao_id');
             }
 
             switch ($tipoInformacao)
@@ -429,6 +460,7 @@ class LeiturasModel extends BaseModel
                     )
                     AS temperatura_media
                 ");
+                $this->filtrarEstacoesComAcesso('E.id');
         $linha = $this->db->get()->row_array();
 
         if (DB_CACHE_ESTATISTICAS)
@@ -465,6 +497,7 @@ class LeiturasModel extends BaseModel
                     )
                     AS vol_chuva_min
                 ");
+                $this->filtrarEstacoesComAcesso('E.id');
         $linha = $this->db->get()->row_array();
 
         if (DB_CACHE_ESTATISTICAS)
@@ -500,6 +533,7 @@ class LeiturasModel extends BaseModel
             )
             AS vol_chuva_max
         ");
+        $this->filtrarEstacoesComAcesso('E.id');
         $linha = $this->db->get()->row_array();
 
         if (DB_CACHE_ESTATISTICAS)
@@ -535,6 +569,7 @@ class LeiturasModel extends BaseModel
                     )
                     AS temperatura_minima
                 ");
+                $this->filtrarEstacoesComAcesso('E.id');
         $linha = $this->db->get()->row_array();
 
         if (DB_CACHE_ESTATISTICAS)
@@ -570,6 +605,7 @@ class LeiturasModel extends BaseModel
                     )
                     AS temperatura_maxima
                 ");
+                $this->filtrarEstacoesComAcesso('E.id');
         $linha = $this->db->get()->row_array();
 
         if (DB_CACHE_ESTATISTICAS)
@@ -605,6 +641,7 @@ class LeiturasModel extends BaseModel
                     )
                     AS velocidade_minima
                     ");
+                    $this->filtrarEstacoesComAcesso('E.id');
         $linha = $this->db->get()->row_array();
 
         if (DB_CACHE_ESTATISTICAS)
@@ -640,6 +677,7 @@ class LeiturasModel extends BaseModel
                     )
                     AS velocidade_maxima
                     ");
+                    $this->filtrarEstacoesComAcesso('E.id');
         $linha = $this->db->get()->row_array();
 
         if (DB_CACHE_ESTATISTICAS)
@@ -677,14 +715,15 @@ class LeiturasModel extends BaseModel
                            leitura.temperatura, leitura.umidade_ar, leitura.velocidade_vento, leitura.dir_vento, leitura.volume_chuva,datahora_cadastro'); // Adiciona os campos de estacao
         $this->db->from('leitura');
         $this->db->join('estacao', 'leitura.estacao_id = estacao.id');
-        //$this->db->order_by('leitura.datahora', 'DESC');
-        $this->db->order_by('leitura.id', 'ASC');
+        //$this->db->order_by('leitura.datahora', 'DESC'); 
+        $this->db->order_by('leitura.id', 'ASC'); 
         $query = $this->db->get();
         return $query->result_array();
     }
 
     public function exportarLeiturasParaCSV($filtros)
     {
+        
         $leituras = $this->getLeiturasPorEscala($filtros, false);
 
         $csvData = array();

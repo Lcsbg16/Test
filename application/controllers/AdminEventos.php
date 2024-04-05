@@ -35,6 +35,9 @@ class AdminEventos extends BaseCrudController
         $crud->set_relation('estacao_id', 'estacao', 'identificador');
         $crud->set_relation('tipo_evento_id', 'tipo_evento', 'nome');
 
+          // Filtros
+        $this->adicionaFiltroAcessoEstacao($crud,'`estacao_id`');
+
         $crud->unset_add();
         $crud->unset_delete();
         $crud->unset_edit();

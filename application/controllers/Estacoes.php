@@ -17,7 +17,11 @@ class Estacoes extends BasePrivateController
         $variaveisView = [];
 
         $variaveisView['titulo_pagina'] = 'Mapa de Estações';
-        $variaveisView['estacoes']      = $this->EstacoesModel->getEstacoes(true);
+
+        $estacoes  = $this->EstacoesModel->getEstacoesComAcessoPorUsuario();  
+        $imploded = implode(',', array_map('array_pop', $estacoes));
+
+        $variaveisView['estacoes']      = $this->EstacoesModel->getEstacoes(true, explode(',',$imploded));
 
         $this->loadSmartyView('Estacoes/mapa', $variaveisView);
     }
@@ -30,7 +34,11 @@ class Estacoes extends BasePrivateController
         $variaveisView = [];
 
         $variaveisView['titulo_pagina'] = 'Mapa de Monitoramento';
-        $variaveisView['estacoes']      = $this->EstacoesModel->getEstacoes(true);
+
+        $estacoes  = $this->EstacoesModel->getEstacoesComAcessoPorUsuario();  
+        $imploded = implode(',', array_map('array_pop', $estacoes));
+       
+        $variaveisView['estacoes']      = $this->EstacoesModel->getEstacoes(true, explode(',',$imploded)) ;
         $variaveisView['camadas']       = FiltrosLeitura::getTodosTiposInformacao();
 
         $this->loadSmartyView('Estacoes/mapaMonitoramento', $variaveisView);
@@ -63,6 +71,7 @@ class Estacoes extends BasePrivateController
 
         // Separa os IDs das estações em um array
         $estacoesIds = explode(',', $ids);
+       // var_dump($estacoesIds);
         $estacoes    = $this->EstacoesModel->getEstacoesGeoJson($idCamada, $atividade, $estacoesIds); //segundo argumento: os IDs das estações
         //var_dump($estacoes);
         /* TODO: Filtrar melhor aqui quais informações serão retornadas no json */
