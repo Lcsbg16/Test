@@ -17,6 +17,8 @@ class AlertaPluviometriaObserver implements iMonitoramentoObserver
         $coresNiveisAlerta = $ci->LeiturasModel->getCoresNiveisAlertasPluviometria();
         $nomesNiveisAlerta = $ci->LeiturasModel->getNomesNiveisAlertasPluviometria();
 
+        $variaveisView = [];
+
         $estacoesAtivas = $ci->EstacoesModel->getEstacoes(true);
         foreach ($estacoesAtivas as $estacaoAtual)
         {
@@ -29,7 +31,10 @@ class AlertaPluviometriaObserver implements iMonitoramentoObserver
                     $alerta->setCor($coresNiveisAlerta[$tipoAlerta]);
                     $alerta->setTitulo('Alerta de Chuva');
                     $alerta->setMensagem('Alerta de Chuva na estação ' . $estacaoAtual['identificador'] . '(' . $estacaoAtual['descricao'] . ') - ' . $nomesNiveisAlerta[$tipoAlerta]);
-                    $htmlCard = $ci->loadSmartyView('cardsAlerta/cardAlertaPluviometria', ['mensagem' => $alerta->getMensagem()], true);
+
+                    $variaveisView['acumulado'] = $ci->LeiturasModel->getAcumuladoChuvaPorPeriodoGeral($estacaoAtual['id']); //JAQUE 22/03/24
+                    $htmlCard = $ci->loadSmartyView('cardsAlerta/cardAlertaPluviometria', array_merge($variaveisView, ['mensagem' => $alerta->getMensagem()]), true);
+
                     $alerta->setCardHTML($htmlCard);
 
                     $alertas[] = $alerta;

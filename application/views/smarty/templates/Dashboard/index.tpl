@@ -57,7 +57,7 @@
                     </div>
                     <div class="table-responsive" id="ocorrencias_table">
                         <!-- Projects table -->
-                   
+
                     </div>
                 </div>
             </div>
@@ -74,8 +74,8 @@
                         url: url,
                         method: 'GET',
                         success: function (response) {
-                           
-                           $('#ocorrencias_table').html(response);
+
+                            $('#ocorrencias_table').html(response);
 
                         },
                         error: function (error) {
@@ -94,8 +94,8 @@
                         url: url,
                         method: 'GET',
                         success: function (response) {
-                           
-                           $('#eventos_table').html(response);
+
+                            $('#eventos_table').html(response);
 
                         },
                         error: function (error) {
@@ -155,15 +155,12 @@
                         url: url,
                         method: 'GET',
                         success: function (response) {
-                            console.log(response);
                             let responseHTML = $(response);  
 
                             if (responseHTML.find('.carousel-item').length > 0) {
                                 $('#alert_cards_row').addClass('acumuladoChuvaPorPeriodo');
                                 $('#alert_cards_row').append(response);
-                                console.log("entrou no if");
                             } else {
-                                console.log(response);
                                 $('#alert_cards_row .acumuladoChuvaPorPeriodo').remove();
                             }
                         },

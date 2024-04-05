@@ -83,58 +83,74 @@ class Estacoes extends BasePrivateController
         header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
         header("Cache-Control: post-check=0, pre-check=0", false);
         header("Pragma: no-cache");
-
+    
         $this->load->model('EstacoesModel');
-
+    
         $eventos = $this->EstacoesModel->monitorarEstacao(5);
         foreach ($eventos as $evento)
         {
             $estacaoId  = $evento['estacao_id'];
             $eventoTipo = $evento['tipo_evento_id'];
             $mensagem   = $evento['mensagem'];
-
+    
             $estacao = $this->EstacoesModel->getEstacao($estacaoId);
-            $this->enviarEmailEvento($estacao['descricao'], $mensagem);
+            $this->enviarEmailEvento($estacaoId, $estacao['descricao'], $mensagem, $eventoTipo); 
         }
         echo 'OK';
     }
-
-    public function enviarEmailEvento($estacaoId, $nomeEstacao, $evento)
+    
+    public function enviarEmailEvento($estacaoId, $nomeEstacao, $evento, $tipoEvento)
     {
         $this->load->library('EmailUtil');
         $this->load->model('EstacoesModel');
-
+    
         $result = $this->EstacoesModel->getEmailsUsuariosPorEstacao($estacaoId);
-
-        if (!empty($result)) {
+    
+        if (!empty($result))
+        {
             $assunto   = "Evento de Estação: $nomeEstacao $evento";
             $mensagem  = "A estação $nomeEstacao está $evento.";
             $remetente = EMAIL_FROM;
-        
-            foreach ($result as $row) {
+    
+            foreach ($result as $row)
+            {
                 $destinatario = $row->email;
                 $this->emailutil->enviarEmail($assunto, $destinatario, $mensagem, $remetente);
             }
-
+    
             $adminEmail = ADMIN_EMAIL;
             $this->emailutil->enviarEmail($assunto, $adminEmail, $mensagem, $remetente);
         }
     }
-
     public function getLegendaMonitoramento($camada)
     {
         $this->jsonOutput('Legenda não disponível');
     }
 
-
     //Metodo apenas para testar o envio de emails diretamente
     public function testarEnvioEmailEvento()
     {
-        $estacaoId = 45; 
-        $nomeEstacao = "Lucas"; 
-        $evento = "online";
+        $estacaoId   = 45;
+        $nomeEstacao = "Lucas";
+        $evento      = "online";
 
-        
         $this->enviarEmailEvento($estacaoId, $nomeEstacao, $evento);
+    }
+
+    public function visualizarEstacoes()
+    {
+        $this->load->model('EstacoesModel');
+        $this->load->model('LeiturasModel');
+        $this->load->model('OcorrenciasModel');
+        
+        $variaveisView = [];
+
+        $variaveisView['titulo_pagina'] = 'Info';
+        $variaveisView['qtde_estacoes'] = $this->EstacoesModel->getContagemEstacoes();
+
+        $variaveisView['estacoes'] = $this->EstacoesModel->getEstacaoComDadosMeteorologicos();
+
+        //var_dump($variaveisView['estacoes']);
+        $this->loadSmartyView('Estacoes/visualizarEstacoes', $variaveisView);
     }
 }
