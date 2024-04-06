@@ -10,8 +10,8 @@
         <h6 style="font-weight: bolder; justify-content: center; text-align: center;">
             <i class="fas fa-cloud-rain" style="width: 15px; height: 15px; color: blue;"></i> Volume Acumulado de Chuva:
         </h6>
-        {foreach $acumulados['acumulados'] as $chave => $valor}
-            <h6><strong>{$chave}:</strong> {$valor|number_format:1:","}mm</h6>
+        {foreach $acumulados['acumulados'] as $acumulo => $valor}
+            <h6><strong>{$acumulo}:</strong> {$valor|number_format:1:","}mm</h6>
         {/foreach}
     </div>
 </div>
