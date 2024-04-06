@@ -17,11 +17,10 @@ class AdminEventos extends BaseCrudController
 
         $crud = new AppGroceryCRUD();
 
-
         $crud->set_theme(self::DEFAULT_CRUD_THEME);
         $crud->set_table('evento');
         $crud->set_subject('Eventos');
-        
+
         $crud->required_fields('estacao_id', 'datahora', 'tipo_evento_id');
 
         $crud->display_as('estacao_id', 'Estação');
@@ -40,20 +39,28 @@ class AdminEventos extends BaseCrudController
         $crud->unset_delete();
         $crud->unset_edit();
         $crud->unset_clone();
-        $crud->order_by('datahora', 'desc');       
+        $crud->order_by('datahora', 'desc');
+
+
+        $estacao_id = $this->input->get('estacao_id');
+
+        if ($estacao_id !== null && is_numeric($estacao_id)) {
+            $this->session->admin_eventos_estacao_id = $estacao_id;
+
+        }
+        $crud->where('estacao_id', $this->session->admin_eventos_estacao_id );
+
         $this->formatar_datahora($crud);
 
-        $this->_crud_output($crud);
+       return $this->_crud_output($crud);
     }
 
     private function formatar_datahora($crud)
     {
-        $crud->callback_column('datahora', function ($value, $row) {
-            $data_formatada= date('d/m/Y - H:i', strtotime($value));
+        $crud->callback_column('datahora', function ($value, $row)
+        {
+            $data_formatada = date('d/m/Y - H:i', strtotime($value));
             return $data_formatada;
         });
     }
-    
-
-
 }

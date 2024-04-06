@@ -78,6 +78,7 @@ class AdminLeituras extends BaseCrudController
         $this->jsonOutput($leituras);
     }
 
+
     public function getUltimaLeituraRegistrada()
     {
         $estacao    = $this->input->post('estacao_selecionada'); 
@@ -97,117 +98,63 @@ class AdminLeituras extends BaseCrudController
         $this->load->model('LeiturasModel');
         $this->load->model('EstacoesModel');
         $variaveisView = [];
-        $filtros       = new FiltrosLeitura();
-        if ($this->input->get('escala'))
-        {
-            $estacoes      = $this->input->get('estacoes');
-            $dataInicial   = $this->input->get('data_inicial');
-            $dataFinal     = $this->input->get('data_final');
+        $filtros = new FiltrosLeitura();
+    
+        if ($this->input->get('escala')) {
+            $estacoes = $this->input->get('estacoes');
+            $dataInicial = $this->input->get('data_inicial');
+            $dataFinal = $this->input->get('data_final');
             $colunaPeriodo = $this->input->get('escala');
-            $estacao       = $this->input->get('estacao');
-
-            if ($estacoes)
-            {
+            $estacao = $this->input->get('estacao');
+    
+            if ($estacoes) {
                 $filtros->setEstacoes($estacoes);
             }
-
-            if ($dataInicial)
-            {
+    
+            if ($dataInicial) {
                 $filtros->setDataInicial($dataInicial);
             }
-
-            if ($dataFinal)
-            {
+    
+            if ($dataFinal) {
                 $filtros->setDataFinal($dataFinal);
             }
-
-            if ($colunaPeriodo)
-            {
+    
+            if ($colunaPeriodo) {
                 $filtros->setEscala($colunaPeriodo);
             }
-
+    
             $filtros->setEstacoes($estacao);
-
-            $leituras = $this->LeiturasModel->getLeiturasPorEscala($filtros, false);
-
+    
+            // Obter e exibir o conteúdo da variável $leituras
             $csvData = $this->LeiturasModel->exportarLeiturasParaCSV($filtros);
-
+    
             $filename = 'leituras.csv';
             header('Content-Type: text/csv');
             header('Content-Disposition: attachment; filename="' . $filename . '"');
-        
+    
             $output = fopen('php://output', 'w');
-        
+    
             $separador = ';';
-        
+    
             foreach ($csvData as $row) {
                 fputcsv($output, $row, $separador);
             }
-        
-
-
-            $output = fopen('php://output', 'w');
-
-            $separador = ';';
-
-            $header = array(
-                'periodo',
-                'estacao_identificador',
-                'estacao_descricao',
-                'estacao_endereco',
-                'estacao_latitude',
-                'estacao_longitude',
-                'temperatura',
-                'umidade_ar',
-                'velocidade_vento',
-                'rajada_vento',
-                'volume_chuva'
-            );
-
-            fputcsv($output, $header, $separador);
-
-            while ($leitura = $leituras->unbuffered_row('array'))
-            {
-
-
-                // Converter velocidade do vento para km/h
-                $leitura['velocidade_vento'] = Conversao::velVentoParakmH($leitura['velocidade_vento']);
-                $leitura['rajada_vento']     = Conversao::velVentoParakmH($leitura['rajada_vento']);
-
-                //Substituindo o separador decimal de . para ,
-                $leitura['velocidade_vento'] = str_replace('.', ',', $leitura['velocidade_vento']);
-                $leitura['temperatura']      = str_replace('.', ',', $leitura['temperatura']);
-                $leitura['umidade_ar']       = str_replace('.', ',', $leitura['umidade_ar']);
-                $leitura['volume_chuva']     = str_replace('.', ',', $leitura['volume_chuva']);
-
-                $leituraArquivo = [
-                    $leitura['periodo'],
-                    $leitura['estacao_identificador'],
-                    $leitura['estacao_descricao'],
-                    $leitura['estacao_endereco'],
-                    $leitura['estacao_latitude'],
-                    $leitura['estacao_longitude'],
-                    $leitura['temperatura'],
-                    $leitura['umidade_ar'],
-                    $leitura['velocidade_vento'],
-                    $leitura['rajada_vento'],
-                    $leitura['volume_chuva']
-                ];
-
-                fputcsv($output, $leituraArquivo, $separador);
-            }
-
+    
             fclose($output);
             exit;
-        }
-        else
-        {
+        } else {
             $leituras = [];
         }
-        $variaveisView['estacoes']      = $this->EstacoesModel->getEstacoes();
+    
+        $variaveisView['estacoes'] = $this->EstacoesModel->getEstacoes();
         $variaveisView['titulo_pagina'] = 'Exportar Leituras';
-        $variaveisView['leituras']      = $leituras;
-
+        $variaveisView['leituras'] = $leituras;
+    
         $this->loadSmartyView('ExportarLeituras/index', $variaveisView);
     }
+
+    
+
+
+
 }

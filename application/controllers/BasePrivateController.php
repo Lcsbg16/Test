@@ -9,6 +9,8 @@ require_once 'BaseController.php';
 
 /**
  * Base class for all private controllers (available just for logged users)
+ *
+ * @property AlertaSubject $alertasubject
  */
 abstract class BasePrivateController extends BaseController
 {
@@ -50,6 +52,15 @@ abstract class BasePrivateController extends BaseController
                 return;
             }
         }
+        $this->carregarAlertas();
+    }
+
+    private function carregarAlertas()
+    {
+        $this->load->library('Monitoramento/Alerta/AlertaSubject');
+
+        $this->load->library('Monitoramento/Alerta/AlertaPluviometriaObserver');
+        $this->alertasubject->attach($this->alertapluviometriaobserver);
     }
 
     protected function checaPermissaoUsuarioLogado($permissao)
@@ -84,5 +95,11 @@ abstract class BasePrivateController extends BaseController
     protected function getDadosUsuarioLogado()
     {
         return $this->LoginModel->getDadosUsuarioLogado();
+    }
+
+    public function testeEnvioEmail()
+    {
+        $this->load->library('EmailUtil');
+        $this->emailutil->enviarEmail("Teste de envio", "adriano.php4@gmail.com", "Isto é um teste.", EMAIL_FROM);
     }
 }

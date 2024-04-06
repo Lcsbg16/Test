@@ -10,6 +10,26 @@ class LeiturasModel extends BaseModel
     const PLUVIOMETRIA_NIVEL_ALERTA        = 'alerta';
     const PLUVIOMETRIA_NIVEL_ALERTA_MAXIMO = 'alerta_maximo';
 
+    public function getCoresNiveisAlertasPluviometria()
+    {
+        return [
+            LeiturasModel::PLUVIOMETRIA_NIVEL_ATENCAO       => COR_PLUVIOMETRIA_NIVEL_ATENCAO,
+            LeiturasModel::PLUVIOMETRIA_NIVEL_ALERTA        => COR_PLUVIOMETRIA_NIVEL_ALERTA,
+            LeiturasModel::PLUVIOMETRIA_NIVEL_ALERTA_MAXIMO => COR_PLUVIOMETRIA_NIVEL_ALERTA_MAXIMO,
+            LeiturasModel::PLUVIOMETRIA_NIVEL_NORMALIDADE   => COR_PLUVIOMETRIA_NIVEL_NORMALIDADE
+        ];
+    }
+
+    public function getNomesNiveisAlertasPluviometria()
+    {
+        return [
+            LeiturasModel::PLUVIOMETRIA_NIVEL_ATENCAO       => 'nível de atenção',
+            LeiturasModel::PLUVIOMETRIA_NIVEL_ALERTA        => 'nível de alerta',
+            LeiturasModel::PLUVIOMETRIA_NIVEL_ALERTA_MAXIMO => 'nível de alerta máximo',
+            LeiturasModel::PLUVIOMETRIA_NIVEL_NORMALIDADE   => 'nível de normalidade'
+        ];
+    }
+
     public function inserirLeitura($estacaoId, $dadosLeitura)
     {
         $dadosLeitura['estacao_id'] = $estacaoId;
@@ -21,7 +41,7 @@ class LeiturasModel extends BaseModel
 
         $this->db->from('leitura');
         if ($filtros)
-        {   
+        {
             $estacoes       = $filtros->getEstacoes();
             $dataInicial    = $filtros->getDataInicial();
             $dataFinal      = $filtros->getDataFinal();
@@ -173,6 +193,7 @@ class LeiturasModel extends BaseModel
 
             $this->db->select(
                     $colunaPeriodo . ' AS periodo,
+                            E.id as estacao_id,
                             E.identificador as estacao_identificador,
                             E.descricao as estacao_descricao,
                             E.endereco as estacao_endereco,
@@ -181,8 +202,9 @@ class LeiturasModel extends BaseModel
                             AVG(L.temperatura) as temperatura,
                             AVG(L.umidade_ar) as umidade_ar,
                             AVG(L.velocidade_vento) as velocidade_vento,
+                            MAX(L.velocidade_vento) as rajada_vento,
                             SUM(L.volume_chuva) as volume_chuva,
-                            MAX(L.velocidade_vento) as rajada_vento
+                            L.datahora_cadastro as datahora_cadastro
                         ');
 
             $this->db->join('estacao E', 'L.estacao_id = E.id');
@@ -209,6 +231,34 @@ class LeiturasModel extends BaseModel
             }
         }
     }
+
+    public function getAcumuladoChuvaPorPeriodoGeral($estacao = null) //acumulo de chuva - jaque
+    {
+        $this->load->model('EstacoesModel');
+        $listaEstacoesLeituras = array(); 
+
+    $estacoesAtivas = $this->EstacoesModel->getEstacoes(true);
+
+    foreach ($estacoesAtivas as $estacao) {
+    $ultimoRegistro = $this->EstacoesModel->getUltimoRegistro($estacao['id'], 60);
+
+    if (isset($ultimoRegistro['volume_chuva_ac_1h']) && $ultimoRegistro['volume_chuva_ac_1h'] !== null) {
+        $dadosEstacaoLeitura = [
+            'estacao_id' => $estacao['id'],
+            'descricao' => $estacao['descricao'],
+            'volume_1h' => $ultimoRegistro['volume_chuva_ac_1h'],
+            'volume_24h' => $ultimoRegistro['volume_chuva_ac_24h'],
+            'volume_96h' => $ultimoRegistro['volume_chuva_ac_96h'],
+            'temperatura' => $ultimoRegistro['temperatura']
+        ];
+
+        $listaEstacoesLeituras[] = (object)$dadosEstacaoLeitura; // Mantendo o padrão de saída em objeto
+    }
+}
+    return $listaEstacoesLeituras;
+      
+    }
+    
 
     /**
      * Retorna a última leitura obtida de cada estação
@@ -366,6 +416,11 @@ class LeiturasModel extends BaseModel
 
     public function getUltimaTemperaturaMedia()
     {
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_on();
+        }
+
         $this->db->from('estacao E')
                 ->select("
                     AVG(
@@ -376,7 +431,7 @@ class LeiturasModel extends BaseModel
                                     leitura L1
                             WHERE
                                     L1.estacao_id = E.id
-                                    AND datahora >= '" . date('Y-m-d') . " 00:00:00'
+                                    AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
                                     datahora DESC
                             LIMIT 1
@@ -385,11 +440,23 @@ class LeiturasModel extends BaseModel
                     AS temperatura_media
                 ");
         $linha = $this->db->get()->row_array();
+
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_off();
+        }
+
         return $linha['temperatura_media'];
     }
 
     public function getVolumeChuvaMinimo()
     {
+
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_on();
+        }
+
         $this->db->from("estacao E")
                 ->select("
                     MIN(
@@ -400,7 +467,7 @@ class LeiturasModel extends BaseModel
                                     leitura L1
                             WHERE
                                     L1.estacao_id = E.id
-                                    AND datahora >= '" . date('Y-m-d') . " 00:00:00'
+                                    AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
                                     datahora DESC
                             LIMIT 1
@@ -409,11 +476,22 @@ class LeiturasModel extends BaseModel
                     AS vol_chuva_min
                 ");
         $linha = $this->db->get()->row_array();
+
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_off();
+        }
+
         return $linha['vol_chuva_min'];
     }
 
     public function getVolumeChuvaMaxima()
     {
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_on();
+        }
+
         $this->db->from('estacao E')
                 ->select("
             MAX(
@@ -424,7 +502,7 @@ class LeiturasModel extends BaseModel
                             leitura L1
                     WHERE
                             L1.estacao_id = E.id
-                            AND datahora >= '" . date('Y-m-d') . " 00:00:00'
+                            AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                     ORDER BY
                             datahora DESC
                     LIMIT 1
@@ -433,11 +511,22 @@ class LeiturasModel extends BaseModel
             AS vol_chuva_max
         ");
         $linha = $this->db->get()->row_array();
+
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_off();
+        }
+
         return $linha['vol_chuva_max'];
     }
 
     public function getTemperaturaMinima()
     {
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_on();
+        }
+
         $this->db->from('estacao E')
                 ->select("
                     MIN(
@@ -448,7 +537,7 @@ class LeiturasModel extends BaseModel
                                     leitura L1
                             WHERE
                                     L1.estacao_id = E.id
-                                    AND datahora >= '" . date('Y-m-d') . " 00:00:00'
+                                    AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
                                     datahora DESC
                             LIMIT 1
@@ -458,11 +547,21 @@ class LeiturasModel extends BaseModel
                 ");
         $linha = $this->db->get()->row_array();
 
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_off();
+        }
+
         return $linha['temperatura_minima'];
     }
 
     public function getTemperaturaMaxima()
     {
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_on();
+        }
+
         $this->db->from('estacao E')
                 ->select("
                     MAX(
@@ -473,7 +572,7 @@ class LeiturasModel extends BaseModel
                                     leitura L1
                             WHERE
                                 L1.estacao_id = E.id
-                                AND datahora >= '" . date('Y-m-d') . " 00:00:00'
+                                AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
                                     datahora DESC
                             LIMIT 1
@@ -483,11 +582,21 @@ class LeiturasModel extends BaseModel
                 ");
         $linha = $this->db->get()->row_array();
 
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_off();
+        }
+
         return $linha['temperatura_maxima'];
     }
 
     public function getVelocidadeMinima()
     {
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_on();
+        }
+
         $this->db->from("estacao E")
                 ->select("
                     MIN(
@@ -498,7 +607,7 @@ class LeiturasModel extends BaseModel
                                 leitura L1
                             WHERE
                                 L1.estacao_id = E.id
-                                AND datahora >= '" . date('Y-m-d') . " 00:00:00'
+                                AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
                                 datahora DESC
                             LIMIT 1
@@ -508,11 +617,21 @@ class LeiturasModel extends BaseModel
                     ");
         $linha = $this->db->get()->row_array();
 
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_off();
+        }
+
         return $linha["velocidade_minima"];
     }
 
     public function getVelocidadeMaxima()
     {
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_on();
+        }
+
         $this->db->from("estacao E")
                 ->select("
                     MAX(
@@ -523,7 +642,7 @@ class LeiturasModel extends BaseModel
                                     leitura L1
                             WHERE
                                 L1.estacao_id = E.id
-                                AND datahora >= '" . date('Y-m-d') . " 00:00:00'
+                                AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
                                     datahora DESC
                             LIMIT 1
@@ -532,6 +651,11 @@ class LeiturasModel extends BaseModel
                     AS velocidade_maxima
                     ");
         $linha = $this->db->get()->row_array();
+
+        if (DB_CACHE_ESTATISTICAS)
+        {
+            $this->db->cache_off();
+        }
 
         return $linha["velocidade_maxima"];
     }
@@ -554,6 +678,65 @@ class LeiturasModel extends BaseModel
         {
             return self::PLUVIOMETRIA_NIVEL_NORMALIDADE;
         }
+    }
+
+    public function getAllLeituras()
+    {
+        $this->db->select('leitura.id, leitura.datahora, estacao.identificador as estacao_identificador, estacao.descricao as estacao_descricao,
+                           estacao.endereco as estacao_edereco, estacao.latitude as estacao_latitude, estacao.longitude as estacao_longitude,
+                           leitura.temperatura, leitura.umidade_ar, leitura.velocidade_vento, leitura.dir_vento, leitura.volume_chuva,datahora_cadastro'); // Adiciona os campos de estacao
+        $this->db->from('leitura');
+        $this->db->join('estacao', 'leitura.estacao_id = estacao.id');
+        //$this->db->order_by('leitura.datahora', 'DESC'); 
+        $this->db->order_by('leitura.id', 'ASC'); 
+        $query = $this->db->get();
+        return $query->result_array();
+    }  
+    
+    public function exportarLeiturasParaCSV($filtros)
+    {
+        $leituras = $this->getLeiturasPorEscala($filtros, false);
+
+        $csvData = array();
+
+        $header = array(
+            'periodo',
+            'estacao_id',
+            'estacao_identificador',
+            'estacao_descricao',
+            'estacao_endereco',
+            'estacao_latitude',
+            'estacao_longitude',
+            'temperatura',
+            'umidade_ar',
+            'velocidade_vento',
+            'rajada_vento',
+            'volume_chuva',
+            'datahora_cadastro'
+        );
+
+        $csvData[] = $header;
+
+        while ($leitura = $leituras->unbuffered_row('array')) {
+            // Substituir vírgulas por pontos nas colunas de velocidade do vento e rajada de vento
+            $leitura['velocidade_vento'] = str_replace(',', '.', $leitura['velocidade_vento']);
+            $leitura['rajada_vento'] = str_replace(',', '.', $leitura['rajada_vento']);
+        
+            // Converter velocidade do vento e rajada de vento para km/h
+            $leitura['velocidade_vento'] = self::converterVelocidadeVentoKMH($leitura['velocidade_vento']);
+            $leitura['rajada_vento'] = self::converterVelocidadeVentoKMH($leitura['rajada_vento']);
+        
+            // Substituir o separador decimal de . para ,
+            $leitura = array_map(function ($value) {
+                return str_replace('.', ',', $value);
+            }, $leitura);
+            
+            // Adicionar a linha ao CSV
+            $csvData[] = $leitura;
+        }
+        //var_dump($csvData);
+
+        return $csvData;
     }
 
     public static function converterVelocidadeVentoKMH($velocidadeMS)

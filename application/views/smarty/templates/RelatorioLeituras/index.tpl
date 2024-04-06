@@ -14,13 +14,12 @@
                             <div class="row my-3">
                                 <div class="col">
                                     <label>Estação</label><br>
-                                    <select id="estacoesSelect" class="form-control form-control-sm" name="estacoes[]" multiple>
+                                    <select id="estacoesSelect" class="form-control form-control-sm" name="estacoes[]" multiple="multiple">
                                         {foreach $estacoes as $eAtual}
-                                            {if $eAtual.ativa == 0}
-                                                <option value="{$eAtual.id}" id="estacao_descricao" style="color: red;" {if isset($smarty.get.estacoes) && in_array($eAtual.id, $smarty.get.estacoes)} selected {/if}> {$eAtual.descricao} ({$eAtual.identificador})</option>
-                                            {else}
-                                                <option value="{$eAtual.id}" id="estacao_descricao" {if isset($smarty.get.estacoes) && in_array($eAtual.id, $smarty.get.estacoes)} selected {/if}> {$eAtual.descricao} ({$eAtual.identificador})</option>
-                                            {/if}
+                                            {assign var=corTexto value=($eAtual.ativa == 1) ? 'black' : 'grey'}
+                                            <option value="{$eAtual.id}" id="estacao_descricao" {if isset($smarty.get.estacoes) && in_array($eAtual.id, $smarty.get.estacoes)} selected {/if} style="color: {$corTexto}">
+                                                {$eAtual.descricao} ({$eAtual.identificador})
+                                            </option>
                                         {/foreach}
                                     </select>
                                 </div>
@@ -108,19 +107,21 @@
 
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.16/js/bootstrap-multiselect.min.js"></script>
+    <script type="text/javascript">    
+        $(document).ready(function () {
+            $("#estacoesSelect").multiselect({
+                includeSelectAllOption: true,
+                buttonWidth: '180px',
+                enableHTML: true
+            });
+        });
 
-    <script type="text/javascript">
-                                        $(document).ready(function () {
-                                            $("#estacoesSelect").multiselect({
-                                                includeSelectAllOption: true,
-                                                buttonWidth: '180px',
-                                            });
-                                        });
-
-                                        $(document).ready(function () {
-                                            $('#tabela').DataTable({
-                                                "order": [[0, 'asc']]
-                                            });
-                                        });
+        $(document).ready(function () {
+            $('#tabela').DataTable({
+                "order": [[0, 'asc']]
+            });
+        });
     </script>
 {/block}
+
+

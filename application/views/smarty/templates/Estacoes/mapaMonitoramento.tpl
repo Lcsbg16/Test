@@ -85,8 +85,8 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
                 </div>
-                <div class="modal-body">
-                ...
+                <div class="modal-body" id="modal-body">
+                
                 </div>
                 <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
@@ -99,6 +99,29 @@
 
         <script>
             {literal}
+
+                /*AJAX PARA CARREGAMENTO DAS LEGENDAS NO MODAL*/ 
+                function buscaLegendaCamada(camada) {
+                    let url = BASE_URL + 'Estacoes/getLegendaMonitoramento/' + camada;
+                        $.ajax({
+                            url: url,
+                            dataType: "json",
+                            method: "GET"
+                        }).done(function (data) {
+                            $("#modal-body").html(data);
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                            console.error("Erro na requisição AJAX para gerar as legendas:", errorThrown);
+                        });
+                    }
+
+                    $('#legendasModal').on('shown.bs.modal', function (e) {
+                        let camada =  $('#camada_id').val();
+                        buscaLegendaCamada(camada);
+                    });
+
+                /* FIM DO AJAX PARA CARREGAMENTO DAS LEGENDAS NO MODAL*/
+
+
                 function criaMapa()
                 {
                     var map = L.map('map').setView([-22.368461, -41.774747], 13);
@@ -124,7 +147,9 @@
                         <br><strong>Umidade do ar:</strong> " + (feature.properties.ultimaLeitura.umidade_ar ? parseFloat(feature.properties.ultimaLeitura.umidade_ar).toFixed(2).replace(".", ",") + "%" : "Sem registro") + "\
                         <br><strong>Velocidade do vento:</strong> " + (feature.properties.ultimaLeitura.velocidade_vento ? parseFloat(feature.properties.ultimaLeitura.velocidade_vento).toFixed(2).replace(".", ",") + " km/h" : "Sem registro") + "\
                         <br><strong>Direção do vento:</strong> " + (feature.properties.ultimaLeitura.dir_vento ? feature.properties.ultimaLeitura.dir_vento + "&#176;" : "Sem registro") + "\
-                        <br><strong>Volume de chuva:</strong> " + (feature.properties.ultimaLeitura.volume_chuva ? parseFloat(feature.properties.ultimaLeitura.volume_chuva).toFixed(2).replace(".", ",") + " mm&sup3;" : "Sem registro") + "\
+                        <br><strong>Acúmulo de chuva (1h):</strong> " + (feature.properties.ultimaLeitura.volume_acumulado_1h ? parseFloat(feature.properties.ultimaLeitura.volume_acumulado_1h).toFixed(2).replace(".", ",") + " mm&sup3;" : "Sem registro") + "\
+                        <br><strong>Acúmulo de chuva (24h):</strong> " + (feature.properties.ultimaLeitura.volume_acumulado_24h ? parseFloat(feature.properties.ultimaLeitura.volume_acumulado_24h).toFixed(2).replace(".", ",") + " mm&sup3;" : "Sem registro") + "\
+                        <br><strong>Acúmulo de chuva (96h):</strong> " + (feature.properties.ultimaLeitura.volume_acumulado_96h ? parseFloat(feature.properties.ultimaLeitura.volume_acumulado_96h).toFixed(2).replace(".", ",") + " mm&sup3;" : "Sem registro") + "\
                             ";
                         } else
                         {
@@ -139,6 +164,7 @@
                 function HandleAjax(url, mapa) {
                     $.get(url).done(
                             function (data) {
+                                console.log(data);
                                 estacoes = L.geoJSON([data], {
                                     style: function (feature) {
                                         return feature.properties && feature.properties.style;

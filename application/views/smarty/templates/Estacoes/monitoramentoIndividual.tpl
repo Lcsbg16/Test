@@ -8,7 +8,7 @@
     <div class="container-fluid mt-3">
     <div class="row">
         <div class="col">
-            <div class="card shadow">
+            <div class="card shadow" >
                 <div class="card-body">
                 <!-- INFORMAÇÕES DA ESTAÇÃO -->
                 <h5 class="text-center"> Identificação da Estação: </h5> <h2 class="card-title text-center"  id="estacao_id"> </h2> 
@@ -18,8 +18,8 @@
             </div>
         
             <!-- INFORMAÇÕES DE LEITURA -->
-            <div class="card shadow" style="height: 100%;">
-                <div class="card-body">
+            <div class="card shadow" >
+            <div class="card-body" >
                   <div class="row">
                     <div class="col-xl-7">
                       <div class="row">
@@ -127,7 +127,7 @@
                             <h3 class="mb-0">Eventos</h3>
                         </div>
                         <div class="col text-right">
-                            <a href="http://localhost/telemetria-web/AdminEventos" class="btn btn-sm btn-primary">Ver todos</a>
+                            <a href="{$BASE_URL}AdminEventos/?estacao_id={$estacao.id}" class="btn btn-sm btn-primary">Ver todos</a>
                         </div>
                     </div>
                 </div>
@@ -165,9 +165,7 @@
                 </div>
             </div>
             </div>
-    </div>
-
-            
+    </div>  
             <div class="row d-flex justify-content-center align-items-center">
             <div class="col-xl-3 col-lg-6">
                                 <label>Escala</label>
@@ -232,6 +230,7 @@
 
 </div>
 <script>
+
  function GetEscala(){ //função que devolve os dados da escala 
             let escala_selecionada = $( "#escala_selecionada" ).val(); //Valor da escala 
             if(!escala_selecionada){

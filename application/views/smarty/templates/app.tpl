@@ -10,7 +10,7 @@
             {$titulo_pagina|default:$APPLICATION_TITLE}
         </title>
         <!-- Favicon -->
-        <link href="{$BASE_URL}/assets/temas/argon/assets/img/brand/favicon.png" rel="icon" type="image/png">
+        <link href="{$BASE_URL}/assets/temas/argon/assets/img/brand/favicon.ico" rel="icon" type="image/png">
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
 
@@ -36,6 +36,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.pt-BR.min.js"></script>
 
         <script src="https://kit.fontawesome.com/7731e1bde2.js" crossorigin="anonymous"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js"></script>
 
         <link href="{$BASE_URL}/assets/css/app.css" rel="stylesheet" />
         <script src="{$BASE_URL}/assets/js/app.js"></script>

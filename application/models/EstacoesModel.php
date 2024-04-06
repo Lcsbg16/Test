@@ -127,19 +127,23 @@ class EstacoesModel extends BaseModel
         return $evento['tipo_evento_id'] == $idTipoEventoOnline;
     }
 
-    public function getEstacoes($somenteAtivas = FALSE, $ids = array()) //alteração para aceitar um array de estações a ser buscadas também
+    public function getEstacoes($somenteAtivas = FALSE, $ids = array())
     {
+        $this->db->order_by('ativa', 'DESC'); // Ordenar as ativas para as telas de relatorio
         $this->db->order_by('descricao');
+
         if ($somenteAtivas)
         {
             $this->db->where('ativa', true);
         }
+
         if (!empty($ids))
         {
-            $this->db->where_in('id', $ids); //se houver estaçõesy
+            $this->db->where_in('id', $ids);
         }
-        $estacoes = $this->db->get('estacao')
-                ->result_array();
+
+        $estacoes = $this->db->get('estacao')->result_array();
+
         foreach ($estacoes as $index => $estacaoAtual)
         {
             $estacoes[$index]['online'] = $this->getEstacaoOnline($estacaoAtual['id']);
@@ -147,6 +151,7 @@ class EstacoesModel extends BaseModel
 
         return $estacoes;
     }
+
 
     public function getContagemEstacoes($somenteAtivas = TRUE)
     {
@@ -168,7 +173,7 @@ class EstacoesModel extends BaseModel
      */
     public function getEstacoesGeoJson($camada = NULL, $somenteAtivas, $ids)
     {
-        $estacoesBD = $this->getEstacoes($somenteAtivas, $ids); //getEstações a partir dos ids
+        $estacoesBD = $this->getEstacoes($somenteAtivas, $ids); 
 
         $estacoes = [];
 
@@ -186,7 +191,10 @@ class EstacoesModel extends BaseModel
                         'umidade_ar'         => $ultimoRegistro['umidade_ar'],
                         'velocidade_vento'   => $ultimoRegistro['velocidade_vento'],
                         'dir_vento'          => $ultimoRegistro['dir_vento'],
-                        'volume_chuva'       => $ultimoRegistro['volume_chuva']
+                        'volume_chuva'       => $ultimoRegistro['volume_chuva'],
+                        'volume_acumulado_1h' => $ultimoRegistro['volume_chuva_ac_1h'],
+                        'volume_acumulado_24h' => $ultimoRegistro['volume_chuva_ac_24h'],
+                        'volume_acumulado_96h' => $ultimoRegistro['volume_chuva_ac_96h']
                     ];
                 }
                 else
@@ -224,12 +232,7 @@ class EstacoesModel extends BaseModel
         switch ($camada)
         {
             case FiltrosLeitura::TIPO_VOLUME_CHUVA:
-                $coresPluviometria = [
-                    LeiturasModel::PLUVIOMETRIA_NIVEL_ATENCAO       => '#fe9900',
-                    LeiturasModel::PLUVIOMETRIA_NIVEL_ALERTA        => '#fe0000',
-                    LeiturasModel::PLUVIOMETRIA_NIVEL_ALERTA_MAXIMO => '#7030a0',
-                    LeiturasModel::PLUVIOMETRIA_NIVEL_NORMALIDADE   => '#7eff2c'
-                ];
+                $coresPluviometria = $this->LeiturasModel->getCoresNiveisAlertasPluviometria();
                 $nivel             = $this->LeiturasModel->calcularAlertaPluviometria($leitura);
                 $corDaEstacao      = $coresPluviometria[$nivel];
 
@@ -328,12 +331,47 @@ class EstacoesModel extends BaseModel
         return $query->result_array();
     }
 
-    private function getUltimoRegistro($estacaoId) //pega o ultimo registro de cada estação para atualizar o mapa de monitoamento a cada 30seg
+    public function getUltimoRegistro($estacaoId, $limiteTempoEmMinutos = NULL) //pega o ultimo registro de cada estação para atualizar o mapa de monitoamento a cada 30seg
     {
-        return $this->db->where('estacao_id', $estacaoId)
-                        ->order_by('datahora', 'desc')
-                        ->limit(1)
-                        ->get('v_leitura_calculada')
+        $this->db->where('estacao_id', $estacaoId)
+                ->order_by('datahora', 'desc')
+                ->limit(1);
+
+        if ($limiteTempoEmMinutos !== NULL)
+        {
+            $this->db->where('datahora >= date_sub(now(), INTERVAL ' . $limiteTempoEmMinutos . ' MINUTE)');
+        }
+
+        return $this->db->get('v_leitura_calculada')
                         ->row_array();
     }
+
+    public function getURLMonitoramentoEstacao($idEstacao)
+    {
+        return base_url('Estacoes/monitoramentoIndividual/' . $idEstacao);
+    }
+
+    public function getEstacaoComDadosMeteorologicos()
+    {
+        $this->db->select('estacao.*, leitura.temperatura, leitura.velocidade_vento, leitura.volume_chuva');
+        $this->db->from('estacao');
+        $this->db->join('(SELECT estacao_id, MAX(id) AS max_id FROM leitura GROUP BY estacao_id) AS ultima_leitura', 'estacao.id = ultima_leitura.estacao_id', 'left');
+        $this->db->join('leitura', 'ultima_leitura.max_id = leitura.id', 'left');
+        $this->db->where('estacao.ativa', 1);
+
+        return $this->db->get()->result();
+    }
+
+    public function getEmailsUsuariosPorEstacao($estacaoId)
+    {
+        return $this->db
+            ->select('u.email, u.nome')
+            ->from('Usuario u')
+            ->join('Usuario_Acessa_Estacao ue', 'u.id = ue.usuario_id')
+            ->where('ue.estacao_id', $estacaoId)
+            ->get()
+            ->result();
+    }
+
+
 }
