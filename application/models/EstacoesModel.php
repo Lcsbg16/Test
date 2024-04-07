@@ -194,7 +194,7 @@ class EstacoesModel extends BaseModel
      */
     public function getEstacoesGeoJson($camada = NULL, $somenteAtivas, $ids)
     {
-        $estacoesBD = $this->getEstacoes($somenteAtivas, $ids); //getEstações a partir dos ids
+        $estacoesBD = $this->getEstacoes($somenteAtivas, $ids); 
 
         $estacoes = [];
 

@@ -308,20 +308,29 @@ class LeiturasModel extends BaseModel
 
     public function getAcumuladoChuvaPorPeriodoGeral() //Acumulos de chuva + descrição da estação + temperatura // jaque
     {
+        $this->load->model('EstacoesModel');
+        $listaEstacoesLeituras = array(); 
 
-        $this->db->select('estacao.id AS estacao_id, estacao.descricao AS descricao, v_leitura_calculada.volume_chuva_ac_1h AS volume_1h, v_leitura_calculada.volume_chuva_ac_24h AS volume_24h, v_leitura_calculada.volume_chuva_ac_96h AS volume_96h, v_leitura_calculada.temperatura AS temperatura');
-        $this->db->from('v_leitura_calculada');
-        $this->db->join('estacao', 'estacao.id = v_leitura_calculada.estacao_id');
-        $this->db->where('v_leitura_calculada.volume_chuva_ac_1h IS NOT NULL');
-        $this->db->where('v_leitura_calculada.volume_chuva_ac_1h !=', 0);
-        $this->db->where('v_leitura_calculada.datahora = (SELECT MAX(datahora) FROM v_leitura_calculada WHERE estacao_id = estacao.id AND datahora >= DATE_SUB(NOW(), INTERVAL 1 HOUR))', NULL, FALSE);
-       // if ($estacao !== null) {
-        //    $this->db->where('estacao.id', $estacao);
-       // }
-        $this->filtrarEstacoesComAcesso('estacao_id');
-        $this->db->group_by('estacao.id, estacao.descricao');
-    
-        return $this->db->get()->result();
+    $estacoesAtivas = $this->EstacoesModel->getEstacoes(true);
+
+    foreach ($estacoesAtivas as $estacao) {
+    $ultimoRegistro = $this->EstacoesModel->getUltimoRegistro($estacao['id'], 60);
+
+    if (isset($ultimoRegistro['volume_chuva_ac_1h']) && $ultimoRegistro['volume_chuva_ac_1h'] !== null) {
+        $dadosEstacaoLeitura = [
+            'estacao_id' => $estacao['id'],
+            'descricao' => $estacao['descricao'],
+            'volume_1h' => $ultimoRegistro['volume_chuva_ac_1h'],
+            'volume_24h' => $ultimoRegistro['volume_chuva_ac_24h'],
+            'volume_96h' => $ultimoRegistro['volume_chuva_ac_96h'],
+            'temperatura' => $ultimoRegistro['temperatura']
+        ];
+
+        $listaEstacoesLeituras[] = (object)$dadosEstacaoLeitura; // Mantendo o padrão de saída em objeto
+    }
+}
+    return $listaEstacoesLeituras;
+      
     }
     
 

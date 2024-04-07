@@ -8,7 +8,7 @@
     <div class="container-fluid mt-3">
     <div class="row">
         <div class="col">
-            <div class="card shadow">
+            <div class="card shadow" >
                 <div class="card-body">
                 <!-- INFORMAÇÕES DA ESTAÇÃO -->
                 <h5 class="text-center"> Identificação da Estação: </h5> <h2 class="card-title text-center"  id="estacao_id"> </h2> 
@@ -18,8 +18,8 @@
             </div>
         
             <!-- INFORMAÇÕES DE LEITURA -->
-            <div class="card shadow" style="height: 100%;">
-                <div class="card-body">
+            <div class="card shadow" >
+            <div class="card-body" >
                   <div class="row">
                     <div class="col-xl-7">
                       <div class="row">
@@ -165,9 +165,7 @@
                 </div>
             </div>
             </div>
-    </div>
-
-            
+    </div>  
             <div class="row d-flex justify-content-center align-items-center">
             <div class="col-xl-3 col-lg-6">
                                 <label>Escala</label>
