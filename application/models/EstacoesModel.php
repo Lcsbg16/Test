@@ -11,12 +11,11 @@ class EstacoesModel extends BaseModel
     public function __construct()
     {
        
-        $this->estacoesComAcesso  = $this->getEstacoesComAcessoPorUsuario();
         parent::__construct();
     }
 
     private function filtrarEstacoesComAcesso($fild){
-
+        $this->estacoesComAcesso  = $this->getEstacoesComAcessoPorUsuario();
         $imploded = implode(',', array_map('array_pop',  $this->estacoesComAcesso));
         $this->db->where_in($fild, explode(',',$imploded));
     }
@@ -116,7 +115,7 @@ class EstacoesModel extends BaseModel
         $estacao = $this->db->where('identificador', $identificador)
                 ->get('estacao')
                 ->row_array();
-
+                
         $estacao['online'] = $this->getEstacaoOnline($estacao['id']);
 
         return $estacao;

@@ -15,7 +15,7 @@ class LeiturasModel extends BaseModel
     public function __construct()
     {
         $this->load->model('EstacoesModel');
-        $this->estacoesComAcesso  = $this->EstacoesModel->getEstacoesComAcessoPorUsuario();
+        
         parent::__construct();
     }
 
@@ -44,9 +44,57 @@ class LeiturasModel extends BaseModel
     public function inserirLeitura($estacaoId, $dadosLeitura)
     {
         $dadosLeitura['estacao_id'] = $estacaoId;
-        return $this->db->insert('leitura', $dadosLeitura);
+        
+        $this->db->insert('leitura', $dadosLeitura);
+       
+        $insert_id = $this->db->insert_id();
+        
+        return $insert_id;
+
+    }
+    public function inserirLeituraValor($leituraId, $tag, $value)
+    {
+     
+        $dadosLeitura['leitura_id'] = $leituraId;
+        $dadosLeitura['leitura_dimensao_tag'] = $tag;
+
+        if(is_string($value)){
+            $dadosLeitura['valor_texto'] = $value;
+        }else{
+            $dadosLeitura['valor'] = $value;
+        }
+        
+        return $this->db->insert('leitura_valor', $dadosLeitura);
+    }
+    public function inserirUltimaLeitura($estacaoId, $leituraId, $tag, $value)
+    {
+
+        $this->db->where('estacao_id',$estacaoId)->where('leitura_dimensao_tag',$tag);
+        $q = $this->db->get('ultima_leitura_valor');
+
+        $dadosLeitura['estacao_id'] = $estacaoId;
+        $dadosLeitura['leitura_id'] = $leituraId;
+        $dadosLeitura['leitura_dimensao_tag'] = $tag;
+
+        if(is_string($value)){
+            $dadosLeitura['valor_texto'] = $value;
+        }else{
+            $dadosLeitura['valor'] = $value;
+        }
+        
+        if ( $q->num_rows() > 0 ) 
+        {
+            return $this->db->where('estacao_id',$estacaoId)->where('leitura_dimensao_tag',$tag)->update('ultima_leitura_valor', $dadosLeitura);
+          
+        } else {
+            return $this->db->insert('ultima_leitura_valor', $dadosLeitura);
+          
+        }
+
+        
     }
     private function filtrarEstacoesComAcesso($fild){
+        $this->estacoesComAcesso  = $this->EstacoesModel->getEstacoesComAcessoPorUsuario();
         $imploded = implode(',', array_map('array_pop',  $this->estacoesComAcesso));
         $this->db->where_in($fild, explode(',',$imploded));
     }
