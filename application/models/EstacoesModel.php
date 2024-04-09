@@ -14,13 +14,23 @@ class EstacoesModel extends BaseModel
         parent::__construct();
     }
 
-    private function filtrarEstacoesComAcesso($fild){
+    private function getArrayEstacoesComAcesso(){
         $this->estacoesComAcesso  = $this->getEstacoesComAcessoPorUsuario();
 
-        $imploded = implode(',', array_map('array_pop',  $this->estacoesComAcesso));
-        $this->db->where_in($fild, explode(',',$imploded));
+        if($this->estacoesComAcesso){
+            $imploded = implode(',', array_map('array_pop',  $this->estacoesComAcesso));
+            $this->estacoesComAcesso = explode(',',$imploded);
+        }
+       
     }
-    
+    private function filtrarEstacoesComAcesso($fild){
+      
+        if(!$this->estacoesComAcesso){
+            $this->db->where_in($fild, 'NULL');
+        }else{
+            $this->db->where_in($fild, $this->estacoesComAcesso);
+        }
+    }
     /**
      * Retorna a quantidade de estações cujo último evento registrado é de id informado em $tipo_evento_id
      *
@@ -36,7 +46,7 @@ class EstacoesModel extends BaseModel
             $queryFiltrarTipos = 'AND ev.tipo_evento_id IN(' . implode(',', $filtrarTipos) . ')';
         }
 
-        $this->filtrarEstacoesComAcesso('e.id');
+        $this->getArrayEstacoesComAcesso();
 
         $this->db->from('estacao e')
                 ->select("
@@ -59,7 +69,7 @@ class EstacoesModel extends BaseModel
             $this->db->where('ativa', 1);
         }
        
-
+        $this->filtrarEstacoesComAcesso('e.id');
 
         return $this->db->count_all_results();
     }
@@ -345,16 +355,20 @@ class EstacoesModel extends BaseModel
 
     public function getEventos($limit)
     {
-        $this->filtrarEstacoesComAcesso('estacao_id');
-
+       
+        $this->getArrayEstacoesComAcesso();
+        
         $this->db->select('evento.id, evento.datahora, evento.tipo_evento_id, estacao.id AS estacao_id, estacao.descricao AS estacao_descricao, estacao.identificador as estacao_identificador')
                 ->from('evento')
                 ->join('estacao', 'evento.estacao_id = estacao.id')
                 ->order_by('evento.datahora', 'desc')
+              
                 ->limit($limit);
+                $this->filtrarEstacoesComAcesso('estacao_id');
                 
                
         $query = $this->db->get();
+
        
         return $query->result_array();
     }
