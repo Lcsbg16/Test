@@ -16,6 +16,7 @@ class EstacoesModel extends BaseModel
 
     private function filtrarEstacoesComAcesso($fild){
         $this->estacoesComAcesso  = $this->getEstacoesComAcessoPorUsuario();
+
         $imploded = implode(',', array_map('array_pop',  $this->estacoesComAcesso));
         $this->db->where_in($fild, explode(',',$imploded));
     }
@@ -34,6 +35,8 @@ class EstacoesModel extends BaseModel
         {
             $queryFiltrarTipos = 'AND ev.tipo_evento_id IN(' . implode(',', $filtrarTipos) . ')';
         }
+
+        $this->filtrarEstacoesComAcesso('e.id');
 
         $this->db->from('estacao e')
                 ->select("
@@ -55,7 +58,7 @@ class EstacoesModel extends BaseModel
         {
             $this->db->where('ativa', 1);
         }
-        $this->filtrarEstacoesComAcesso('e.id');
+       
 
 
         return $this->db->count_all_results();
@@ -342,12 +345,14 @@ class EstacoesModel extends BaseModel
 
     public function getEventos($limit)
     {
+        $this->filtrarEstacoesComAcesso('estacao_id');
+
         $this->db->select('evento.id, evento.datahora, evento.tipo_evento_id, estacao.id AS estacao_id, estacao.descricao AS estacao_descricao, estacao.identificador as estacao_identificador')
                 ->from('evento')
                 ->join('estacao', 'evento.estacao_id = estacao.id')
                 ->order_by('evento.datahora', 'desc')
                 ->limit($limit);
-                $this->filtrarEstacoesComAcesso('estacao_id');
+                
                
         $query = $this->db->get();
        
