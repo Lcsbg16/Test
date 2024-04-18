@@ -851,8 +851,6 @@ class LeiturasModel extends BaseModel
 
         $estacoes = $this->EstacoesModel->getEstacoes();
 
-        $this->db->truncate('leitura_calculada');
-
         $registros = [];
         foreach ($estacoes as $estacaoAtual)
         {
@@ -862,6 +860,8 @@ class LeiturasModel extends BaseModel
                 $registros[] = $ultimoRegistroEstacao;
             }
         }
+
+        $this->db->truncate('leitura_calculada');
         $this->db->insert_batch('leitura_calculada', $registros);
 
         $this->db->trans_commit();
