@@ -135,6 +135,13 @@ class Api extends BaseController
     {
         set_time_limit(0);
 
+        $startTime = new DateTime();
+
         $this->atualizarCacheLeituraCalculada();
+
+        $endTime  = new DateTime();
+        $interval = $startTime->diff($endTime);
+
+        echo 'Concluído em: ' . $interval->format('%H:%I:%S');
     }
 }
