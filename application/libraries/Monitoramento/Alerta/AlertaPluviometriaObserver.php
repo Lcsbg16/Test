@@ -22,7 +22,7 @@ class AlertaPluviometriaObserver implements iMonitoramentoObserver
         $estacoesAtivas = $ci->EstacoesModel->getEstacoes(true);
         foreach ($estacoesAtivas as $estacaoAtual)
         {
-            if ($ultimoRegistro = $ci->EstacoesModel->getUltimoRegistro($estacaoAtual['id'], 60))
+            if ($ultimoRegistro = $ci->EstacoesModel->getUltimoRegistro($estacaoAtual['id'], NULL, true))
             {
                 $tipoAlerta = $ci->LeiturasModel->calcularAlertaPluviometria($ultimoRegistro);
                 if ($tipoAlerta != LeiturasModel::PLUVIOMETRIA_NIVEL_NORMALIDADE)

@@ -109,4 +109,10 @@ class Api extends BaseController
             echo $e->getMessage();
         }
     }
+
+    public function atualizarCacheLeituraCalculada()
+    {
+        $this->load->model('LeiturasModel');
+        $this->LeiturasModel->atualizarCacheLeituraCalculada();
+    }
 }

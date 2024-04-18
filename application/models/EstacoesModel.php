@@ -152,7 +152,6 @@ class EstacoesModel extends BaseModel
         return $estacoes;
     }
 
-
     public function getContagemEstacoes($somenteAtivas = TRUE)
     {
         if ($somenteAtivas)
@@ -182,17 +181,17 @@ class EstacoesModel extends BaseModel
             if ($eAtual['latitude'] && $eAtual['longitude'])
             {
 
-                if ($ultimoRegistro = $this->getUltimoRegistro($eAtual['id']))
+                if ($ultimoRegistro = $this->getUltimoRegistro($eAtual['id'], NULL, true))
                 {
                     $ultimaLeituraRetorno = [
-                        'datahora'           => $ultimoRegistro['datahora'],
-                        'datahora_formatada' => date('d/m/Y H:i:s', strtotime($ultimoRegistro['datahora'])),
-                        'temperatura'        => $ultimoRegistro['temperatura'],
-                        'umidade_ar'         => $ultimoRegistro['umidade_ar'],
-                        'velocidade_vento'   => $ultimoRegistro['velocidade_vento'],
-                        'dir_vento'          => $ultimoRegistro['dir_vento'],
-                        'volume_chuva'       => $ultimoRegistro['volume_chuva'],
-                        'volume_acumulado_1h' => $ultimoRegistro['volume_chuva_ac_1h'],
+                        'datahora'             => $ultimoRegistro['datahora'],
+                        'datahora_formatada'   => date('d/m/Y H:i:s', strtotime($ultimoRegistro['datahora'])),
+                        'temperatura'          => $ultimoRegistro['temperatura'],
+                        'umidade_ar'           => $ultimoRegistro['umidade_ar'],
+                        'velocidade_vento'     => $ultimoRegistro['velocidade_vento'],
+                        'dir_vento'            => $ultimoRegistro['dir_vento'],
+                        'volume_chuva'         => $ultimoRegistro['volume_chuva'],
+                        'volume_acumulado_1h'  => $ultimoRegistro['volume_chuva_ac_1h'],
                         'volume_acumulado_24h' => $ultimoRegistro['volume_chuva_ac_24h'],
                         'volume_acumulado_96h' => $ultimoRegistro['volume_chuva_ac_96h']
                     ];
@@ -331,7 +330,7 @@ class EstacoesModel extends BaseModel
         return $query->result_array();
     }
 
-    public function getUltimoRegistro($estacaoId, $limiteTempoEmMinutos = NULL) //pega o ultimo registro de cada estação para atualizar o mapa de monitoamento a cada 30seg
+    public function getUltimoRegistro($estacaoId, $limiteTempoEmMinutos = NULL, $cacheBD = false) //pega o ultimo registro de cada estação para atualizar o mapa de monitoamento a cada 30seg
     {
         $this->db->where('estacao_id', $estacaoId)
                 ->order_by('datahora', 'desc')
@@ -342,7 +341,16 @@ class EstacoesModel extends BaseModel
             $this->db->where('datahora >= date_sub(now(), INTERVAL ' . $limiteTempoEmMinutos . ' MINUTE)');
         }
 
-        return $this->db->get('v_leitura_calculada')
+        if ($cacheBD)
+        {
+            $tabela = 'leitura_calculada';
+        }
+        else
+        {
+            $tabela = 'v_leitura_calculada';
+        }
+
+        return $this->db->get($tabela)
                         ->row_array();
     }
 
@@ -365,13 +373,11 @@ class EstacoesModel extends BaseModel
     public function getEmailsUsuariosPorEstacao($estacaoId)
     {
         return $this->db
-            ->select('u.email, u.nome')
-            ->from('Usuario u')
-            ->join('Usuario_Acessa_Estacao ue', 'u.id = ue.usuario_id')
-            ->where('ue.estacao_id', $estacaoId)
-            ->get()
-            ->result();
+                        ->select('u.email, u.nome')
+                        ->from('Usuario u')
+                        ->join('Usuario_Acessa_Estacao ue', 'u.id = ue.usuario_id')
+                        ->where('ue.estacao_id', $estacaoId)
+                        ->get()
+                        ->result();
     }
-
-
 }
