@@ -731,6 +731,29 @@ class LeiturasModel extends BaseModel
     {
         return number_format($velocidadeMS * 3.6, 1);
     }
+
+    public function atualizarCacheLeituraCalculada()
+    {
+        $this->load->model('EstacoesModel');
+
+        $this->db->trans_start();
+
+        $estacoes = $this->EstacoesModel->getEstacoes();
+
+        $this->db->truncate('leitura_calculada');
+
+        foreach ($estacoes as $estacaoAtual)
+        {
+            $ultimoRegistroEstacao = $this->EstacoesModel->getUltimoRegistro($estacaoAtual['id']);
+            if ($ultimoRegistroEstacao)
+            {
+                $this->db->insert('leitura_calculada', $ultimoRegistroEstacao);
+            }
+        }
+
+        $this->db->trans_commit();
+        echo 'OK';
+    }
 }
 
 class FiltrosLeitura
