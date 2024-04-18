@@ -750,17 +750,18 @@ class LeiturasModel extends BaseModel
 
         $this->db->truncate('leitura_calculada');
 
+        $registros = [];
         foreach ($estacoes as $estacaoAtual)
         {
             $ultimoRegistroEstacao = $this->EstacoesModel->getUltimoRegistro($estacaoAtual['id']);
             if ($ultimoRegistroEstacao)
             {
-                $this->db->insert('leitura_calculada', $ultimoRegistroEstacao);
+                $registros[] = $ultimoRegistroEstacao;
             }
         }
+        $this->db->insert_batch('leitura_calculada', $registros);
 
         $this->db->trans_commit();
-        echo 'OK';
     }
 }
 
