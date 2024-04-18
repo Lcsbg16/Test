@@ -133,6 +133,8 @@ class Api extends BaseController
 
     public function cron()
     {
+        set_time_limit(0);
+
         $this->atualizarCacheLeituraCalculada();
     }
 }
