@@ -94,17 +94,37 @@
         </div>
     </div>
 
-    <script type="text/javascript">
-
-        $(document).ready(function () {
-            $("#estacao_selecionada").multiselect({
-                includeSelectAllOption: true,
-                buttonWidth: '100%'
-            });
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#estacao_selecionada").multiselect({
+            includeSelectAllOption: true,
+            buttonWidth: '100%'
         });
 
+        function aplicarFiltro() {
+            var startDate = $("#dataInicial").val(); // Correto: usando startDate
+            var endDate = $("#dataFinal").val();     // Correto: usando endDate
 
-    </script>
+            $.ajax({
+                type: "POST",
+                url: "{$BASE_URL}AdminLeituras/index",
+                data: {
+                    startDate: startDate,  // Corrigido: usando startDate
+                    endDate: endDate      // Corrigido: usando endDate
+                },
+                success: function (data) {
+                    // Atualize a visualização com os dados filtrados usando o Smarty, por exemplo, {$data}
+                    console.log("Dados filtrados com sucesso");
+                },
+                error: function (error) {
+                    console.error("Erro ao aplicar o filtro de datas: " + error);
+                }
+            });
+        }
+    });
+</script>
+
+
 
     {literal}
 

@@ -56,7 +56,7 @@ class Api extends BaseController
         $this->load->model('EstacoesModel');
         $this->load->model('LeiturasModel');
 
-        $postData             = $this->input->post();
+        $postData = $this->input->post();
         $identificadorEstacao = $postData['identidade'];
 
         if (!$identificadorEstacao)
@@ -66,8 +66,10 @@ class Api extends BaseController
 
         try
         {
+            //Verificar necessidade dessa chamada, visto que o parametro UID já vem no post.
             if ($estacao = $this->EstacoesModel->getEstacaoPorIdentificador($identificadorEstacao))
             {
+                
                 $dadosLeitura = [
                     'datahora'          => date('Y-m-d H:i:s', $postData['timestamp']),
                     'dir_vento'         => $postData['dir_vento'] * 45,
@@ -80,8 +82,21 @@ class Api extends BaseController
                 ];
 
                 $this->db->db_debug = FALSE;
-                $this->LeiturasModel->inserirLeitura($estacao['id'], $dadosLeitura);
+                $leitura_id = $this->LeiturasModel->inserirLeitura($estacao['id'], $dadosLeitura);
+                
+                //removendo valores para a tabela leitura_valor
+                unset($postData['identidade']);
+                unset($postData['timestamp']);
+                unset($postData['uid']);
 
+                foreach ($postData as $key => $value) { 
+                    $this->LeiturasModel->inserirLeituraValor( $leitura_id, $key, $value);
+                }
+
+                foreach ($postData as $key => $value) { 
+                    $this->LeiturasModel->inserirUltimaLeitura($estacao['id'], $leitura_id, $key, $value);
+                }
+               
                 $error = $this->db->error();
                 if ($error['code'])
                 {

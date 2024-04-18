@@ -15,7 +15,7 @@ class MenusModel extends BaseModel
         $principal->adicionarFilho(new MenuItem('Painel de Controle', base_url('Dashboard'), 'tv-2'));
         $principal->adicionarFilho(new MenuItem('Mapa de Estações', base_url('Estacoes/mapa'), 'map-big', 'yellow'));
         $principal->adicionarFilho(new MenuItem('Mapa de Monitoramento', base_url('Estacoes/mapaMonitoramento'), 'map-big', 'orange'));
-        $principal->adicionarFilho(new MenuItem('Visualizar Estações', base_url('Info'), 'grip', 'orange'));
+        $principal->adicionarFilho(new MenuItem('Visualizar Estações', base_url('Estacoes/visualizarEstacoes'), 'grip', 'orange'));
 
         $principal->adicionarFilho(new MenuItem('Gráficos', base_url('grafico'), 'chart-bar-32', 'green'));
         $principal->adicionarFilho(new MenuItem('Reportar Ocorrência', base_url('AdminOcorrencias/index/add'), 'square-pin', 'orange'));
@@ -27,6 +27,9 @@ class MenusModel extends BaseModel
             $cadastros->adicionarFilho(new MenuItem('-', ''));
             $cadastros->adicionarFilho(new MenuItem('Usuários', base_url('AdminUsuarios')));
             $cadastros->adicionarFilho(new MenuItem('Grupos de Usuários', base_url('AdminGrupos')));
+            $cadastros->adicionarFilho(new MenuItem('-', ''));
+            $cadastros->adicionarFilho(new MenuItem('Leitura Dimensão', base_url('AdminLeituraDimensao')));
+            $cadastros->adicionarFilho(new MenuItem('Unidade de medida', base_url('AdminUnidadeMedida')));
 
             $relatorios = new MenuItem('Relatórios', '');
             $relatorios->adicionarFilho(new MenuItem('Leituras', base_url('AdminLeituras'), 'collection', 'green'));

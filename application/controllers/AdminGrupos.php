@@ -33,7 +33,7 @@ class AdminGrupos extends BaseCrudController
         // Relacionamentos
         //$crud->set_relation_n_n('_locais', 'grupo_acessa_endereco', 'endereco', 'grupo_id', 'endereco_id', 'descricao', 'ordem');
         $crud->set_relation_n_n('_estacoes', 'grupo_acessa_estacao', 'estacao', 'grupo_id', 'estacao_id', '{id} ({descricao})', 'ordem');
-
+     //   $crud->where('dfs = 3');
         $this->_crud_output($crud);
     }
 

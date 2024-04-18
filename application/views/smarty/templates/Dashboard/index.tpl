@@ -79,7 +79,7 @@
 
                         },
                         error: function (error) {
-                            console.error('Erro na requisição AJAX:', error);
+                            console.error('Erro na requisição AJAX ao carregar ocorrencias:', error);
                         }
                     });
                 }
@@ -99,7 +99,7 @@
 
                         },
                         error: function (error) {
-                            console.error('Erro na requisição AJAX:', error);
+                            console.error('Erro na requisição AJAX ao carregar eventos:', error);
                         }
                     });
                 }
@@ -140,7 +140,7 @@
                             $('#' + 'card_' + id).find(".card-body").html(response);
                         },
                         error: function (error) {
-                            console.error('Erro na requisição AJAX:', error);
+                            console.error('Erro na requisição AJAX ao desenhar card de monitoramento:', error);
                         }
                     });
                 }
@@ -165,7 +165,7 @@
                             }
                         },
                         error: function (error) {
-                            console.error('Erro na requisição AJAX:', error);
+                            console.error('Erro na requisição AJAX ao carregar card de acumulado de chuva:', error);
                         }
                     });
                 }
@@ -196,7 +196,8 @@
                             }
                         },
                         error: function (error) {
-                            console.error('Erro na requisição AJAX:', error);
+                           
+                            console.error('Erro na requisição AJAX ao carregar card de alerta:', error);
                         }
                     });
                 }
@@ -219,7 +220,7 @@
                             $('#classeCardAlerta').append('<style>@keyframes blink_' + idCardAlerta + ' { 0% { background-color:' + cor + '; } 30% { background-color: white; } 100% { background-color: ' + cor + '; } }</style>');
                         },
                         error: function (error) {
-                            console.error('Erro na requisição AJAX:', error);
+                            console.error('Erro na requisição AJAX ao desenhar card de alerta:', error);
                         }
                     });
 
