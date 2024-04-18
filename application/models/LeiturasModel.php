@@ -232,15 +232,23 @@ class LeiturasModel extends BaseModel
         }
     }
 
-    public function getAcumuladoChuvaPorPeriodoGeral() //Acumulos de chuva + descrição da estação + temperatura // jaque
+    public function getAcumuladoChuvaPorPeriodoGeral($cacheBD = true) //Acumulos de chuva + descrição da estação + temperatura // jaque
     {
+        if ($cacheBD)
+        {
+            $tabela = 'leitura_calculada';
+        }
+        else
+        {
+            $tabela = 'v_leitura_calculada';
+        }
 
-        $this->db->select('estacao.id AS estacao_id, estacao.descricao AS descricao, v_leitura_calculada.volume_chuva_ac_1h AS volume_1h, v_leitura_calculada.volume_chuva_ac_24h AS volume_24h, v_leitura_calculada.volume_chuva_ac_96h AS volume_96h, v_leitura_calculada.temperatura AS temperatura');
-        $this->db->from('v_leitura_calculada');
-        $this->db->join('estacao', 'estacao.id = v_leitura_calculada.estacao_id');
-        $this->db->where('v_leitura_calculada.volume_chuva_ac_1h IS NOT NULL');
-        $this->db->where('v_leitura_calculada.volume_chuva_ac_1h !=', 0);
-        $this->db->where('v_leitura_calculada.datahora = (SELECT MAX(datahora) FROM v_leitura_calculada WHERE estacao_id = estacao.id AND datahora >= DATE_SUB(NOW(), INTERVAL 1 HOUR))', NULL, FALSE);
+        $this->db->select('estacao.id AS estacao_id, estacao.descricao AS descricao, volume_chuva_ac_1h AS volume_1h, volume_chuva_ac_24h AS volume_24h, volume_chuva_ac_96h AS volume_96h, temperatura AS temperatura');
+        $this->db->from($tabela);
+        $this->db->join('estacao', 'estacao.id = estacao_id');
+        $this->db->where('volume_chuva_ac_1h IS NOT NULL');
+        $this->db->where('volume_chuva_ac_1h !=', 0);
+        $this->db->where('datahora = (SELECT MAX(datahora) FROM ' . $tabela . ' WHERE estacao_id = estacao.id AND datahora >= DATE_SUB(NOW(), INTERVAL 1 HOUR))', NULL, FALSE);
         $this->db->group_by('estacao.id, estacao.descricao');
 
         return $resultado = $this->db->get()->result();

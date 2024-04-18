@@ -115,4 +115,9 @@ class Api extends BaseController
         $this->load->model('LeiturasModel');
         $this->LeiturasModel->atualizarCacheLeituraCalculada();
     }
+
+    public function cron()
+    {
+        $this->atualizarCacheLeituraCalculada();
+    }
 }
