@@ -751,7 +751,7 @@ class LeiturasModel extends BaseModel
         $registros = [];
         foreach ($estacoes as $estacaoAtual)
         {
-            $ultimoRegistroEstacao = $this->EstacoesModel->getUltimoRegistro($estacaoAtual['id']);
+            $ultimoRegistroEstacao = $this->EstacoesModel->getUltimoRegistro($estacaoAtual['id'], 60);
             if ($ultimoRegistroEstacao)
             {
                 $registros[] = $ultimoRegistroEstacao;
