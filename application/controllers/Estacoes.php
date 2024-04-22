@@ -18,10 +18,13 @@ class Estacoes extends BasePrivateController
 
         $variaveisView['titulo_pagina'] = 'Mapa de Estações';
 
-        $estacoes = $this->EstacoesModel->getEstacoesComAcessoPorUsuario();
-        $imploded = implode(',', $estacoes);
+        $this->EstacoesModel->getArrayEstacoesComAcesso();
 
-        $variaveisView['estacoes'] = $this->EstacoesModel->getEstacoes(true, explode(',', $imploded));
+        $estacoes = $this->EstacoesModel->estacoesComAcesso;
+        //$imploded = implode(',', $estacoes);
+
+
+        $variaveisView['estacoes'] = $this->EstacoesModel->getEstacoes(true, $this->EstacoesModel->estacoesComAcesso);
 
         $this->loadSmartyView('Estacoes/mapa', $variaveisView);
     }
@@ -35,10 +38,13 @@ class Estacoes extends BasePrivateController
 
         $variaveisView['titulo_pagina'] = 'Mapa de Monitoramento';
 
-        $estacoes = $this->EstacoesModel->getEstacoesComAcessoPorUsuario();
-        $imploded = implode(',', array_map('array_pop', $estacoes));
+        $this->EstacoesModel->getArrayEstacoesComAcesso();
 
-        $variaveisView['estacoes'] = $this->EstacoesModel->getEstacoes(true, explode(',', $imploded));
+        $estacoes = $this->EstacoesModel->estacoesComAcesso;
+        
+      //  $imploded = implode(',', $estacoes);
+
+        $variaveisView['estacoes'] = $this->EstacoesModel->getEstacoes(true, $this->EstacoesModel->estacoesComAcesso);
         $variaveisView['camadas']  = FiltrosLeitura::getTodosTiposInformacao();
 
         $this->loadSmartyView('Estacoes/mapaMonitoramento', $variaveisView);

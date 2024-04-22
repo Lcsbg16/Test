@@ -102,4 +102,29 @@ abstract class BasePrivateController extends BaseController
         $this->load->library('EmailUtil');
         $this->emailutil->enviarEmail("Teste de envio", "adriano.php4@gmail.com", "Isto é um teste.", EMAIL_FROM);
     }
+
+    
+    public function adicionaFiltroAcessoEstacao($crud, $fild, $filtrar = false)
+    {
+
+        $this->load->model('EstacoesModel');
+        
+
+        $this->EstacoesModel->getArrayEstacoesComAcesso($filtrar);
+
+        $estacoes  = $this->EstacoesModel->estacoesComAcesso;
+        
+        $parametro_filtro_estacoes = $this->session->parametroControleAcesso['valor'];
+       
+
+        if($parametro_filtro_estacoes == "true" OR $filtrar == true){
+            $imploded = implode(',', $estacoes);
+
+            $crud->where($fild.' in ', '('.$imploded.')',false);
+        
+        }
+
+              
+        return $crud;
+    }
 }

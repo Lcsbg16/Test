@@ -60,7 +60,7 @@ class AdminEstacoes extends BaseCrudController
         $crud->callback_field('_coordenadas', array($this, 'callbackFieldCoordenadas'));
         
          // Filtros
-         $this->adicionaFiltroAcessoEstacao($crud, '`estacao`.`id`');
+         $this->adicionaFiltroAcessoEstacao($crud, '`estacao`.`id`',true);
 
         // Relacionamentos
         $crud->set_relation('endereco_id', 'endereco', 'descricao');

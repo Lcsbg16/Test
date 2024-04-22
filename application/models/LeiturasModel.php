@@ -99,14 +99,21 @@ class LeiturasModel extends BaseModel
 
     private function filtrarEstacoesComAcesso($fild)
     {
-        $this->estacoesComAcesso = $this->EstacoesModel->getEstacoesComAcessoPorUsuario();
-        $imploded                = implode(',', array_map('array_pop', $this->estacoesComAcesso));
-        $this->db->where_in($fild, explode(',', $imploded));
+
+       
+        $this->EstacoesModel->filtrarEstacoesComAcesso($fild);
+    }
+    private function getArrayEstacoesComAcesso()
+    {
+
+        $this->EstacoesModel->getArrayEstacoesComAcesso();
+       
     }
 
     public function calcularEstatisticasPorPeriodo(FiltrosLeitura $filtros)
     {
 
+        $this->getArrayEstacoesComAcesso();
 
         $this->db->from('leitura');
         if ($filtros)
@@ -223,6 +230,7 @@ class LeiturasModel extends BaseModel
 
     public function getLeiturasPorEscala(FiltrosLeitura $filtros = NULL, $retornarTudo = true)
     {
+                $this->getArrayEstacoesComAcesso();
         $this->db->from('leitura L');
         if ($filtros)
         {
@@ -351,6 +359,7 @@ class LeiturasModel extends BaseModel
      */
     public function getUltimasLeituras(FiltrosLeitura $filtros = NULL, $tempoLimite = 2440)
     {
+        $this->getArrayEstacoesComAcesso();
         $this->db->from('leitura');
         if ($filtros)
         {
@@ -443,6 +452,7 @@ class LeiturasModel extends BaseModel
      */
     public function getUltimaLeituraRegistrada(FiltrosLeitura $filtros = NULL)
     {
+                $this->getArrayEstacoesComAcesso();
         $this->db->from('leitura');
 
         if ($filtros)
@@ -505,10 +515,14 @@ class LeiturasModel extends BaseModel
 
     public function getUltimaTemperaturaMedia()
     {
+
+        $this->getArrayEstacoesComAcesso();
+
         if (DB_CACHE_ESTATISTICAS)
         {
             $this->db->cache_on();
         }
+
 
         $this->db->from('estacao E')
                 ->select("
@@ -541,6 +555,7 @@ class LeiturasModel extends BaseModel
 
     public function getVolumeChuvaMinimo()
     {
+        $this->getArrayEstacoesComAcesso();
 
         if (DB_CACHE_ESTATISTICAS)
         {
@@ -578,6 +593,7 @@ class LeiturasModel extends BaseModel
 
     public function getVolumeChuvaMaxima()
     {
+        $this->getArrayEstacoesComAcesso();
         if (DB_CACHE_ESTATISTICAS)
         {
             $this->db->cache_on();
@@ -614,6 +630,7 @@ class LeiturasModel extends BaseModel
 
     public function getTemperaturaMinima()
     {
+        $this->getArrayEstacoesComAcesso();
         if (DB_CACHE_ESTATISTICAS)
         {
             $this->db->cache_on();
@@ -650,6 +667,7 @@ class LeiturasModel extends BaseModel
 
     public function getTemperaturaMaxima()
     {
+        $this->getArrayEstacoesComAcesso();
         if (DB_CACHE_ESTATISTICAS)
         {
             $this->db->cache_on();
@@ -686,6 +704,7 @@ class LeiturasModel extends BaseModel
 
     public function getVelocidadeMinima()
     {
+        $this->getArrayEstacoesComAcesso();
         if (DB_CACHE_ESTATISTICAS)
         {
             $this->db->cache_on();
@@ -722,6 +741,7 @@ class LeiturasModel extends BaseModel
 
     public function getVelocidadeMaxima()
     {
+        $this->getArrayEstacoesComAcesso();
         if (DB_CACHE_ESTATISTICAS)
         {
             $this->db->cache_on();

@@ -192,35 +192,20 @@ abstract class BaseCrudController extends BasePrivateController
         return $this->loadSmartyView('campoValorFixo', $variaveis_view, true);
     }
 
-    public function adicionaFiltroAcessoEstacao($crud, $fild)
+   /*  public function adicionaFiltroAcessoEstacao($crud, $fild)
     {
 
         $this->load->model('EstacoesModel');
 
         $estacoes  = $this->EstacoesModel->getEstacoesComAcessoPorUsuario();
                
-        $imploded = implode(',', array_map('array_pop', $estacoes));
+        $imploded = implode(',', $estacoes);
 
         $crud->where($fild.' in ', '('.$imploded.')',false);
-
-       
-       
-/* 
-        $crud->set_primary_key('estacao_id', 'usuario_acessa_estacao');
-        $crud->set_relation('id', 'usuario_acessa_estacao', 'estacao_id');
-        $crud->where(
-            'usuario_id = ', $usuario['id']
-       );
-        $crud->set_primary_key('estacao_id', 'grupo_acessa_estacao');
-        $crud->set_relation('id', 'grupo_acessa_estacao', 'estacao_id'); 
-        //GroceryCrud não aceita duas relações para o mesmo campo da tabela
-        $crud->where(
-            '`grupo_id` in ', '('.implode(", ", $usuario['grupos']).')'
-        ,false);
- */
-                
-
+              
         return $crud;
-    }
+    } */
+
+    
 
 }
