@@ -58,10 +58,12 @@ class RelatorioLeituras extends BaseCrudController
             $leituras = [];
         }
         
-        $estacoes  = $this->EstacoesModel->getEstacoesComAcessoPorUsuario();
+        //$estacoes  = $this->EstacoesModel->getEstacoesComAcessoPorUsuario();
+
+        $this->EstacoesModel->getArrayEstacoesComAcesso();
                
-        $imploded = implode(',', array_map('array_pop', $estacoes));
-        $variaveisView['estacoes']      = $this->EstacoesModel->getEstacoes(false, explode(',',$imploded));
+
+        $variaveisView['estacoes']      = $this->EstacoesModel->getEstacoes(false, $this->EstacoesModel->estacoesComAcesso);
        // $variaveisView['estacoes']      = $this->EstacoesModel->getEstacoes();
         $variaveisView['titulo_pagina'] = 'Estatísticas';
         $variaveisView['leituras']      = $leituras;

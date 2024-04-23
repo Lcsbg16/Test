@@ -13,9 +13,12 @@ class Grafico extends BasePrivateController
 
         $variaveisView = [];
 
-        $estacoes  = $this->EstacoesModel->getEstacoesComAcessoPorUsuario();  
-        $imploded = implode(',', array_map('array_pop', $estacoes));
-        $variaveisView['estacoes'] = $this->EstacoesModel->getEstacoes(false, explode(',',$imploded));
+       // $estacoes  = $this->EstacoesModel->getEstacoesComAcessoPorUsuario();  
+        $this->EstacoesModel->getArrayEstacoesComAcesso();
+     
+       // $imploded = implode(',', $this->EstacoesModel->estacoesComAcesso  );
+       
+        $variaveisView['estacoes'] = $this->EstacoesModel->getEstacoes(false,$this->EstacoesModel->estacoesComAcesso);
 
 
        // $variaveisView['estacoes']      = $this->EstacoesModel->getEstacoes();
