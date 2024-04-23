@@ -113,7 +113,7 @@
                 var listaCards = [
                     {id: 1, url: BASE_URL + '/Dashboard/cardContagemEstacoes', largura: '3'},
                     {id: 2, url: BASE_URL + '/Dashboard/cardEstacoesAtivas', largura: '3'},
-                    {id: 3, url: BASE_URL + '/Dashboard/cardEstacoesOffline', largura: '3'},
+                    // {id: 3, url: BASE_URL + '/Dashboard/cardEstacoesOffline', largura: '3'},
                     {id: 4, url: BASE_URL + '/Dashboard/cardTemperaturaMedia', largura: '3'},
                     {id: 5, url: BASE_URL + '/Dashboard/cardTemperaturaMinima', largura: '3'},
                     {id: 6, url: BASE_URL + '/Dashboard/cardTemperaturaMaxima', largura: '3'},
