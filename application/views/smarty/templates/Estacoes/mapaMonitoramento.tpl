@@ -147,10 +147,9 @@
                         <br><strong>Umidade do ar:</strong> " + (feature.properties.ultimaLeitura.umidade_ar ? parseFloat(feature.properties.ultimaLeitura.umidade_ar).toFixed(2).replace(".", ",") + "%" : "Sem registro") + "\
                         <br><strong>Velocidade do vento:</strong> " + (feature.properties.ultimaLeitura.velocidade_vento ? parseFloat(feature.properties.ultimaLeitura.velocidade_vento).toFixed(2).replace(".", ",") + " km/h" : "Sem registro") + "\
                         <br><strong>Direção do vento:</strong> " + (feature.properties.ultimaLeitura.dir_vento ? feature.properties.ultimaLeitura.dir_vento + "&#176;" : "Sem registro") + "\
-                        <br><strong>Volume de chuva:</strong> " + (feature.properties.ultimaLeitura.volume_chuva ? parseFloat(feature.properties.ultimaLeitura.volume_chuva).toFixed(2).replace(".", ",") + " mm&sup3;" : "Sem registro") + "\
-                        <br><strong>Acumulo de chuva (1h):</strong> " + (feature.properties.ultimaLeitura.volume_acumulado_1h ? parseFloat(feature.properties.ultimaLeitura.volume_acumulado_1h).toFixed(2).replace(".", ",") + " mm&sup3;" : "Sem registro") + "\
-                        <br><strong>Acumulo de chuva (24h):</strong> " + (feature.properties.ultimaLeitura.volume_acumulado_24h ? parseFloat(feature.properties.ultimaLeitura.volume_acumulado_24h).toFixed(2).replace(".", ",") + " mm&sup3;" : "Sem registro") + "\
-                        <br><strong>Acumulo de chuva (96h):</strong> " + (feature.properties.ultimaLeitura.volume_acumulado_96h ? parseFloat(feature.properties.ultimaLeitura.volume_acumulado_96h).toFixed(2).replace(".", ",") + " mm&sup3;" : "Sem registro") + "\
+                        <br><strong>Acúmulo de chuva (1h):</strong> " + (feature.properties.ultimaLeitura.volume_acumulado_1h ? parseFloat(feature.properties.ultimaLeitura.volume_acumulado_1h).toFixed(2).replace(".", ",") + " mm&sup3;" : "Sem registro") + "\
+                        <br><strong>Acúmulo de chuva (24h):</strong> " + (feature.properties.ultimaLeitura.volume_acumulado_24h ? parseFloat(feature.properties.ultimaLeitura.volume_acumulado_24h).toFixed(2).replace(".", ",") + " mm&sup3;" : "Sem registro") + "\
+                        <br><strong>Acúmulo de chuva (96h):</strong> " + (feature.properties.ultimaLeitura.volume_acumulado_96h ? parseFloat(feature.properties.ultimaLeitura.volume_acumulado_96h).toFixed(2).replace(".", ",") + " mm&sup3;" : "Sem registro") + "\
                             ";
                         } else
                         {

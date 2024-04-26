@@ -7,20 +7,49 @@ class EstacoesModel extends BaseModel
 
     public $estacoesComAcesso = array();
 
-   
     public function __construct()
     {
-       
-        $this->estacoesComAcesso  = $this->getEstacoesComAcessoPorUsuario();
+
         parent::__construct();
     }
 
-    private function filtrarEstacoesComAcesso($fild){
+    public function getArrayEstacoesComAcesso($filtrar = false)
+    {
+        $parametro_filtro_estacoes = CONTROLE_ACESSO_ESTACAO;
 
-        $imploded = implode(',', array_map('array_pop',  $this->estacoesComAcesso));
-        $this->db->where_in($fild, explode(',',$imploded));
+        if ($parametro_filtro_estacoes == "true" OR $filtrar == true)
+        {
+            $this->estacoesComAcesso = $this->getEstacoesComAcessoPorUsuario();
+
+            if ($this->estacoesComAcesso)
+            {
+                $imploded                = implode(',', $this->estacoesComAcesso);
+                $this->estacoesComAcesso = explode(',', $imploded);
+            }
+        }
+        else
+        {
+            $this->estacoesComAcesso = array();
+        }
     }
-    
+
+    public function filtrarEstacoesComAcesso($fild, $filtrar = false)
+    {
+        $parametro_filtro_estacoes = CONTROLE_ACESSO_ESTACAO;
+
+        if ($parametro_filtro_estacoes == "true" OR $filtrar == true)
+        {
+            if (!$this->estacoesComAcesso)
+            {
+                $this->db->where_in($fild, 'NULL');
+            }
+            else
+            {
+                $this->db->where_in($fild, $this->estacoesComAcesso);
+            }
+        }
+    }
+
     /**
      * Retorna a quantidade de estações cujo último evento registrado é de id informado em $tipo_evento_id
      *
@@ -35,6 +64,8 @@ class EstacoesModel extends BaseModel
         {
             $queryFiltrarTipos = 'AND ev.tipo_evento_id IN(' . implode(',', $filtrarTipos) . ')';
         }
+
+        $this->getArrayEstacoesComAcesso();
 
         $this->db->from('estacao e')
                 ->select("
@@ -56,8 +87,8 @@ class EstacoesModel extends BaseModel
         {
             $this->db->where('ativa', 1);
         }
-        $this->filtrarEstacoesComAcesso('e.id');
 
+        $this->filtrarEstacoesComAcesso('e.id');
 
         return $this->db->count_all_results();
     }
@@ -143,15 +174,16 @@ class EstacoesModel extends BaseModel
         return $evento['tipo_evento_id'] == $idTipoEventoOnline;
     }
 
-    public function getEstacoes($somenteAtivas = FALSE, $ids = array())
+    public function getEstacoes($somenteAtivas = FALSE, $ids = array(), $tipo = NULL)
     {
-       
+
+
         $this->db->order_by('ativa', 'DESC'); // Ordenar as ativas para as telas de relatorio
         $this->db->order_by('descricao');
 
         if ($somenteAtivas)
         {
-            
+
             $this->db->where('ativa', true);
         }
 
@@ -160,8 +192,13 @@ class EstacoesModel extends BaseModel
             $this->db->where_in('id', $ids);
         }
 
+        if ($tipo)
+        {
+            $this->db->where('tipo', $tipo);
+        }
+
         $estacoes = $this->db->get('estacao')->result_array();
-       
+
         foreach ($estacoes as $index => $estacaoAtual)
         {
             $estacoes[$index]['online'] = $this->getEstacaoOnline($estacaoAtual['id']);
@@ -170,18 +207,20 @@ class EstacoesModel extends BaseModel
         return $estacoes;
     }
 
-
     public function getContagemEstacoes($somenteAtivas = TRUE)
     {
+
+        $this->getArrayEstacoesComAcesso();
+
         if ($somenteAtivas)
         {
             $this->db->where('ativa', TRUE);
         }
 
-        $result  = $this->getEstacoesComAcessoPorUsuario();
-        $imploded = implode(',', array_map('array_pop', $result));
-        $this->db->where_in('`estacao`.`id`', explode(',',$imploded));
-
+        // $result   = $this->getEstacoesComAcessoPorUsuario();
+        ////$imploded = implode(',',  $result);
+        // $this->db->where_in('`estacao`.`id`', explode(',', $imploded));
+        $this->filtrarEstacoesComAcesso('`estacao`.`id`');
         return $this->db->count_all_results('estacao');
     }
 
@@ -195,7 +234,7 @@ class EstacoesModel extends BaseModel
      */
     public function getEstacoesGeoJson($camada = NULL, $somenteAtivas, $ids)
     {
-        $estacoesBD = $this->getEstacoes($somenteAtivas, $ids); //getEstações a partir dos ids
+        $estacoesBD = $this->getEstacoes($somenteAtivas, $ids);
 
         $estacoes = [];
 
@@ -204,17 +243,17 @@ class EstacoesModel extends BaseModel
             if ($eAtual['latitude'] && $eAtual['longitude'])
             {
 
-                if ($ultimoRegistro = $this->getUltimoRegistro($eAtual['id']))
+                if ($ultimoRegistro = $this->getUltimoRegistro($eAtual['id'], NULL, true))
                 {
                     $ultimaLeituraRetorno = [
-                        'datahora'           => $ultimoRegistro['datahora'],
-                        'datahora_formatada' => date('d/m/Y H:i:s', strtotime($ultimoRegistro['datahora'])),
-                        'temperatura'        => $ultimoRegistro['temperatura'],
-                        'umidade_ar'         => $ultimoRegistro['umidade_ar'],
-                        'velocidade_vento'   => $ultimoRegistro['velocidade_vento'],
-                        'dir_vento'          => $ultimoRegistro['dir_vento'],
-                        'volume_chuva'       => $ultimoRegistro['volume_chuva'],
-                        'volume_acumulado_1h' => $ultimoRegistro['volume_chuva_ac_1h'],
+                        'datahora'             => $ultimoRegistro['datahora'],
+                        'datahora_formatada'   => date('d/m/Y H:i:s', strtotime($ultimoRegistro['datahora'])),
+                        'temperatura'          => $ultimoRegistro['temperatura'],
+                        'umidade_ar'           => $ultimoRegistro['umidade_ar'],
+                        'velocidade_vento'     => $ultimoRegistro['velocidade_vento'],
+                        'dir_vento'            => $ultimoRegistro['dir_vento'],
+                        'volume_chuva'         => $ultimoRegistro['volume_chuva'],
+                        'volume_acumulado_1h'  => $ultimoRegistro['volume_chuva_ac_1h'],
                         'volume_acumulado_24h' => $ultimoRegistro['volume_chuva_ac_24h'],
                         'volume_acumulado_96h' => $ultimoRegistro['volume_chuva_ac_96h']
                     ];
@@ -343,19 +382,22 @@ class EstacoesModel extends BaseModel
 
     public function getEventos($limit)
     {
+
+        $this->getArrayEstacoesComAcesso();
+
         $this->db->select('evento.id, evento.datahora, evento.tipo_evento_id, estacao.id AS estacao_id, estacao.descricao AS estacao_descricao, estacao.identificador as estacao_identificador')
                 ->from('evento')
                 ->join('estacao', 'evento.estacao_id = estacao.id')
                 ->order_by('evento.datahora', 'desc')
                 ->limit($limit);
-                $this->filtrarEstacoesComAcesso('estacao_id');
-               
+        $this->filtrarEstacoesComAcesso('estacao_id');
+
         $query = $this->db->get();
-       
+
         return $query->result_array();
     }
 
-    public function getUltimoRegistro($estacaoId, $limiteTempoEmMinutos = NULL) //pega o ultimo registro de cada estação para atualizar o mapa de monitoamento a cada 30seg
+    public function getUltimoRegistro($estacaoId, $limiteTempoEmMinutos = NULL, $cacheBD = false) //pega o ultimo registro de cada estação para atualizar o mapa de monitoamento a cada 30seg
     {
         $this->db->where('estacao_id', $estacaoId)
                 ->order_by('datahora', 'desc')
@@ -366,7 +408,16 @@ class EstacoesModel extends BaseModel
             $this->db->where('datahora >= date_sub(now(), INTERVAL ' . $limiteTempoEmMinutos . ' MINUTE)');
         }
 
-        return $this->db->get('v_leitura_calculada')
+        if ($cacheBD)
+        {
+            $tabela = 'leitura_calculada';
+        }
+        else
+        {
+            $tabela = 'v_leitura_calculada';
+        }
+
+        return $this->db->get($tabela)
                         ->row_array();
     }
 
@@ -377,51 +428,54 @@ class EstacoesModel extends BaseModel
 
     public function getEstacaoComDadosMeteorologicos()
     {
-        $result  = $this->getEstacoesComAcessoPorUsuario();
-
-        $imploded = implode(',', array_map('array_pop', $result));
-       
+        //$result = $this->getEstacoesComAcessoPorUsuario();
+        $this->getArrayEstacoesComAcesso();
+        // $imploded = implode(',', $result);
 
         $this->db->select('estacao.*, leitura.temperatura, leitura.velocidade_vento, leitura.volume_chuva');
         $this->db->from('estacao');
         $this->db->join('(SELECT estacao_id, MAX(id) AS max_id FROM leitura GROUP BY estacao_id) AS ultima_leitura', 'estacao.id = ultima_leitura.estacao_id', 'left');
         $this->db->join('leitura', 'ultima_leitura.max_id = leitura.id', 'left');
         $this->db->where('estacao.ativa', 1);
-        $this->db->where_in('`estacao`.`id`', explode(',',$imploded));
+        // $this->db->where_in('`estacao`.`id`', explode(',', $imploded));
+        $this->filtrarEstacoesComAcesso('`estacao`.`id`');
         return $this->db->get()->result();
     }
 
     public function getEmailsUsuariosPorEstacao($estacaoId)
     {
         return $this->db
-            ->select('u.email, u.nome')
-            ->from('Usuario u')
-            ->join('Usuario_Acessa_Estacao ue', 'u.id = ue.usuario_id')
-            ->where('ue.estacao_id', $estacaoId)
-            ->get()
-            ->result();
+                        ->select('u.email, u.nome')
+                        ->from('Usuario u')
+                        ->join('Usuario_Acessa_Estacao ue', 'u.id = ue.usuario_id')
+                        ->where('ue.estacao_id', $estacaoId)
+                        ->get()
+                        ->result();
     }
 
-
-    public function getEstacoesComAcessoPorUsuario(){
+    private function getEstacoesComAcessoPorUsuario()
+    {
         $this->load->model('LoginModel');
 
-        $usuario = $this->LoginModel->getDadosUsuarioLogado();
+        $usuario    = $this->LoginModel->getDadosUsuarioLogado();
         $usuario_id = $usuario['id'];
-        $grupos =  implode(", ", $usuario['grupos']);
+        $grupos     = implode(", ", $usuario['grupos']);
 
         $db = $this->db
-        ->distinct()->select('e.id')
-        ->from('estacao e')
-        ->join('usuario_acessa_estacao uas', 'uas.estacao_id = e.id','left')
-        ->join('grupo_acessa_estacao gas', 'gas.estacao_id = e.id','left')
-        ->where('gas.grupo_id in '.'('. $grupos.')')
-        ->or_where('uas.usuario_id', $usuario_id)
-        ->get()
-        ->result_array();
-        
+                ->distinct()->select('e.id')
+                ->from('estacao e')
+                ->join('usuario_acessa_estacao uas', 'uas.estacao_id = e.id', 'left')
+                ->join('grupo_acessa_estacao gas', 'gas.estacao_id = e.id', 'left')
+                ->where('gas.grupo_id in ' . '(' . $grupos . ')')
+                ->or_where('uas.usuario_id', $usuario_id)
+                ->get()
+                ->result_array();
+
+        $db = array_map(function ($linha)
+        {
+            return $linha['id'];
+        }, $db);
+
         return $db;
-
     }
-
 }

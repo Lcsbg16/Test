@@ -18,10 +18,13 @@ class Estacoes extends BasePrivateController
 
         $variaveisView['titulo_pagina'] = 'Mapa de Estações';
 
-        $estacoes  = $this->EstacoesModel->getEstacoesComAcessoPorUsuario();  
-        $imploded = implode(',', array_map('array_pop', $estacoes));
+        $this->EstacoesModel->getArrayEstacoesComAcesso();
 
-        $variaveisView['estacoes']      = $this->EstacoesModel->getEstacoes(true, explode(',',$imploded));
+        $estacoes = $this->EstacoesModel->estacoesComAcesso;
+        //$imploded = implode(',', $estacoes);
+
+
+        $variaveisView['estacoes'] = $this->EstacoesModel->getEstacoes(true, $this->EstacoesModel->estacoesComAcesso);
 
         $this->loadSmartyView('Estacoes/mapa', $variaveisView);
     }
@@ -35,11 +38,14 @@ class Estacoes extends BasePrivateController
 
         $variaveisView['titulo_pagina'] = 'Mapa de Monitoramento';
 
-        $estacoes  = $this->EstacoesModel->getEstacoesComAcessoPorUsuario();  
-        $imploded = implode(',', array_map('array_pop', $estacoes));
-       
-        $variaveisView['estacoes']      = $this->EstacoesModel->getEstacoes(true, explode(',',$imploded)) ;
-        $variaveisView['camadas']       = FiltrosLeitura::getTodosTiposInformacao();
+        $this->EstacoesModel->getArrayEstacoesComAcesso();
+
+        $estacoes = $this->EstacoesModel->estacoesComAcesso;
+        
+      //  $imploded = implode(',', $estacoes);
+
+        $variaveisView['estacoes'] = $this->EstacoesModel->getEstacoes(true, $this->EstacoesModel->estacoesComAcesso);
+        $variaveisView['camadas']  = FiltrosLeitura::getTodosTiposInformacao();
 
         $this->loadSmartyView('Estacoes/mapaMonitoramento', $variaveisView);
     }
@@ -71,7 +77,7 @@ class Estacoes extends BasePrivateController
 
         // Separa os IDs das estações em um array
         $estacoesIds = explode(',', $ids);
-       // var_dump($estacoesIds);
+        // var_dump($estacoesIds);
         $estacoes    = $this->EstacoesModel->getEstacoesGeoJson($idCamada, $atividade, $estacoesIds); //segundo argumento: os IDs das estações
         //var_dump($estacoes);
         /* TODO: Filtrar melhor aqui quais informações serão retornadas no json */
@@ -83,45 +89,46 @@ class Estacoes extends BasePrivateController
         header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
         header("Cache-Control: post-check=0, pre-check=0", false);
         header("Pragma: no-cache");
-    
+
         $this->load->model('EstacoesModel');
-    
+
         $eventos = $this->EstacoesModel->monitorarEstacao(5);
         foreach ($eventos as $evento)
         {
             $estacaoId  = $evento['estacao_id'];
             $eventoTipo = $evento['tipo_evento_id'];
             $mensagem   = $evento['mensagem'];
-    
+
             $estacao = $this->EstacoesModel->getEstacao($estacaoId);
-            $this->enviarEmailEvento($estacaoId, $estacao['descricao'], $mensagem, $eventoTipo); 
+            $this->enviarEmailEvento($estacaoId, $estacao['descricao'], $mensagem, $eventoTipo);
         }
         echo 'OK';
     }
-    
+
     public function enviarEmailEvento($estacaoId, $nomeEstacao, $evento, $tipoEvento)
     {
         $this->load->library('EmailUtil');
         $this->load->model('EstacoesModel');
-    
+
         $result = $this->EstacoesModel->getEmailsUsuariosPorEstacao($estacaoId);
-    
+
         if (!empty($result))
         {
             $assunto   = "Evento de Estação: $nomeEstacao $evento";
             $mensagem  = "A estação $nomeEstacao está $evento.";
             $remetente = EMAIL_FROM;
-    
+
             foreach ($result as $row)
             {
                 $destinatario = $row->email;
                 $this->emailutil->enviarEmail($assunto, $destinatario, $mensagem, $remetente);
             }
-    
+
             $adminEmail = ADMIN_EMAIL;
             $this->emailutil->enviarEmail($assunto, $adminEmail, $mensagem, $remetente);
         }
     }
+
     public function getLegendaMonitoramento($camada)
     {
         $this->jsonOutput('Legenda não disponível');
@@ -142,7 +149,7 @@ class Estacoes extends BasePrivateController
         $this->load->model('EstacoesModel');
         $this->load->model('LeiturasModel');
         $this->load->model('OcorrenciasModel');
-        
+
         $variaveisView = [];
 
         $variaveisView['titulo_pagina'] = 'Info';

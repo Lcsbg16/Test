@@ -36,7 +36,7 @@ class AdminEventos extends BaseCrudController
         $crud->set_relation('tipo_evento_id', 'tipo_evento', 'nome');
 
           // Filtros
-        $this->adicionaFiltroAcessoEstacao($crud,'`estacao_id`');
+        $this->adicionaFiltroAcessoEstacao($crud,'`estacao_id`',false);
 
         $crud->unset_add();
         $crud->unset_delete();
@@ -51,7 +51,7 @@ class AdminEventos extends BaseCrudController
             $this->session->admin_eventos_estacao_id = $estacao_id;
 
         }
-        $crud->where('estacao_id', $this->session->admin_eventos_estacao_id );
+       // $crud->where('estacao_id', $this->session->admin_eventos_estacao_id );
 
         $this->formatar_datahora($crud);
 

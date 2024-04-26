@@ -20,7 +20,7 @@ class AdminEstacoes extends BaseCrudController
     public function index()
     {
 
-       
+
 
         $crud = new AppGroceryCRUD();
 
@@ -30,7 +30,7 @@ class AdminEstacoes extends BaseCrudController
         $crud->set_subject('Estações');
 
         // Validações
-        $crud->required_fields('identificador', 'descricao');
+        $crud->required_fields('identificador', 'descricao', 'tipo');
         $crud->unique_fields('identificador');
 
         // Nomes dos campos
@@ -45,9 +45,11 @@ class AdminEstacoes extends BaseCrudController
         $crud->display_as('weathercloud_api_key', 'Wheather Cloud key');
         $crud->display_as('weathercloud_api_id', 'WeatherCloud - API ID');
         $crud->display_as('weathercloud_api_key', 'WeatherCloud - API Key');
+        $crud->display_as('weathercom_station_id', 'Weather.com - Station Id');
+        $crud->display_as('weathercom_api_key', 'Weather.com - API Key');
         $crud->display_as('foto_estacao', 'Foto da Estação');
         // Campos
-        $crud->fields('identificador', 'descricao', 'foto_estacao', 'endereco', '_coordenadas', 'ativa', '_usuarios', '_grupos', 'obs', 'latitude', 'longitude', 'weathercloud_api_id', 'weathercloud_api_key');
+        $crud->fields('identificador', 'tipo', 'descricao', 'foto_estacao', 'endereco', '_coordenadas', 'ativa', '_usuarios', '_grupos', 'obs', 'latitude', 'longitude', 'weathercloud_api_id', 'weathercloud_api_key', 'weathercom_station_id', 'weathercom_api_key');
 
         // Tipos de campos
         $crud->field_type('ativa', 'true_false', ['Inativa', 'Ativa']);
@@ -58,15 +60,14 @@ class AdminEstacoes extends BaseCrudController
 
         // Callbacks de campo
         $crud->callback_field('_coordenadas', array($this, 'callbackFieldCoordenadas'));
-        
-         // Filtros
-         $this->adicionaFiltroAcessoEstacao($crud, '`estacao`.`id`');
+
+        // Filtros
+        $this->adicionaFiltroAcessoEstacao($crud, '`estacao`.`id`', true);
 
         // Relacionamentos
         $crud->set_relation('endereco_id', 'endereco', 'descricao');
         $crud->set_relation_n_n('_grupos', 'grupo_acessa_estacao', 'grupo', 'estacao_id', 'grupo_id', 'nome');
         $crud->set_relation_n_n('_usuarios', 'usuario_acessa_estacao', 'usuario', 'estacao_id', 'usuario_id', 'nome', 'ordem');
-                  
 
         // Configurações da listagem
         $crud->columns('identificador', 'descricao', 'endereco', 'ativa');
@@ -79,10 +80,9 @@ class AdminEstacoes extends BaseCrudController
         $this->_crud_output($crud);
     }
 
-   
     public function callbackFieldCoordenadas($value = '', $primaryKey = NULL)
     {
-        
+
         if ($primaryKey)
         {
             $estacao   = $this->EstacoesModel->getEstacao($primaryKey);
@@ -100,17 +100,13 @@ class AdminEstacoes extends BaseCrudController
 
     public function callbackBeforeProcess($postArray, $primaryKey = NULL)
     {
-       
-            $usuario = $this->LoginModel->getDadosUsuarioLogado();
-            $postArray['_usuarios'][]  = $usuario['id'];
-       
-               
+
+        $usuario                  = $this->LoginModel->getDadosUsuarioLogado();
+        $postArray['_usuarios'][] = $usuario['id'];
+
         $postArray['latitude']  = $this->input->post('latitude') ? strtr($this->input->post('latitude'), ['.' => '', ',' => '.']) : NULL;
         $postArray['longitude'] = $this->input->post('longitude') ? strtr($this->input->post('longitude'), ['.' => '', ',' => '.']) : NULL;
 
         return $postArray;
     }
-
-
-
 }
