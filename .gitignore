@@ -38,3 +38,6 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 /application/third_party/composer/
 /application/vendor/
 !/composer.lock
+/assets/uploads/*
+!/assets/uploads/files/index.html
+!/assets/uploads/estacao/index.html
