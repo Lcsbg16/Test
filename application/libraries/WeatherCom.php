@@ -3,7 +3,7 @@
 /**
  * Lê dados de estações publicadas no Weather.com
  */
-class WeatherCom
+class Weathercom
 {
 
     const BASE_URL = 'https://api.weather.com/v2/pws/observations/current';
