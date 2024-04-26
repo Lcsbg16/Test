@@ -20,7 +20,7 @@ class AdminEstacoes extends BaseCrudController
     public function index()
     {
 
-       
+
 
         $crud = new AppGroceryCRUD();
 
@@ -30,7 +30,7 @@ class AdminEstacoes extends BaseCrudController
         $crud->set_subject('Estações');
 
         // Validações
-        $crud->required_fields('identificador', 'descricao');
+        $crud->required_fields('identificador', 'descricao', 'tipo');
         $crud->unique_fields('identificador');
 
         // Nomes dos campos
@@ -60,15 +60,14 @@ class AdminEstacoes extends BaseCrudController
 
         // Callbacks de campo
         $crud->callback_field('_coordenadas', array($this, 'callbackFieldCoordenadas'));
-        
-         // Filtros
-         $this->adicionaFiltroAcessoEstacao($crud, '`estacao`.`id`',true);
+
+        // Filtros
+        $this->adicionaFiltroAcessoEstacao($crud, '`estacao`.`id`', true);
 
         // Relacionamentos
         $crud->set_relation('endereco_id', 'endereco', 'descricao');
         $crud->set_relation_n_n('_grupos', 'grupo_acessa_estacao', 'grupo', 'estacao_id', 'grupo_id', 'nome');
         $crud->set_relation_n_n('_usuarios', 'usuario_acessa_estacao', 'usuario', 'estacao_id', 'usuario_id', 'nome', 'ordem');
-                  
 
         // Configurações da listagem
         $crud->columns('identificador', 'descricao', 'endereco', 'ativa');
@@ -76,14 +75,13 @@ class AdminEstacoes extends BaseCrudController
         // Callbacks de processamento
         $crud->callback_before_insert(array($this, 'callbackBeforeProcess'));
         $crud->callback_before_update(array($this, 'callbackBeforeProcess'));
-       
+
         $this->_crud_output($crud);
     }
 
-   
     public function callbackFieldCoordenadas($value = '', $primaryKey = NULL)
     {
-        
+
         if ($primaryKey)
         {
             $estacao   = $this->EstacoesModel->getEstacao($primaryKey);
@@ -101,17 +99,13 @@ class AdminEstacoes extends BaseCrudController
 
     public function callbackBeforeProcess($postArray, $primaryKey = NULL)
     {
-       
-            $usuario = $this->LoginModel->getDadosUsuarioLogado();
-            $postArray['_usuarios'][]  = $usuario['id'];
-       
-               
+
+        $usuario                  = $this->LoginModel->getDadosUsuarioLogado();
+        $postArray['_usuarios'][] = $usuario['id'];
+
         $postArray['latitude']  = $this->input->post('latitude') ? strtr($this->input->post('latitude'), ['.' => '', ',' => '.']) : NULL;
         $postArray['longitude'] = $this->input->post('longitude') ? strtr($this->input->post('longitude'), ['.' => '', ',' => '.']) : NULL;
 
         return $postArray;
     }
-
-
-
 }
