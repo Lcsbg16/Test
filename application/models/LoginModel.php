@@ -38,9 +38,7 @@ class LoginModel extends BaseModel
         {
             throw new LoginError('Usuário ou senha não conferem.');
         }
-        $this->getParametroControleAcesso();
 
-        
         return $this->setUsuarioLogado($usr['id']);
     }
 
@@ -150,16 +148,6 @@ class LoginModel extends BaseModel
             return false;
         }
     }
-
-    private function getParametroControleAcesso(){
-        $this->load->model('ParametrosModel');
-        $this->load->library('session');
-
-        $parametro = $this->ParametrosModel->getParametros('CONTROLE_ACESSO_ESTACAO');
-        //var_dump($parametro);
-        $this->session->parametroControleAcesso = $parametro;
-
-}
 }
 
 class LoginError extends Exception

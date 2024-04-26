@@ -9,18 +9,16 @@ class EstacoesModel extends BaseModel
 
     public function __construct()
     {
-       
+
         parent::__construct();
     }
 
-   
-
     public function getArrayEstacoesComAcesso($filtrar = false)
     {
-        $parametro_filtro_estacoes = $this->session->parametroControleAcesso['valor'];
-       
+        $parametro_filtro_estacoes = CONTROLE_ACESSO_ESTACAO;
 
-        if($parametro_filtro_estacoes == "true" OR $filtrar == true){
+        if ($parametro_filtro_estacoes == "true" OR $filtrar == true)
+        {
             $this->estacoesComAcesso = $this->getEstacoesComAcessoPorUsuario();
 
             if ($this->estacoesComAcesso)
@@ -28,18 +26,19 @@ class EstacoesModel extends BaseModel
                 $imploded                = implode(',', $this->estacoesComAcesso);
                 $this->estacoesComAcesso = explode(',', $imploded);
             }
-        }else{
+        }
+        else
+        {
             $this->estacoesComAcesso = array();
         }
-        
-
     }
 
     public function filtrarEstacoesComAcesso($fild, $filtrar = false)
     {
-        $parametro_filtro_estacoes = $this->session->parametroControleAcesso['valor'];
+        $parametro_filtro_estacoes = CONTROLE_ACESSO_ESTACAO;
 
-        if($parametro_filtro_estacoes == "true" OR $filtrar == true){
+        if ($parametro_filtro_estacoes == "true" OR $filtrar == true)
+        {
             if (!$this->estacoesComAcesso)
             {
                 $this->db->where_in($fild, 'NULL');
@@ -49,7 +48,6 @@ class EstacoesModel extends BaseModel
                 $this->db->where_in($fild, $this->estacoesComAcesso);
             }
         }
-       
     }
 
     /**
@@ -189,7 +187,7 @@ class EstacoesModel extends BaseModel
             $this->db->where('ativa', true);
         }
 
-       
+
         if (!empty($ids))
         {
             $this->db->where_in('id', $ids);
@@ -197,7 +195,6 @@ class EstacoesModel extends BaseModel
 
         $estacoes = $this->db->get('estacao')->result_array();
 
-       
         foreach ($estacoes as $index => $estacaoAtual)
         {
             $estacoes[$index]['online'] = $this->getEstacaoOnline($estacaoAtual['id']);
@@ -216,9 +213,9 @@ class EstacoesModel extends BaseModel
             $this->db->where('ativa', TRUE);
         }
 
-       // $result   = $this->getEstacoesComAcessoPorUsuario();
+        // $result   = $this->getEstacoesComAcessoPorUsuario();
         ////$imploded = implode(',',  $result);
-       // $this->db->where_in('`estacao`.`id`', explode(',', $imploded));
+        // $this->db->where_in('`estacao`.`id`', explode(',', $imploded));
         $this->filtrarEstacoesComAcesso('`estacao`.`id`');
         return $this->db->count_all_results('estacao');
     }
@@ -281,7 +278,6 @@ class EstacoesModel extends BaseModel
             }
         }
         $geojson = ['type' => 'FeatureCollection', 'features' => $estacoes];
-        
 
         return $geojson;
     }
@@ -430,15 +426,15 @@ class EstacoesModel extends BaseModel
     {
         //$result = $this->getEstacoesComAcessoPorUsuario();
         $this->getArrayEstacoesComAcesso();
-       // $imploded = implode(',', $result);
+        // $imploded = implode(',', $result);
 
         $this->db->select('estacao.*, leitura.temperatura, leitura.velocidade_vento, leitura.volume_chuva');
         $this->db->from('estacao');
         $this->db->join('(SELECT estacao_id, MAX(id) AS max_id FROM leitura GROUP BY estacao_id) AS ultima_leitura', 'estacao.id = ultima_leitura.estacao_id', 'left');
         $this->db->join('leitura', 'ultima_leitura.max_id = leitura.id', 'left');
         $this->db->where('estacao.ativa', 1);
-       // $this->db->where_in('`estacao`.`id`', explode(',', $imploded));
-       $this->filtrarEstacoesComAcesso('`estacao`.`id`');
+        // $this->db->where_in('`estacao`.`id`', explode(',', $imploded));
+        $this->filtrarEstacoesComAcesso('`estacao`.`id`');
         return $this->db->get()->result();
     }
 
