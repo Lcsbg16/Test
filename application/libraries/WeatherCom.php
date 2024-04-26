@@ -25,8 +25,8 @@ class WeatherCom
         $urlRequisicao = self::BASE_URL . '?stationId=' . $stationId . '&format=' . $format . '&units=' . $this->units . '&apiKey=' . $apiKey;
         if ($dadosLeitura  = file_get_contents($urlRequisicao))
         {
-            $dadosLeituraArray = json_decode($dadosLeitura);
-            return $dadosLeituraArray->observations;
+            $dadosLeituraArray = json_decode($dadosLeitura, true);
+            return $dadosLeituraArray['observations'][0];
         }
         else
         {

@@ -174,7 +174,7 @@ class EstacoesModel extends BaseModel
         return $evento['tipo_evento_id'] == $idTipoEventoOnline;
     }
 
-    public function getEstacoes($somenteAtivas = FALSE, $ids = array())
+    public function getEstacoes($somenteAtivas = FALSE, $ids = array(), $tipo = NULL)
     {
 
 
@@ -187,10 +187,14 @@ class EstacoesModel extends BaseModel
             $this->db->where('ativa', true);
         }
 
-
         if (!empty($ids))
         {
             $this->db->where_in('id', $ids);
+        }
+
+        if ($tipo)
+        {
+            $this->db->where('tipo', $tipo);
         }
 
         $estacoes = $this->db->get('estacao')->result_array();
