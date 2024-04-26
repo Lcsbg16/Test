@@ -163,7 +163,7 @@ class Api extends BaseController
                         'payload'           => json_encode($dadosLeituraRaw)
                     ];
 
-                    $this->db->db_debug = TRUE;
+                    $this->db->db_debug = FALSE;
                     $this->LeiturasModel->inserirLeitura($estacaoAtual['id'], $dadosLeitura);
                 }
             }
