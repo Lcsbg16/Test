@@ -347,6 +347,12 @@ class EstacoesModel extends BaseModel
         return $eventos;
     }
 
+    /**
+     * Retorna a última leitura, baseando-se na data/hora de cadastro da leitura no banco de dados
+     *
+     * @param int $estacaoId
+     * @return array
+     */
     private function getUltimaLeitura($estacaoId)
     {
         return $this->db->where('estacao_id', $estacaoId)
@@ -397,6 +403,14 @@ class EstacoesModel extends BaseModel
         return $query->result_array();
     }
 
+    /**
+     * Retorna a última leitura, considerando a data da leitura, registrada pela estação
+     *
+     * @param int $estacaoId
+     * @param int $limiteTempoEmMinutos
+     * @param bool $cacheBD
+     * @return array
+     */
     public function getUltimoRegistro($estacaoId, $limiteTempoEmMinutos = NULL, $cacheBD = false) //pega o ultimo registro de cada estação para atualizar o mapa de monitoamento a cada 30seg
     {
         $this->db->where('estacao_id', $estacaoId)
