@@ -1,6 +1,18 @@
+<<<<<<< Updated upstream
 .flash-message{
 
 }
 .alert{
     z-index:5
+=======
+.flash-message{
+
+}
+.alert{
+    z-index:5
+}
+
+.mensagem_card_alerta{
+    font-size: 1rem;
+>>>>>>> Stashed changes
 }
