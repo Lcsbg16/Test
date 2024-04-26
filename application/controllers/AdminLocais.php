@@ -42,6 +42,7 @@ class AdminLocais extends BaseCrudController
         // Relacionamentos
         $crud->set_relation_n_n('_grupos', 'grupo_acessa_endereco', 'grupo', 'endereco_id', 'grupo_id', 'nome');
 
+        $this->_adicionarCallbacksDePosProcessamentoPadrao($crud);
         $this->_crud_output($crud);
     }
 

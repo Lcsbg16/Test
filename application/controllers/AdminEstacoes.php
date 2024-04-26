@@ -75,7 +75,8 @@ class AdminEstacoes extends BaseCrudController
         // Callbacks de processamento
         $crud->callback_before_insert(array($this, 'callbackBeforeProcess'));
         $crud->callback_before_update(array($this, 'callbackBeforeProcess'));
-
+       
+        $this->_adicionarCallbacksDePosProcessamentoPadrao($crud);
         $this->_crud_output($crud);
     }
 

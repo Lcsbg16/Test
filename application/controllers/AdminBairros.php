@@ -31,6 +31,7 @@ class AdminBairros extends BaseCrudController
         // Relacionamentos
         $crud->set_relation('cidade_id', 'cidade', 'nome');
 
+        $this->_adicionarCallbacksDePosProcessamentoPadrao($crud);
         $this->_crud_output($crud);
     }
 

@@ -55,6 +55,7 @@ class AdminEventos extends BaseCrudController
 
         $this->formatar_datahora($crud);
 
+       $this->_adicionarCallbacksDePosProcessamentoPadrao($crud);
        return $this->_crud_output($crud);
     }
 
