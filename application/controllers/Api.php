@@ -186,6 +186,7 @@ class Api extends BaseController
 
         $this->retornoApi['tempo_processamento'] = $interval->format('%H:%I:%S');
 
+        header('Content-Type: application/json');
         echo json_encode($this->retornoApi);
     }
 }
