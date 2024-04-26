@@ -45,9 +45,11 @@ class AdminEstacoes extends BaseCrudController
         $crud->display_as('weathercloud_api_key', 'Wheather Cloud key');
         $crud->display_as('weathercloud_api_id', 'WeatherCloud - API ID');
         $crud->display_as('weathercloud_api_key', 'WeatherCloud - API Key');
+        $crud->display_as('weathercom_station_id', 'Weather.com - Station Id');
+        $crud->display_as('weathercom_api_key', 'Weather.com - API Key');
         $crud->display_as('foto_estacao', 'Foto da Estação');
         // Campos
-        $crud->fields('identificador', 'descricao', 'foto_estacao', 'endereco', '_coordenadas', 'ativa', '_usuarios', '_grupos', 'obs', 'latitude', 'longitude', 'weathercloud_api_id', 'weathercloud_api_key');
+        $crud->fields('identificador', 'tipo', 'descricao', 'foto_estacao', 'endereco', '_coordenadas', 'ativa', '_usuarios', '_grupos', 'obs', 'latitude', 'longitude', 'weathercloud_api_id', 'weathercloud_api_key', 'weathercom_station_id', 'weathercom_api_key');
 
         // Tipos de campos
         $crud->field_type('ativa', 'true_false', ['Inativa', 'Ativa']);
