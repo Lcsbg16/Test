@@ -41,8 +41,8 @@ class Estacoes extends BasePrivateController
         $this->EstacoesModel->getArrayEstacoesComAcesso();
 
         $estacoes = $this->EstacoesModel->estacoesComAcesso;
-        
-      //  $imploded = implode(',', $estacoes);
+
+        //  $imploded = implode(',', $estacoes);
 
         $variaveisView['estacoes'] = $this->EstacoesModel->getEstacoes(true, $this->EstacoesModel->estacoesComAcesso);
         $variaveisView['camadas']  = FiltrosLeitura::getTodosTiposInformacao();

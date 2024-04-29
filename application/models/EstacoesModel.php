@@ -290,17 +290,17 @@ class EstacoesModel extends BaseModel
     {
         $this->load->model('LeiturasModel');
 
+        $corDaEstacao = '#0000FF';
         switch ($camada)
         {
             case FiltrosLeitura::TIPO_VOLUME_CHUVA:
-                $coresPluviometria = $this->LeiturasModel->getCoresNiveisAlertasPluviometria();
-                $nivel             = $this->LeiturasModel->calcularAlertaPluviometria($leitura);
-                $corDaEstacao      = $coresPluviometria[$nivel];
-
+                if ($leitura)
+                {
+                    $coresPluviometria = $this->LeiturasModel->getCoresNiveisAlertasPluviometria();
+                    $nivel             = $this->LeiturasModel->calcularAlertaPluviometria($leitura);
+                    $corDaEstacao      = $coresPluviometria[$nivel];
+                }
                 break;
-
-            default:
-                $corDaEstacao = '#0000FF';
         }
 
         $camadaRetorno = [

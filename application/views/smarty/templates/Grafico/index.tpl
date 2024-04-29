@@ -16,7 +16,7 @@
         }
 
         .col-xl-personalizado{
-           max-width: 14.2857%; /* 100% / 7 elementos */
+            max-width: 14.2857%; /* 100% / 7 elementos */
         }
     </style>
 
@@ -70,12 +70,12 @@
                             </div>
 
                             <div class="col-sm-12 col-md-4 col-xl-personalizado align-items-center">
-                        <label>Seleção Rápida</label><br>
-                    <button type="button" class="btn btn-sm btn-primary" style="height: 30px; margin: 0 !important; justify-content: center;" onclick="selecionaDiaAtual()">Dia</button>
-                    <button type="button" class="btn btn-sm btn-primary" style="height: 30px; margin: 0 !important; justify-content: center;" onclick="selecionaSemanaAtual()">Semana</button>
-                    <button type="button" class="btn btn-sm btn-primary" style="height: 30px; margin: 0 !important; justify-content: center;" onclick="selecionaMesAtual()">Mês</button>
+                                <label>Seleção Rápida</label><br>
+                                <button type="button" class="btn btn-sm btn-primary" style="height: 30px; margin: 0 !important; justify-content: center;" onclick="selecionaDiaAtual()">Dia</button>
+                                <button type="button" class="btn btn-sm btn-primary" style="height: 30px; margin: 0 !important; justify-content: center;" onclick="selecionaSemanaAtual()">Semana</button>
+                                <button type="button" class="btn btn-sm btn-primary" style="height: 30px; margin: 0 !important; justify-content: center;" onclick="selecionaMesAtual()">Mês</button>
 
-                    </div>
+                            </div>
 
                         </div>
                     </div>
@@ -94,35 +94,35 @@
         </div>
     </div>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#estacao_selecionada").multiselect({
-            includeSelectAllOption: true,
-            buttonWidth: '100%'
-        });
-
-        function aplicarFiltro() {
-            var startDate = $("#dataInicial").val(); // Correto: usando startDate
-            var endDate = $("#dataFinal").val();     // Correto: usando endDate
-
-            $.ajax({
-                type: "POST",
-                url: "{$BASE_URL}AdminLeituras/index",
-                data: {
-                    startDate: startDate,  // Corrigido: usando startDate
-                    endDate: endDate      // Corrigido: usando endDate
-                },
-                success: function (data) {
-                    // Atualize a visualização com os dados filtrados usando o Smarty, por exemplo, {$data}
-                    console.log("Dados filtrados com sucesso");
-                },
-                error: function (error) {
-                    console.error("Erro ao aplicar o filtro de datas: " + error);
-                }
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#estacao_selecionada").multiselect({
+                includeSelectAllOption: true,
+                buttonWidth: '100%'
             });
-        }
-    });
-</script>
+
+            function aplicarFiltro() {
+                var startDate = $("#dataInicial").val(); // Correto: usando startDate
+                var endDate = $("#dataFinal").val();     // Correto: usando endDate
+
+                $.ajax({
+                    type: "POST",
+                    url: "{$BASE_URL}Leituras/index",
+                    data: {
+                        startDate: startDate, // Corrigido: usando startDate
+                        endDate: endDate      // Corrigido: usando endDate
+                    },
+                    success: function (data) {
+                        // Atualize a visualização com os dados filtrados usando o Smarty, por exemplo, {$data}
+                        console.log("Dados filtrados com sucesso");
+                    },
+                    error: function (error) {
+                        console.error("Erro ao aplicar o filtro de datas: " + error);
+                    }
+                });
+            }
+        });
+    </script>
 
 
 
@@ -131,45 +131,45 @@
         <script>
 
 //////BOTÕES FACILITADORES DE SELECÃO DE DIA MES E SEMANA ////////
-function selecionaDiaAtual(){
-        let dataAtual = new Date();
-        let dataFinalAtual = ("0" + dataAtual.getDate()).slice(-2) + "/" + ("0" + (dataAtual.getMonth() + 1)).slice(-2) + "/" + dataAtual.getFullYear();
-        $('#dataFinal').val(dataFinalAtual);
+            function selecionaDiaAtual() {
+                let dataAtual = new Date();
+                let dataFinalAtual = ("0" + dataAtual.getDate()).slice(-2) + "/" + ("0" + (dataAtual.getMonth() + 1)).slice(-2) + "/" + dataAtual.getFullYear();
+                $('#dataFinal').val(dataFinalAtual);
 
-        let dataInicial = new Date();
-        let dataInicialCorrigida = ("0" + dataInicial.getDate()).slice(-2) + "/" + ("0" + (dataInicial.getMonth() + 1)).slice(-2) + "/" + dataInicial.getFullYear();
-        $('#dataInicial').val(dataInicialCorrigida);
-        HandleAjax();
-    }
+                let dataInicial = new Date();
+                let dataInicialCorrigida = ("0" + dataInicial.getDate()).slice(-2) + "/" + ("0" + (dataInicial.getMonth() + 1)).slice(-2) + "/" + dataInicial.getFullYear();
+                $('#dataInicial').val(dataInicialCorrigida);
+                HandleAjax();
+            }
 
-    function selecionaMesAtual(){
-        let dataAtual = new Date();
-        let dataFinalAtual = ("0" + dataAtual.getDate()).slice(-2) + "/" + ("0" + (dataAtual.getMonth() + 1)).slice(-2) + "/" + dataAtual.getFullYear();
-        $('#dataFinal').val(dataFinalAtual);
+            function selecionaMesAtual() {
+                let dataAtual = new Date();
+                let dataFinalAtual = ("0" + dataAtual.getDate()).slice(-2) + "/" + ("0" + (dataAtual.getMonth() + 1)).slice(-2) + "/" + dataAtual.getFullYear();
+                $('#dataFinal').val(dataFinalAtual);
 
-        let dataInicial = new Date();
-        dataInicial.setDate(1);
-        let dataInicialCorrigida = ("0" + dataInicial.getDate()).slice(-2) + "/" + ("0" + (dataInicial.getMonth() + 1)).slice(-2) + "/" + dataInicial.getFullYear();
-        $('#dataInicial').val(dataInicialCorrigida);
-        HandleAjax();
-    }
+                let dataInicial = new Date();
+                dataInicial.setDate(1);
+                let dataInicialCorrigida = ("0" + dataInicial.getDate()).slice(-2) + "/" + ("0" + (dataInicial.getMonth() + 1)).slice(-2) + "/" + dataInicial.getFullYear();
+                $('#dataInicial').val(dataInicialCorrigida);
+                HandleAjax();
+            }
 
-    function selecionaSemanaAtual(){ //considera o primeiro dia da semana como domingo 
-        let dataAtual = new Date();
-        let dataFinalAtual = ("0" + dataAtual.getDate()).slice(-2) + "/" + ("0" + (dataAtual.getMonth() + 1)).slice(-2) + "/" + dataAtual.getFullYear();
-        $('#dataFinal').val(dataFinalAtual);
+            function selecionaSemanaAtual() { //considera o primeiro dia da semana como domingo
+                let dataAtual = new Date();
+                let dataFinalAtual = ("0" + dataAtual.getDate()).slice(-2) + "/" + ("0" + (dataAtual.getMonth() + 1)).slice(-2) + "/" + dataAtual.getFullYear();
+                $('#dataFinal').val(dataFinalAtual);
 
-        let dataInicial = new Date();
-        let diaAtual = dataInicial.getDay();
-        let inicioSemana = new Date(dataInicial);
-        inicioSemana.setDate(dataInicial.getDate() - diaAtual)
-        let dataInicialCorrigida = ("0" + inicioSemana.getDate()).slice(-2) + "/" + ("0" + (inicioSemana.getMonth() + 1)).slice(-2) + "/" + inicioSemana.getFullYear();
-        $('#dataInicial').val(dataInicialCorrigida);
-        HandleAjax();
-    }
+                let dataInicial = new Date();
+                let diaAtual = dataInicial.getDay();
+                let inicioSemana = new Date(dataInicial);
+                inicioSemana.setDate(dataInicial.getDate() - diaAtual)
+                let dataInicialCorrigida = ("0" + inicioSemana.getDate()).slice(-2) + "/" + ("0" + (inicioSemana.getMonth() + 1)).slice(-2) + "/" + inicioSemana.getFullYear();
+                $('#dataInicial').val(dataInicialCorrigida);
+                HandleAjax();
+            }
 
 
-   /////////// ///// Atualiza o select de tipos de informação
+            /////////// ///// Atualiza o select de tipos de informação
             const tiposInformacao = {
                 "volume_chuva": "Volume de Chuva (mm³)",
                 "temperatura": "Temperatura (°C)",
@@ -197,36 +197,35 @@ function selecionaDiaAtual(){
                     let tipo_dados = "TIPO_VOLUME_CHUVA";
                     console.log("Dado de volume de chuva selecionado por padrão");
                     return tipo_dados; // Quando o usuário não selecionar nada, por padrão, o gráfico vai iniciar com o volume de chuva que é a info mais importante pro monitoramento
-                }
-                else {
+                } else {
                     let tipo_dados;
-                        switch (tipo_informacao)
-                        {
-                            case 'temperatura':
-                                tipo_dados = "TIPO_TEMPERATURA";
-                                break;
-                            case 'volume_chuva':
-                                tipo_dados = "TIPO_VOLUME_CHUVA";
-                                break;
-                            case 'umidade_ar':
-                                tipo_dados = "TIPO_UMIDADE_AR";
-                                break;
-                            case 'velocidade_vento':
-                                tipo_dados = "TIPO_VELOCIDADE_VENTO";
-                                break;
-                                default:
-                                tipo_dados = "TIPO_VOLUME_CHUVA";
-                                console.log(`Erro na seleção de dados. Selecionado padrão default "volume de chuvas"`);
+                    switch (tipo_informacao)
+                    {
+                        case 'temperatura':
+                            tipo_dados = "TIPO_TEMPERATURA";
+                            break;
+                        case 'volume_chuva':
+                            tipo_dados = "TIPO_VOLUME_CHUVA";
+                            break;
+                        case 'umidade_ar':
+                            tipo_dados = "TIPO_UMIDADE_AR";
+                            break;
+                        case 'velocidade_vento':
+                            tipo_dados = "TIPO_VELOCIDADE_VENTO";
+                            break;
+                        default:
+                            tipo_dados = "TIPO_VOLUME_CHUVA";
+                            console.log(`Erro na seleção de dados. Selecionado padrão default "volume de chuvas"`);
 
-                        }
-                        return tipo_dados;
+                    }
+                    return tipo_dados;
                 }
-               
+
             }
 
 
             function GetEstacao() { //função que pega a descriçao da estação selecionada
-                let estacao = $("#estacao_selecionada").val(); 
+                let estacao = $("#estacao_selecionada").val();
                 let estacao_infos = new Array(); //Array com a estação selecionada e sua descrição
                 estacao_infos.push(estacao); //estacao_infos[0] == ID da estação
 
@@ -238,7 +237,7 @@ function selecionaDiaAtual(){
                         selectedOptions.push(descricao);
                     });
 
-                  let  resultado = [estacao, selectedOptions]  //estação = indice // selectedOption = texto da estação
+                    let  resultado = [estacao, selectedOptions]  //estação = indice // selectedOption = texto da estação
                     return resultado;
                 } else {
                     GerarGrafico(0, 0, "Nenhuma estação selecionada", 0);
@@ -306,11 +305,11 @@ function selecionaDiaAtual(){
                 } catch (e) {
                     console.log(e.message)
                 }
-        
+
 
                 try {
                     $.ajax({
-                        url: "AdminLeituras/getEstatisticasLeiturasJson",
+                        url: "Leituras/getEstatisticasLeiturasJson",
                         dataType: "json",
                         method: "POST",
                         data: {
@@ -321,7 +320,7 @@ function selecionaDiaAtual(){
                             tipo_dados: tipo_dados},
 
                         success: function (data) {
-                           
+
                             //salva as keys/chaves como os periodos de tempo (no model: o dado vem como 2023=>20.55, ou seja, key = periodo
                             const periodos = Object.keys(data).map(function (key) {
                                 return key;

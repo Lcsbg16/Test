@@ -294,7 +294,7 @@
             let graficoVolChuva = document.getElementById("graficoVolChuva");
 
                     $.ajax({
-                        url: "{$BASE_URL}AdminLeituras/getEstatisticasLeiturasJson",
+                        url: "{$BASE_URL}Leituras/getEstatisticasLeiturasJson",
                         dataType: "json",
                         method: "POST",
                         data: {
@@ -359,7 +359,7 @@
         function handleAjax(card_id, estacao_id, tipo_dados)
     { 
                  $.ajax({
-                        url: "{$BASE_URL}/AdminLeituras/getUltimaLeituraRegistrada",
+                        url: "{$BASE_URL}/Leituras/getUltimaLeituraRegistrada",
                         dataType: "json",
                         method: "POST",
                         data: {
