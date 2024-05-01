@@ -1,4 +1,4 @@
-<div class="col-xl-4 col-lg-6" id="card_acumuladoChuva">
+<div class="col-xl-6 col-md=6 col-lg-6" id="card_acumuladoChuva">
     <div class="card card-stats mb-4 mb-xl-4">
         <div class="card-body" style="max-height: 150px; padding: 0!important;">
             <div class="row">
