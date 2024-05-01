@@ -44,9 +44,11 @@ class Estacoes extends BasePrivateController
 
         $variaveisView['titulo_pagina'] = 'Monitoramento individual de estações';
         $variaveisView['estacao']       = $this->EstacoesModel->getEstacao($id_estacao);
+        $variaveisView['foto_estacao']       = $this->EstacoesModel->obterFotoEstacao($id_estacao); //jaque 01/05
         $variaveisView['eventos']       = json_decode(json_encode($this->EstacoesModel->getEventos(4)), true); //Adicionei ao view de monitoramento individual a variavel $eventos, para controlar os ultimos eventos da estação
 
         $this->loadSmartyView('Estacoes/monitoramentoIndividual', $variaveisView);
+
     }
 
     public function getEstacoesGeoJson($idCamada = NULL)
@@ -128,4 +130,6 @@ class Estacoes extends BasePrivateController
 
         $this->enviarEmailEvento($estacaoId, $nomeEstacao, $evento);
     }
+
+
 }
