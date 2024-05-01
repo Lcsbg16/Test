@@ -169,7 +169,7 @@
                         }
                     });
                 }
-                //carregarCardAcumuladoChuva();
+                carregarCardAcumuladoChuva();
 
 
 
