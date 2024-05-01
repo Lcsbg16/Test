@@ -155,7 +155,7 @@
                         url: url,
                         method: 'GET',
                         success: function (response) {
-                            let responseHTML = $(response);  
+                            let responseHTML = $(response);
 
                             if (responseHTML.find('.carousel-item').length > 0) {
                                 $('#alert_cards_row').addClass('acumuladoChuvaPorPeriodo');
@@ -196,7 +196,7 @@
                             }
                         },
                         error: function (error) {
-                           
+
                             console.error('Erro na requisição AJAX ao carregar card de alerta:', error);
                         }
                     });
@@ -234,8 +234,8 @@
                         desenharCardMonitoramento(card.url, card.id);
                     });
 
-                    carregarCardsAlerta();
                     carregarCardAcumuladoChuva();
+                    carregarCardsAlerta();
                 }
                 atualizarCards();
                 setInterval(atualizarCards, 120000);
