@@ -35,7 +35,7 @@
                     <div class="card-body card-body-top" style="padding-bottom: 0;">
                         <div class="row justify-content-center"> 
                             <div class="col-lg-4 col-sm-12 form-group">
-                                <label for="camada_id">Camada:</label>
+                                <label for="camada_id">Camada: </label>
                                 <select class="form-control form-control-sm change_controller" id="camada_id" name="camada_id">
                                     {html_options options=$camadas}
                                 </select>

@@ -71,6 +71,28 @@
                     shadowSize: [41, 41]
                 });
 
+                var offlineExternalIcon = L.icon({
+                    iconUrl: BASE_URL + 'assets/images/grey_external_marker.png',
+                    shadowUrl: BASE_URL + 'assets/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    tooltipAnchor: [16, -28],
+                    shadowSize: [41, 41]
+                });
+
+                var onlineExternalIcon = L.icon({
+                    iconUrl: BASE_URL + 'assets/images/blue_internal_marker.png',
+                    shadowUrl: BASE_URL + 'assets/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    tooltipAnchor: [16, -28],
+                    shadowSize: [41, 41]
+                });
+
+
+
                 function criaMapa() {
                     var map = L.map('map').setView([-22.368461, -41.774747], 13);
 
@@ -108,11 +130,18 @@
                                 estacoes = L.geoJSON([data], {
                                     onEachFeature: onEachFeature,
                                     pointToLayer: function (feature, latlng)
-                                    {
-                                        //console.log(feature)
-                                        if (!feature.properties.estacao.online)
-                                        {
+                                    {   console.log("dados da estacao");
+                                        console.log(feature.properties.estacao);
+                                        if (!feature.properties.estacao.online && feature.properties.estacao.tipo != "interna") 
+                                        { //se a extação estiver offline e não for interna, adc icone de extação offline externa
+                                            opcoesIcone = {icon: offlineExternalIcon};
+                                        } else if (!feature.properties.estacao.online && feature.properties.estacao.tipo == "interna"){
+                                        //estação offline mas interna   
                                             opcoesIcone = {icon: offlineIcon};
+                                        } else if (feature.properties.estacao.online && feature.properties.estacao.tipo != "interna"){
+                                        //estação online mas externas
+                                        opcoesIcone = {icon: onlineExternalIcon};
+
                                         } else
                                         {
                                             opcoesIcone = {};
