@@ -10,7 +10,10 @@
         <div class="col">
             <div class="card shadow" >
                 <div class="card-body">
-                <!-- INFORMAÇÕES DA ESTAÇÃO -->
+                <!-- INFORMAÇÕES DA ESTAÇÃO --> 
+                {if $foto_estacao}
+                <img src="{$BASE_URL}assets\uploads\estacao\{$foto_estacao}" alt="Foto da Estação" style="height: 100%;position: absolute;left: 10px;top: 0;width: auto;">
+                {/if}
                 <h5 class="text-center"> Identificação da Estação: </h5> <h2 class="card-title text-center"  id="estacao_id"> </h2> 
                 <h6 class="card-subtitle mb-2 text-muted text-center">A última leitura foi realizada em:  </h6>
                 <h6 class="card-subtitle mb-2 text-muted text-center" id='leitura_label'>data/hora ultima leitura </h6>
@@ -116,6 +119,23 @@
                                 </div>
                             </div>
                     </div>
+                    <div class="col-xl-6 col-lg-6 p-1">
+                    <div class="card card-stats mb-4 mb-xl-4">
+                        <div class="card-body" style="min-height: 100px !important;">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Rajada de Vento:</h5>
+                                    <span class="h2 font-weight-bold mb-0" id="card_rajada_vento"> </span> <span class="h3 font-weight-bold mb-0"> mm </span>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="icon icon-shape bg-gradient-gray text-white rounded-circle shadow">
+                                        <i class="fa-solid fa-wind" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 </div>
             </div>

@@ -309,6 +309,20 @@ class EstacoesModel extends BaseModel
 
         return $camadaRetorno;
     }
+     /* JAQUE 01/05 - IMAGENS DA ESTAÇÃO (FOTO_ESTACAO) */
+     public function obterFotoEstacao($id) {
+        $this->db->select('foto_estacao');
+        $this->db->where('id', $id);
+        $result = $this->db->get('estacao');
+        if ($result->num_rows() > 0) {
+            $row = $result->row();
+            return $row->foto_estacao;
+        } else {
+            return false;
+        }
+    }
+
+
 
     public function monitorarEstacao($intervaloTempo)
     {

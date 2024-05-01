@@ -4,6 +4,9 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
           integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
           crossorigin=""/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.label/0.2.4/leaflet.label.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.label/0.2.4/leaflet.label.css" />
+
 
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
             integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
@@ -114,8 +117,26 @@
                                         {
                                             opcoesIcone = {};
                                         }
+                                        var marker = L.marker(latlng, opcoesIcone);
+                                    //    marker.bindTooltip(feature.properties.estacao.identificador, { permanent: true, direction: 'right', opacity: 1, backgroundColor: 'transparent'});
+                                        
+                                        marker.bindTooltip(feature.properties.estacao.identificador, { 
+                                            direction: 'right',
+                                            permanent: true,
+                                            opacity: 1,
+                                        });
 
-                                        return L.marker(latlng, opcoesIcone);
+
+                                    marker.on('tooltipopen', function(e) {
+                                    var tooltip = e.tooltip._container;
+                                    tooltip.style.background = 'transparent';
+                                    tooltip.style.border = 'none',
+                                    tooltip.style.boxShadow = 'none'; 
+                                    tooltip.style.color = 'green';  //ALTERAÇÃO DA COR DA FONTE DAS LEGENDAS DOS MARCADORES NO MAPA
+
+                                });
+                                                                                
+                                        return marker;
                                     }
                                 }).addTo(mapa); //adc os marcadores
                                 mapa.fitBounds(estacoes.getBounds());
