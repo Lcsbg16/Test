@@ -100,14 +100,14 @@ class LeiturasModel extends BaseModel
     private function filtrarEstacoesComAcesso($fild)
     {
 
-       
+
         $this->EstacoesModel->filtrarEstacoesComAcesso($fild);
     }
+
     private function getArrayEstacoesComAcesso()
     {
 
         $this->EstacoesModel->getArrayEstacoesComAcesso();
-       
     }
 
     public function calcularEstatisticasPorPeriodo(FiltrosLeitura $filtros)
@@ -230,7 +230,7 @@ class LeiturasModel extends BaseModel
 
     public function getLeiturasPorEscala(FiltrosLeitura $filtros = NULL, $retornarTudo = true)
     {
-                $this->getArrayEstacoesComAcesso();
+        $this->getArrayEstacoesComAcesso();
         $this->db->from('leitura L');
         if ($filtros)
         {
@@ -334,16 +334,19 @@ class LeiturasModel extends BaseModel
 
             if (isset($ultimoRegistro['volume_chuva_ac_1h']) && $ultimoRegistro['volume_chuva_ac_1h'] !== null)
             {
-                $dadosEstacaoLeitura = [
-                    'estacao_id'  => $estacao['id'],
-                    'descricao'   => $estacao['descricao'],
-                    'volume_1h'   => $ultimoRegistro['volume_chuva_ac_1h'],
-                    'volume_24h'  => $ultimoRegistro['volume_chuva_ac_24h'],
-                    'volume_96h'  => $ultimoRegistro['volume_chuva_ac_96h'],
-                    'temperatura' => $ultimoRegistro['temperatura']
-                ];
+                if ($ultimoRegistro['volume_chuva_ac_1h'] + $ultimoRegistro['volume_chuva_ac_24h'] + $ultimoRegistro['volume_chuva_ac_96h'] > 0)
+                {
+                    $dadosEstacaoLeitura = [
+                        'estacao_id'  => $estacao['id'],
+                        'descricao'   => $estacao['descricao'],
+                        'volume_1h'   => $ultimoRegistro['volume_chuva_ac_1h'],
+                        'volume_24h'  => $ultimoRegistro['volume_chuva_ac_24h'],
+                        'volume_96h'  => $ultimoRegistro['volume_chuva_ac_96h'],
+                        'temperatura' => $ultimoRegistro['temperatura']
+                    ];
 
-                $listaEstacoesLeituras[] = (object) $dadosEstacaoLeitura; // Mantendo o padrão de saída em objeto
+                    $listaEstacoesLeituras[] = (object) $dadosEstacaoLeitura; // Mantendo o padrão de saída em objeto
+                }
             }
         }
         return $listaEstacoesLeituras;
@@ -452,7 +455,7 @@ class LeiturasModel extends BaseModel
      */
     public function getUltimaLeituraRegistrada(FiltrosLeitura $filtros = NULL)
     {
-                $this->getArrayEstacoesComAcesso();
+        $this->getArrayEstacoesComAcesso();
         $this->db->from('leitura');
 
         if ($filtros)
