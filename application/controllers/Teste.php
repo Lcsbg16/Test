@@ -8,6 +8,8 @@ require_once 'BasePrivateController.php';
 class Teste extends BasePrivateController
 {
 
+    protected $permissaoAcesso = 'DEV';
+
     public function testCarregarDadosWeatherCom()
     {
         $this->load->library('weathercom');

@@ -11,12 +11,13 @@ require_once 'BaseCrudController.php';
 class AdminParametros extends BaseCrudController
 {
 
+    protected $permissaoAcesso = 'ADMIN_PARAMETROS';
+
     public function index()
     {
 
 
         $crud = new AppGroceryCRUD();
-
 
         $crud->set_theme(self::DEFAULT_CRUD_THEME);
         $crud->set_table('parametros');
@@ -24,14 +25,10 @@ class AdminParametros extends BaseCrudController
         $crud->unset_add();
         $crud->unset_delete();
 
-
-
         $crud->display_as('nome', 'Nome');
         $crud->display_as('titulo', 'Título');
         $crud->display_as('descricao', 'Descrição');
         $crud->display_as('valor', 'Valor');
-
-
 
         $crud->columns('titulo', 'valor');
         $crud->field_type('nome', 'readonly');
@@ -42,5 +39,4 @@ class AdminParametros extends BaseCrudController
         $this->_adicionarCallbacksDePosProcessamentoPadrao($crud);
         $this->_crud_output($crud);
     }
-
 }

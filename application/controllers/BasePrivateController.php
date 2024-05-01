@@ -114,7 +114,7 @@ abstract class BasePrivateController extends BaseController
 
         $parametro_filtro_estacoes = CONTROLE_ACESSO_ESTACAO;
 
-        if ($parametro_filtro_estacoes == "true" OR $filtrar == true)
+        if (!$this->checaPermissaoUsuarioLogado('EDITAR_TODAS_AS_ESTACOES') && ($parametro_filtro_estacoes == "true" OR $filtrar == true))
         {
             $imploded = implode(',', $estacoes);
 

@@ -118,24 +118,24 @@
                                             opcoesIcone = {};
                                         }
                                         var marker = L.marker(latlng, opcoesIcone);
-                                    //    marker.bindTooltip(feature.properties.estacao.identificador, { permanent: true, direction: 'right', opacity: 1, backgroundColor: 'transparent'});
-                                        
-                                        marker.bindTooltip(feature.properties.estacao.identificador, { 
+                                        //    marker.bindTooltip(feature.properties.estacao.identificador, { permanent: true, direction: 'right', opacity: 1, backgroundColor: 'transparent'});
+
+                                        marker.bindTooltip(feature.properties.estacao.identificador, {
                                             direction: 'right',
                                             permanent: true,
                                             opacity: 1,
                                         });
 
 
-                                    marker.on('tooltipopen', function(e) {
-                                    var tooltip = e.tooltip._container;
-                                    tooltip.style.background = 'transparent';
-                                    tooltip.style.border = 'none',
-                                    tooltip.style.boxShadow = 'none'; 
-                                    tooltip.style.color = 'green';  //ALTERAÇÃO DA COR DA FONTE DAS LEGENDAS DOS MARCADORES NO MAPA
+                                        marker.on('tooltipopen', function (e) {
+                                            var tooltip = e.tooltip._container;
+                                            tooltip.style.background = 'transparent';
+                                            tooltip.style.border = 'none';
+                                            tooltip.style.boxShadow = 'none';
+                                            tooltip.style.color = 'green';  //ALTERAÇÃO DA COR DA FONTE DAS LEGENDAS DOS MARCADORES NO MAPA
 
-                                });
-                                                                                
+                                        });
+
                                         return marker;
                                     }
                                 }).addTo(mapa); //adc os marcadores

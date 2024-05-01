@@ -87,7 +87,7 @@ abstract class BaseCrudController extends BasePrivateController
         $this->load->model('LoginModel');
         $user_info = $this->LoginModel->getDadosUsuarioLogado();
         $log       = array(
-            'user_id'    => $user_info['usuario_id'],
+            'user_id'    => $user_info['id'],
             'ip'         => $this->input->server('REMOTE_ADDR'),
             'controller' => get_class($this),
             'datahora'   => date('Y-m-d H:i:s'),
@@ -192,20 +192,17 @@ abstract class BaseCrudController extends BasePrivateController
         return $this->loadSmartyView('campoValorFixo', $variaveis_view, true);
     }
 
-   /*  public function adicionaFiltroAcessoEstacao($crud, $fild)
-    {
+    /*  public function adicionaFiltroAcessoEstacao($crud, $fild)
+      {
 
-        $this->load->model('EstacoesModel');
+      $this->load->model('EstacoesModel');
 
-        $estacoes  = $this->EstacoesModel->getEstacoesComAcessoPorUsuario();
-               
-        $imploded = implode(',', $estacoes);
+      $estacoes  = $this->EstacoesModel->getEstacoesComAcessoPorUsuario();
 
-        $crud->where($fild.' in ', '('.$imploded.')',false);
-              
-        return $crud;
-    } */
+      $imploded = implode(',', $estacoes);
 
-    
+      $crud->where($fild.' in ', '('.$imploded.')',false);
 
+      return $crud;
+      } */
 }

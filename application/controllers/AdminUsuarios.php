@@ -11,6 +11,8 @@ require_once 'BaseCrudController.php';
 class AdminUsuarios extends BaseCrudController
 {
 
+    protected $permissaoAcesso = 'ADMIN_USUARIOS';
+
     public function index()
     {
         try
@@ -91,5 +93,4 @@ class AdminUsuarios extends BaseCrudController
             return "<input type='password' class='form-control' name='senha' value='' autocomplete='new-password' />";
         }
     }
-
 }

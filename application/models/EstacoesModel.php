@@ -17,7 +17,9 @@ class EstacoesModel extends BaseModel
     {
         $parametro_filtro_estacoes = CONTROLE_ACESSO_ESTACAO;
 
-        if ($parametro_filtro_estacoes == "true" OR $filtrar == true)
+        $this->load->model('LoginModel');
+
+        if (!$this->LoginModel->checaPermissaoUsuarioLogado('VER_TODAS_AS_ESTACOES') && ($parametro_filtro_estacoes == "true" OR $filtrar == true))
         {
             $this->estacoesComAcesso = $this->getEstacoesComAcessoPorUsuario();
 
@@ -37,7 +39,7 @@ class EstacoesModel extends BaseModel
     {
         $parametro_filtro_estacoes = CONTROLE_ACESSO_ESTACAO;
 
-        if ($parametro_filtro_estacoes == "true" OR $filtrar == true)
+        if (!$this->checaPermissaoUsuarioLogado('VER_TODAS_AS_ESTACOES') && ($parametro_filtro_estacoes == "true" OR $filtrar == true))
         {
             if (!$this->estacoesComAcesso)
             {
@@ -309,20 +311,24 @@ class EstacoesModel extends BaseModel
 
         return $camadaRetorno;
     }
-     /* JAQUE 01/05 - IMAGENS DA ESTAÇÃO (FOTO_ESTACAO) */
-     public function obterFotoEstacao($id) {
+
+    /* JAQUE 01/05 - IMAGENS DA ESTAÇÃO (FOTO_ESTACAO) */
+
+    public function obterFotoEstacao($id)
+    {
         $this->db->select('foto_estacao');
         $this->db->where('id', $id);
         $result = $this->db->get('estacao');
-        if ($result->num_rows() > 0) {
+        if ($result->num_rows() > 0)
+        {
             $row = $result->row();
             return $row->foto_estacao;
-        } else {
+        }
+        else
+        {
             return false;
         }
     }
-
-
 
     public function monitorarEstacao($intervaloTempo)
     {
