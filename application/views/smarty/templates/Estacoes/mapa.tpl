@@ -130,8 +130,7 @@
                                 estacoes = L.geoJSON([data], {
                                     onEachFeature: onEachFeature,
                                     pointToLayer: function (feature, latlng)
-                                    {   console.log("dados da estacao");
-                                        console.log(feature.properties.estacao);
+                                    {   
                                         if (!feature.properties.estacao.online && feature.properties.estacao.tipo != "interna") 
                                         { //se a extação estiver offline e não for interna, adc icone de extação offline externa
                                             opcoesIcone = {icon: offlineExternalIcon};
