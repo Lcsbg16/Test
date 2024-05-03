@@ -12,7 +12,7 @@
                                     <div class="carousel-item">
                                         {$primeiro = false}
                                     {/if}
-                                    <h5 class="card-title text-uppercase text-muted mb-0" style="text-align: center;padding-bottom: 10px; padding: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chuva Agora:</h5>
+                                    <h5 class="card-title text-uppercase text-muted mb-0" style="text-align: center;padding-bottom: 10px; padding: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chuva Recente:</h5>
                                     <h5 class="card-title text-uppercase text-muted mb-0" style="text-align: center;padding-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{$acumulado->descricao}</h5>
                                     <div class="row d-flex justify-content-center align-items-center">
                                         <div class="col-6 d-flex justify-content-center align-items-center flex-column ">
