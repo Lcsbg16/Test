@@ -27,9 +27,6 @@ class MenusModel extends BaseModel
             $cadastros->adicionarFilho(new MenuItem('-', ''));
             $cadastros->adicionarFilho(new MenuItem('Usuários', base_url('AdminUsuarios')));
             $cadastros->adicionarFilho(new MenuItem('Grupos de Usuários', base_url('AdminGrupos')));
-            $cadastros->adicionarFilho(new MenuItem('-', ''));
-            $cadastros->adicionarFilho(new MenuItem('Leitura Dimensão', base_url('AdminLeituraDimensao')));
-            $cadastros->adicionarFilho(new MenuItem('Unidade de medida', base_url('AdminUnidadeMedida')));
 
             $relatorios = new MenuItem('Relatórios', '');
             $relatorios->adicionarFilho(new MenuItem('Leituras', base_url('AdminLeituras'), 'collection', 'green'));
@@ -37,6 +34,10 @@ class MenusModel extends BaseModel
             $relatorios->adicionarFilho(new MenuItem('Download dados de leitura', base_url('Leituras/exportarLeitura'), 'collection', 'green'));
             $relatorios->adicionarFilho(new MenuItem('Ocorrências', base_url('RelatorioOcorrencias'), 'collection', 'green'));
             $relatorios->adicionarFilho(new MenuItem('Eventos', base_url('AdminEventos'), 'collection', 'green'));
+
+            $configuracoes = new MenuItem('Configurações', '');
+            $configuracoes->adicionarFilho(new MenuItem('Leitura Dimensão', base_url('AdminLeituraDimensao')));
+            $configuracoes->adicionarFilho(new MenuItem('Unidade de medida', base_url('AdminUnidadeMedida')));
         }
 
         $usuario = new MenuItem('Usuário', '');
@@ -52,6 +53,7 @@ class MenusModel extends BaseModel
         {
             $menus['lateral'][] = $cadastros;
             $menus['lateral'][] = $relatorios;
+            $menus['lateral'][] = $configuracoes;
         }
 
         $menus['lateral'][] = $usuario;
