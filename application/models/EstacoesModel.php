@@ -482,8 +482,8 @@ class EstacoesModel extends BaseModel
     {
         return $this->db
                         ->select('u.email, u.nome')
-                        ->from('Usuario u')
-                        ->join('Usuario_Acessa_Estacao ue', 'u.id = ue.usuario_id')
+                        ->from('usuario u')
+                        ->join('usuario_Acessa_Estacao ue', 'u.id = ue.usuario_id')
                         ->where('ue.estacao_id', $estacaoId)
                         ->get()
                         ->result();
