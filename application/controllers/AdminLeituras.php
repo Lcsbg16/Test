@@ -80,7 +80,11 @@ class AdminLeituras extends BaseCrudController
         $crud->columns('datahora', 'estacao_id', 'temperatura', 'umidade_ar', 'velocidade_vento', 'dir_vento', 'volume_chuva');
         $crud->unset_add();
         $crud->unset_edit();
-        $crud->unset_delete();
+
+        if (!$this->checaPermissaoUsuarioLogado('ADMIN_EXCLUIR_LEITURAS'))
+        {
+            $crud->unset_delete();
+        }
 
         // Relacionamentos
         $crud->set_relation('estacao_id', 'estacao', 'identificador');
