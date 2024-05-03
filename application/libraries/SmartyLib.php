@@ -23,6 +23,11 @@ class SmartyLib extends Smarty
 
         $this->error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED;
 
+        if (ENVIRONMENT == 'production')
+        {
+            $this->muteExpectedErrors();
+        }
+
         $this->compile_dir  = APPPATH . "cache/templates_c";
         $this->template_dir = APPPATH . "views/smarty/templates";
         $this->assign('APPPATH', APPPATH);
