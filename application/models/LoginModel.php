@@ -55,16 +55,21 @@ class LoginModel extends BaseModel
 
     public function checaPermissaoUsuarioLogado($permissao)
     {
+        $dados_usuario = $this->getDadosUsuarioLogado();
+
+        return $this->checaPermissaoUsuarioPorId($permissao, $dados_usuario['id']);
+    }
+
+    public function checaPermissaoUsuarioPorId($permissao, $idUsuario)
+    {
         $ci = & get_instance();
 
         $ci->load->model('PermissoesModel');
         $ci->load->model('UsuarioModel');
 
-        $dados_usuario = $this->getDadosUsuarioLogado();
-
-        if (isset($dados_usuario['id']))
+        if ($idUsuario)
         {
-            $grupos = $this->UsuarioModel->getGruposUsuario($dados_usuario['id']);
+            $grupos = $this->UsuarioModel->getGruposUsuario($idUsuario);
         }
         else
         {

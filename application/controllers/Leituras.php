@@ -49,6 +49,9 @@ class Leituras extends BasePrivateController
     {
         $this->load->model('LeiturasModel');
         $this->load->model('EstacoesModel');
+        $this->load->model('LoginModel');
+
+        $podeVerTodasAsEstacoes = $this->LoginModel->checaPermissaoUsuarioLogado('VER_TODAS_AS_ESTACOES');
 
         // $result  = $this->EstacoesModel->getEstacoesComAcessoPorUsuario();
         $this->EstacoesModel->getArrayEstacoesComAcesso();
@@ -70,10 +73,13 @@ class Leituras extends BasePrivateController
             }
             else
             {
-                $this->EstacoesModel->filtrarEstacoesComAcesso('estacao_id');
-                /*  $imploded = implode(',', $result);
-                  $this->db->where_in('estacao_id', explode(',',$imploded));
-                  $filtros->setEstacoes(explode(',',$imploded)); */
+                if (!$podeVerTodasAsEstacoes)
+                {
+                    $this->EstacoesModel->filtrarEstacoesComAcesso('estacao_id');
+                    /*  $imploded = implode(',', $result);
+                      $this->db->where_in('estacao_id', explode(',',$imploded));
+                      $filtros->setEstacoes(explode(',',$imploded)); */
+                }
             }
 
             if ($dataInicial)
