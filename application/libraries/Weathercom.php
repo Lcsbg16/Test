@@ -30,7 +30,7 @@ class Weathercom
         }
         else
         {
-            throw WeatherComException('Erro ao recuperar informaçÕes da estação via Weather.com.');
+            throw new WeatherComException('Erro ao recuperar informaçÕes da estação via Weather.com.');
         }
     }
 
