@@ -332,21 +332,18 @@ class LeiturasModel extends BaseModel
         {
             $ultimoRegistro = $this->EstacoesModel->getUltimoRegistro($estacao['id'], 60, true);
 
-            if (isset($ultimoRegistro['volume_chuva_ac_1h']) && $ultimoRegistro['volume_chuva_ac_1h'] !== null)
+            if ($ultimoRegistro && $ultimoRegistro['volume_chuva_ac_1h'] + $ultimoRegistro['volume_chuva_ac_24h'] + $ultimoRegistro['volume_chuva_ac_96h'] > 0)
             {
-                if ($ultimoRegistro['volume_chuva_ac_1h'] + $ultimoRegistro['volume_chuva_ac_24h'] + $ultimoRegistro['volume_chuva_ac_96h'] > 0)
-                {
-                    $dadosEstacaoLeitura = [
-                        'estacao_id'  => $estacao['id'],
-                        'descricao'   => $estacao['descricao'],
-                        'volume_1h'   => $ultimoRegistro['volume_chuva_ac_1h'],
-                        'volume_24h'  => $ultimoRegistro['volume_chuva_ac_24h'],
-                        'volume_96h'  => $ultimoRegistro['volume_chuva_ac_96h'],
-                        'temperatura' => $ultimoRegistro['temperatura']
-                    ];
+                $dadosEstacaoLeitura = [
+                    'estacao_id'  => $estacao['id'],
+                    'descricao'   => $estacao['descricao'],
+                    'volume_1h'   => $ultimoRegistro['volume_chuva_ac_1h'],
+                    'volume_24h'  => $ultimoRegistro['volume_chuva_ac_24h'],
+                    'volume_96h'  => $ultimoRegistro['volume_chuva_ac_96h'],
+                    'temperatura' => $ultimoRegistro['temperatura']
+                ];
 
-                    $listaEstacoesLeituras[] = (object) $dadosEstacaoLeitura; // Mantendo o padrão de saída em objeto
-                }
+                $listaEstacoesLeituras[] = (object) $dadosEstacaoLeitura; // Mantendo o padrão de saída em objeto
             }
         }
         return $listaEstacoesLeituras;
