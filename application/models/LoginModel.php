@@ -9,6 +9,26 @@ require_once 'BaseModel.php';
 class LoginModel extends BaseModel
 {
 
+    private static $cachePermissoesUsuarioPorId = [];
+
+    /**
+     * Retorna verdadeiro para todas as checagem de login e permissão (para uso em API)
+     *
+     * Essa rotina foi criada para lidar com acoplamentos ligados ao usuário logado.
+     *
+     * @var bool
+     */
+    private $acessoSemLogin = false;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        // Antecipando chamadas de permissão para gerar cache
+        $this->checaPermissaoUsuarioLogado('VER_TODAS_AS_ESTACOES');
+        $this->checaPermissaoUsuarioLogado('EDITAR_TODAS_AS_ESTACOES');
+    }
+
     /**
      *
      * @return User
@@ -44,6 +64,11 @@ class LoginModel extends BaseModel
 
     public function usuarioEstaLogado()
     {
+        if ($this->acessoSemLogin)
+        {
+            return true;
+        }
+
         return $this->session->usuarioEstaLogado;
     }
 
@@ -55,13 +80,28 @@ class LoginModel extends BaseModel
 
     public function checaPermissaoUsuarioLogado($permissao)
     {
-        $dados_usuario = $this->getDadosUsuarioLogado();
+        if ($this->acessoSemLogin)
+        {
+            return true;
+        }
 
-        return $this->checaPermissaoUsuarioPorId($permissao, $dados_usuario['id']);
+        if ($dados_usuario = $this->getDadosUsuarioLogado())
+        {
+            return $this->checaPermissaoUsuarioPorId($permissao, $dados_usuario['id']);
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public function checaPermissaoUsuarioPorId($permissao, $idUsuario)
     {
+        if (isset(self::$cachePermissoesUsuarioPorId[$permissao]))
+        {
+            return self::$cachePermissoesUsuarioPorId[$permissao];
+        }
+
         $ci = & get_instance();
 
         $ci->load->model('PermissoesModel');
@@ -76,7 +116,11 @@ class LoginModel extends BaseModel
             $grupos = [];
         }
 
-        return $permissao == 'GERAL' || $ci->PermissoesModel->checaPermissaoGrupos($permissao, $grupos);
+        $resultado = $permissao == 'GERAL' || $ci->PermissoesModel->checaPermissaoGrupos($permissao, $grupos);
+
+        self::$cachePermissoesUsuarioPorId[$permissao] = $resultado;
+
+        return $resultado;
     }
 
     public function esqueciSenha($email, $token, $criado, $expirado)
@@ -152,6 +196,16 @@ class LoginModel extends BaseModel
         {
             return false;
         }
+    }
+
+    public function getAcessoSemLogin()
+    {
+        return $this->acessoSemLogin;
+    }
+
+    public function setAcessoSemLogin($acessoSemLogin)
+    {
+        $this->acessoSemLogin = $acessoSemLogin;
     }
 }
 

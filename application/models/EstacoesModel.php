@@ -37,9 +37,11 @@ class EstacoesModel extends BaseModel
 
     public function filtrarEstacoesComAcesso($fild, $filtrar = false)
     {
+        $this->load->model('LoginModel');
+
         $parametro_filtro_estacoes = CONTROLE_ACESSO_ESTACAO;
 
-        if (!$this->checaPermissaoUsuarioLogado('VER_TODAS_AS_ESTACOES') && ($parametro_filtro_estacoes == "true" OR $filtrar == true))
+        if (!$this->LoginModel->checaPermissaoUsuarioLogado('VER_TODAS_AS_ESTACOES') && ($parametro_filtro_estacoes == "true" OR $filtrar == true))
         {
             if (!$this->estacoesComAcesso)
             {

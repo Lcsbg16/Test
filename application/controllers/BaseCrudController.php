@@ -205,4 +205,26 @@ abstract class BaseCrudController extends BasePrivateController
 
       return $crud;
       } */
+
+    public function adicionaFiltroAcessoEstacao($crud, $fild, $filtrar = false)
+    {
+
+        $this->load->model('EstacoesModel');
+
+        $this->EstacoesModel->getArrayEstacoesComAcesso($filtrar);
+
+        $estacoes = $this->EstacoesModel->estacoesComAcesso;
+
+        $parametro_filtro_estacoes = CONTROLE_ACESSO_ESTACAO;
+
+        if (!$this->checaPermissaoUsuarioLogado('EDITAR_TODAS_AS_ESTACOES') && ($parametro_filtro_estacoes == "true" OR $filtrar == true))
+        {
+            $imploded = implode(',', $estacoes);
+
+            $crud->where($fild . ' in ', '(' . $imploded . ')', false);
+        }
+
+
+        return $crud;
+    }
 }

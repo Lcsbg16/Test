@@ -9,6 +9,14 @@ class Api extends BaseController
 
     private $retornoApi = [];
 
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->load->model('LoginModel');
+        $this->LoginModel->setAcessoSemLogin(true);
+    }
+
     private function autenticar()
     {
         // Verificar se as credenciais estão presentes
