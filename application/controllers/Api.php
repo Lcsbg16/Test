@@ -157,22 +157,29 @@ class Api extends BaseController
         {
             if ($estacaoAtual['weathercom_station_id'] && $estacaoAtual['weathercom_api_key'])
             {
-                if ($dadosLeituraRaw = $this->weathercom->getDadosEstacao($estacaoAtual['weathercom_station_id'], $estacaoAtual['weathercom_api_key']))
+                try
                 {
+                    if ($dadosLeituraRaw = $this->weathercom->getDadosEstacao($estacaoAtual['weathercom_station_id'], $estacaoAtual['weathercom_api_key']))
+                    {
 
-                    $dadosLeitura = [
-                        'datahora'          => date('Y-m-d H:i:s', strtotime($dadosLeituraRaw['obsTimeLocal'])),
-                        'dir_vento'         => $dadosLeituraRaw['winddir'],
-                        'temperatura'       => $dadosLeituraRaw['metric']['temp'],
-                        'umidade_ar'        => $dadosLeituraRaw['humidity'],
-                        'velocidade_vento'  => $dadosLeituraRaw['metric']['windSpeed'],
-                        'volume_chuva'      => $dadosLeituraRaw['metric']['precipRate'] / 60,
-                        'datahora_cadastro' => date('Y-m-d H:i:s'),
-                        'payload'           => json_encode($dadosLeituraRaw)
-                    ];
+                        $dadosLeitura = [
+                            'datahora'          => date('Y-m-d H:i:s', strtotime($dadosLeituraRaw['obsTimeLocal'])),
+                            'dir_vento'         => $dadosLeituraRaw['winddir'],
+                            'temperatura'       => $dadosLeituraRaw['metric']['temp'],
+                            'umidade_ar'        => $dadosLeituraRaw['humidity'],
+                            'velocidade_vento'  => $dadosLeituraRaw['metric']['windSpeed'],
+                            'volume_chuva'      => $dadosLeituraRaw['metric']['precipRate'] / 60,
+                            'datahora_cadastro' => date('Y-m-d H:i:s'),
+                            'payload'           => json_encode($dadosLeituraRaw)
+                        ];
 
-                    $this->db->db_debug = FALSE;
-                    $this->LeiturasModel->inserirLeitura($estacaoAtual['id'], $dadosLeitura);
+                        $this->db->db_debug = FALSE;
+                        $this->LeiturasModel->inserirLeitura($estacaoAtual['id'], $dadosLeitura);
+                    }
+                }
+                catch (WeatherComException $e)
+                {
+                    log_message('error', 'Erro ao carregar dados da estação ' . $estacaoAtual['identificador'] . ' .');
                 }
             }
         }
