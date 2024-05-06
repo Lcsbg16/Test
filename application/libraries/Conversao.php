@@ -9,7 +9,7 @@ class Conversao
         return $velocidadeMPS * 3.6;
     }
 
-    function kmPorHoraParaMetroPorSegundo($valorEmKmPorHora)
+    public function kmPorHoraParaMetroPorSegundo($valorEmKmPorHora)
     {
         // Convertendo km/h para m/s
         $valorEmMetroPorSegundo = $valorEmKmPorHora * 1000 / 3600;
