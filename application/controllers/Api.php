@@ -150,6 +150,7 @@ class Api extends BaseController
         $this->load->library('weathercom');
         $this->load->model('EstacoesModel');
         $this->load->model('LeiturasModel');
+        $this->load->library('Conversao');
 
         $estacoes = $this->EstacoesModel->getEstacoes(true, [], 'weather.com');
 
@@ -167,7 +168,7 @@ class Api extends BaseController
                             'dir_vento'         => $dadosLeituraRaw['winddir'],
                             'temperatura'       => $dadosLeituraRaw['metric']['temp'],
                             'umidade_ar'        => $dadosLeituraRaw['humidity'],
-                            'velocidade_vento'  => $dadosLeituraRaw['metric']['windSpeed'],
+                            'velocidade_vento'  => $this->conversao->kmPorHoraParaMetroPorSegundo($dadosLeituraRaw['metric']['windSpeed']),
                             'volume_chuva'      => $dadosLeituraRaw['metric']['precipRate'] / 60,
                             'datahora_cadastro' => date('Y-m-d H:i:s'),
                             'payload'           => json_encode($dadosLeituraRaw)

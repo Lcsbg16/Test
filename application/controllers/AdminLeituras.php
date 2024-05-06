@@ -114,7 +114,7 @@ class AdminLeituras extends BaseCrudController
 
         $velocidade_ms = $row->velocidade_vento;
 
-        $velocidade_kmh = Conversao::velVentoParakmH($velocidade_ms);
+        $velocidade_kmh = Conversao::metroPorSegundoParaKmPorHora($velocidade_ms);
 
         return $velocidade_kmh;
     }

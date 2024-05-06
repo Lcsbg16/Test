@@ -220,7 +220,7 @@ class LeiturasModel extends BaseModel
                 if ($tipoInformacao === FiltrosLeitura::TIPO_VELOCIDADE_VENTO)
                 {
                     // Converte a velocidade do vento de m/s para km/h se for o tipo de informação 'velocidade_vento'
-                    $linha['valor'] = Conversao::velVentoParakmH($linha['valor']);
+                    $linha['valor'] = Conversao::metroPorSegundoParaKmPorHora($linha['valor']);
                 }
                 $retorno[$linha['periodo']] = $linha['valor'];
             }
