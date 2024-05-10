@@ -18,9 +18,8 @@ class EstacoesModel extends BaseModel
         $parametro_filtro_estacoes = CONTROLE_ACESSO_ESTACAO;
 
         $this->load->model('LoginModel');
-
-        if (!$this->LoginModel->checaPermissaoUsuarioLogado('VER_TODAS_AS_ESTACOES') && ($parametro_filtro_estacoes == "true" OR $filtrar == true))
-        {
+        if (!$this->LoginModel->checaPermissaoUsuarioLogado('VER_TODAS_AS_ESTACOES')) {
+            if($parametro_filtro_estacoes == "true" OR $filtrar == true){
             $this->estacoesComAcesso = $this->getEstacoesComAcessoPorUsuario();
 
             if ($this->estacoesComAcesso)
@@ -33,25 +32,28 @@ class EstacoesModel extends BaseModel
         {
             $this->estacoesComAcesso = array();
         }
-    }
+    }}
 
     public function filtrarEstacoesComAcesso($fild, $filtrar = false)
     {
         $this->load->model('LoginModel');
 
         $parametro_filtro_estacoes = CONTROLE_ACESSO_ESTACAO;
+        
 
-        if (!$this->LoginModel->checaPermissaoUsuarioLogado('VER_TODAS_AS_ESTACOES') && ($parametro_filtro_estacoes == "true" OR $filtrar == true))
-        {
-            if (!$this->estacoesComAcesso)
-            {
-                $this->db->where_in($fild, 'NULL');
-            }
-            else
-            {
-                $this->db->where_in($fild, $this->estacoesComAcesso);
-            }
+        if (!$this->LoginModel->checaPermissaoUsuarioLogado('VER_TODAS_AS_ESTACOES')) {
+            if($parametro_filtro_estacoes == "true" OR $filtrar == true){
+               
+                if (!$this->estacoesComAcesso)
+                {
+                    $this->db->where_in($fild, 'NULL');
+                }
+                else
+                {
+                    $this->db->where_in($fild, $this->estacoesComAcesso);
+                }
         }
+    }
     }
 
     /**
