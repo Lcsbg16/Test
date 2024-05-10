@@ -10,6 +10,7 @@ class AdminOcorrencias extends BaseCrudController
 
     public function index()
     {
+        $this->load->model('LoginModel');
 
         $crud = new AppGroceryCRUD();
 
@@ -63,6 +64,11 @@ class AdminOcorrencias extends BaseCrudController
         if ($crud->getStateCategory() != 'create')
         {
             $crud->set_relation('usuario_id', 'usuario', 'nome');
+            if (!$this->checaPermissaoUsuarioLogado('LISTAR_TODAS_OCORRENCIAS'))
+            {
+                $user_info = $this->LoginModel->getDadosUsuarioLogado();
+                $crud->where('usuario_id', $user_info['id']);
+            }
         }
 
         // Callbacks de processamento
@@ -71,6 +77,7 @@ class AdminOcorrencias extends BaseCrudController
         // Filtros
         $this->adicionaFiltros($crud);
 
+        $this->_adicionarCallbacksDePosProcessamentoPadrao($crud);
         $this->_crud_output($crud);
     }
 
@@ -90,5 +97,4 @@ class AdminOcorrencias extends BaseCrudController
 
         return $postArray;
     }
-
 }

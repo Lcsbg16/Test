@@ -115,14 +115,14 @@ class LeiturasModel extends BaseModel
     private function filtrarEstacoesComAcesso($fild)
     {
 
-       
+
         $this->EstacoesModel->filtrarEstacoesComAcesso($fild);
     }
+
     private function getArrayEstacoesComAcesso()
     {
 
         $this->EstacoesModel->getArrayEstacoesComAcesso();
-       
     }
 
     public function calcularEstatisticasPorPeriodo(FiltrosLeitura $filtros)
@@ -235,7 +235,7 @@ class LeiturasModel extends BaseModel
                 if ($tipoInformacao === FiltrosLeitura::TIPO_VELOCIDADE_VENTO)
                 {
                     // Converte a velocidade do vento de m/s para km/h se for o tipo de informação 'velocidade_vento'
-                    $linha['valor'] = Conversao::velVentoParakmH($linha['valor']);
+                    $linha['valor'] = Conversao::metroPorSegundoParaKmPorHora($linha['valor']);
                 }
                 $retorno[$linha['periodo']] = $linha['valor'];
             }
@@ -245,7 +245,7 @@ class LeiturasModel extends BaseModel
 
     public function getLeiturasPorEscala(FiltrosLeitura $filtros = NULL, $retornarTudo = true)
     {
-                $this->getArrayEstacoesComAcesso();
+        $this->getArrayEstacoesComAcesso();
         $this->db->from('leitura L');
         if ($filtros)
         {
@@ -347,7 +347,7 @@ class LeiturasModel extends BaseModel
         {
             $ultimoRegistro = $this->EstacoesModel->getUltimoRegistro($estacao['id'], 60, true);
 
-            if (isset($ultimoRegistro['volume_chuva_ac_1h']) && $ultimoRegistro['volume_chuva_ac_1h'] !== null)
+            if ($ultimoRegistro && $ultimoRegistro['volume_chuva_ac_1h'] + $ultimoRegistro['volume_chuva_ac_24h'] + $ultimoRegistro['volume_chuva_ac_96h'] > 0)
             {
                 $dadosEstacaoLeitura = [
                     'estacao_id'  => $estacao['id'],
@@ -467,7 +467,7 @@ class LeiturasModel extends BaseModel
      */
     public function getUltimaLeituraRegistrada(FiltrosLeitura $filtros = NULL)
     {
-                $this->getArrayEstacoesComAcesso();
+        $this->getArrayEstacoesComAcesso();
         $this->db->from('leitura');
 
         if ($filtros)

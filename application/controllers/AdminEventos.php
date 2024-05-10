@@ -11,6 +11,8 @@ require_once 'BaseCrudController.php';
 class AdminEventos extends BaseCrudController
 {
 
+    protected $permissaoAcesso = 'ADMIN_EVENTOS';
+
     public function index()
     {
 
@@ -35,8 +37,8 @@ class AdminEventos extends BaseCrudController
         $crud->set_relation('estacao_id', 'estacao', 'identificador');
         $crud->set_relation('tipo_evento_id', 'tipo_evento', 'nome');
 
-          // Filtros
-        $this->adicionaFiltroAcessoEstacao($crud,'`estacao_id`',false);
+        // Filtros
+        $this->adicionaFiltroAcessoEstacao($crud, '`estacao_id`', false);
 
         $crud->unset_add();
         $crud->unset_delete();
@@ -44,18 +46,18 @@ class AdminEventos extends BaseCrudController
         $crud->unset_clone();
         $crud->order_by('datahora', 'desc');
 
-
         $estacao_id = $this->input->get('estacao_id');
 
-        if ($estacao_id !== null && is_numeric($estacao_id)) {
+        if ($estacao_id !== null && is_numeric($estacao_id))
+        {
             $this->session->admin_eventos_estacao_id = $estacao_id;
-
         }
-       // $crud->where('estacao_id', $this->session->admin_eventos_estacao_id );
+        // $crud->where('estacao_id', $this->session->admin_eventos_estacao_id );
 
         $this->formatar_datahora($crud);
 
-       return $this->_crud_output($crud);
+        $this->_adicionarCallbacksDePosProcessamentoPadrao($crud);
+        return $this->_crud_output($crud);
     }
 
     private function formatar_datahora($crud)

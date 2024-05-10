@@ -41,8 +41,8 @@ class Estacoes extends BasePrivateController
         $this->EstacoesModel->getArrayEstacoesComAcesso();
 
         $estacoes = $this->EstacoesModel->estacoesComAcesso;
-        
-      //  $imploded = implode(',', $estacoes);
+
+        //  $imploded = implode(',', $estacoes);
 
         $variaveisView['estacoes'] = $this->EstacoesModel->getEstacoes(true, $this->EstacoesModel->estacoesComAcesso);
         $variaveisView['camadas']  = FiltrosLeitura::getTodosTiposInformacao();
@@ -58,6 +58,7 @@ class Estacoes extends BasePrivateController
 
         $variaveisView['titulo_pagina'] = 'Monitoramento individual de estações';
         $variaveisView['estacao']       = $this->EstacoesModel->getEstacao($id_estacao);
+        $variaveisView['foto_estacao']  = $this->EstacoesModel->obterFotoEstacao($id_estacao); //jaque 01/05
         $variaveisView['eventos']       = json_decode(json_encode($this->EstacoesModel->getEventos(4)), true); //Adicionei ao view de monitoramento individual a variavel $eventos, para controlar os ultimos eventos da estação
 
         $this->loadSmartyView('Estacoes/monitoramentoIndividual', $variaveisView);
@@ -152,7 +153,7 @@ class Estacoes extends BasePrivateController
 
         $variaveisView = [];
 
-        $variaveisView['titulo_pagina'] = 'Info';
+        $variaveisView['titulo_pagina'] = 'Visualizar Estações';
         $variaveisView['qtde_estacoes'] = $this->EstacoesModel->getContagemEstacoes();
 
         $variaveisView['estacoes'] = $this->EstacoesModel->getEstacaoComDadosMeteorologicos();

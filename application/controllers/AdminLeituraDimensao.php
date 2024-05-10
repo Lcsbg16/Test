@@ -8,6 +8,8 @@ require_once 'BaseCrudController.php';
 class AdminLeituraDimensao extends BaseCrudController
 {
 
+    protected $permissaoAcesso = 'ADMIN_LEITURA_DIMENSAO';
+
     public function index()
     {
 
@@ -26,11 +28,9 @@ class AdminLeituraDimensao extends BaseCrudController
         $crud->display_as('tipo_dado', 'Tipo do dado');
         $crud->display_as('unidade_medida_id', 'Unidade de medida');
 
-       
         // Relacionamentos
         $crud->set_relation('unidade_medida_id', 'unidade_medida', 'unidade');
 
         $this->_crud_output($crud);
     }
-
 }

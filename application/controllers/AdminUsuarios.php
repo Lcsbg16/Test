@@ -11,6 +11,8 @@ require_once 'BaseCrudController.php';
 class AdminUsuarios extends BaseCrudController
 {
 
+    protected $permissaoAcesso = 'ADMIN_USUARIOS';
+
     public function index()
     {
         try
@@ -53,6 +55,7 @@ class AdminUsuarios extends BaseCrudController
             $crud->set_relation_n_n('_grupos', 'usuario_possui_grupo', 'grupo', 'usuario_id', 'grupo_usuarios_id', 'nome');
             $crud->set_relation_n_n('_estacoes', 'usuario_acessa_estacao', 'estacao', 'usuario_id', 'estacao_id', 'descricao', 'ordem');
 
+            $this->_adicionarCallbacksDePosProcessamentoPadrao($crud);
             $this->_crud_output($crud);
         }
         catch (Exception $e)
@@ -90,5 +93,4 @@ class AdminUsuarios extends BaseCrudController
             return "<input type='password' class='form-control' name='senha' value='' autocomplete='new-password' />";
         }
     }
-
 }

@@ -11,6 +11,7 @@ if (!defined('BASEPATH'))
  * @property EstacoesModel $EstacoesModel
  * @property LoginModel $LoginModel
  * @property OcorrenciasModel $OcorrenciasModel
+ * @property WeatherCom weathercom
  */
 abstract class BaseController extends CI_Controller
 {
@@ -18,6 +19,7 @@ abstract class BaseController extends CI_Controller
     /**
      *
      * @var SmartyLib
+     * @property WeatherCom weathercom
      */
     public $smartylib;
     protected $selected_site_menu = 'home';

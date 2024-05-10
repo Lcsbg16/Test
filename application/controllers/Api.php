@@ -7,6 +7,16 @@ require_once 'BaseController.php';
 class Api extends BaseController
 {
 
+    private $retornoApi = [];
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->load->model('LoginModel');
+        $this->LoginModel->setAcessoSemLogin(true);
+    }
+
     private function autenticar()
     {
         // Verificar se as credenciais estão presentes
@@ -52,11 +62,11 @@ class Api extends BaseController
 
     public function adicionarLeitura()
     {
-        //$this->autenticar();
+        $this->autenticar();
         $this->load->model('EstacoesModel');
         $this->load->model('LeiturasModel');
 
-        $postData = $this->input->get();
+        $postData             = $this->input->post();
         $identificadorEstacao = $postData['identidade'];
 
         if (!$identificadorEstacao)
@@ -69,7 +79,7 @@ class Api extends BaseController
             //Verificar necessidade dessa chamada, visto que o parametro UID já vem no post.
             if ($estacao = $this->EstacoesModel->getEstacaoPorIdentificador($identificadorEstacao))
             {
-                
+
                 $dadosLeitura = [
                     'datahora'          => date('Y-m-d H:i:s', $postData['timestamp']),
                     'dir_vento'         => $postData['dir_vento'] * 45,
@@ -82,10 +92,23 @@ class Api extends BaseController
                 ];
 
                 $this->db->db_debug = FALSE;
-                $leitura_id = $this->LeiturasModel->inserirLeitura($estacao['id'], $dadosLeitura);
+                $leitura_id         = $this->LeiturasModel->inserirLeitura($estacao['id'], $dadosLeitura);
 
-                $this->LeiturasModel->inserirLeituraAPI($estacao['id'], $leitura_id, $postData );
-                
+                //removendo valores para a tabela leitura_valor
+                unset($postData['identidade']);
+                unset($postData['timestamp']);
+                unset($postData['uid']);
+
+                foreach ($postData as $key => $value)
+                {
+                    $this->LeiturasModel->inserirLeituraValor($leitura_id, $key, $value);
+                }
+
+                foreach ($postData as $key => $value)
+                {
+                    $this->LeiturasModel->inserirUltimaLeitura($estacao['id'], $leitura_id, $key, $value);
+                }
+
                 $error = $this->db->error();
 
                 if ($error['code'])
@@ -119,6 +142,51 @@ class Api extends BaseController
     {
         $this->load->model('LeiturasModel');
         $this->LeiturasModel->atualizarCacheLeituraCalculada();
+
+        $this->retornoApi['atualizarCacheLeituraCalculada'] = 'OK';
+    }
+
+    public function carregarLeiturasWeatherCom()
+    {
+        $this->load->library('weathercom');
+        $this->load->model('EstacoesModel');
+        $this->load->model('LeiturasModel');
+        $this->load->library('Conversao');
+
+        $estacoes = $this->EstacoesModel->getEstacoes(true, [], 'weather.com');
+
+        foreach ($estacoes as $estacaoAtual)
+        {
+            if ($estacaoAtual['weathercom_station_id'] && $estacaoAtual['weathercom_api_key'])
+            {
+                try
+                {
+                    if ($dadosLeituraRaw = $this->weathercom->getDadosEstacao($estacaoAtual['weathercom_station_id'], $estacaoAtual['weathercom_api_key']))
+                    {
+
+                        $dadosLeitura = [
+                            'datahora'          => date('Y-m-d H:i:s', strtotime($dadosLeituraRaw['obsTimeLocal'])),
+                            'dir_vento'         => $dadosLeituraRaw['winddir'],
+                            'temperatura'       => $dadosLeituraRaw['metric']['temp'],
+                            'umidade_ar'        => $dadosLeituraRaw['humidity'],
+                            'velocidade_vento'  => $this->conversao->kmPorHoraParaMetroPorSegundo($dadosLeituraRaw['metric']['windSpeed']),
+                            'volume_chuva'      => $dadosLeituraRaw['metric']['precipRate'] / 60,
+                            'datahora_cadastro' => date('Y-m-d H:i:s'),
+                            'payload'           => json_encode($dadosLeituraRaw)
+                        ];
+
+                        $this->db->db_debug = FALSE;
+                        $this->LeiturasModel->inserirLeitura($estacaoAtual['id'], $dadosLeitura);
+                    }
+                }
+                catch (WeatherComException $e)
+                {
+                    log_message('error', 'Erro ao carregar dados da estação ' . $estacaoAtual['identificador'] . ' .');
+                }
+            }
+        }
+
+        $this->retornoApi['carregarLeiturasWeatherCom'] = 'OK';
     }
 
     public function cron()
@@ -127,11 +195,15 @@ class Api extends BaseController
 
         $startTime = new DateTime();
 
+        $this->carregarLeiturasWeatherCom();
         $this->atualizarCacheLeituraCalculada();
 
         $endTime  = new DateTime();
         $interval = $startTime->diff($endTime);
 
-        echo 'Concluído em: ' . $interval->format('%H:%I:%S');
+        $this->retornoApi['tempo_processamento'] = $interval->format('%H:%I:%S');
+
+        header('Content-Type: application/json');
+        echo json_encode($this->retornoApi);
     }
 }

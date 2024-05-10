@@ -8,6 +8,8 @@ require_once 'BaseCrudController.php';
 class AdminBairros extends BaseCrudController
 {
 
+    protected $permissaoAcesso = 'ADMIN_BAIRROS';
+
     public function index()
     {
 
@@ -31,7 +33,7 @@ class AdminBairros extends BaseCrudController
         // Relacionamentos
         $crud->set_relation('cidade_id', 'cidade', 'nome');
 
+        $this->_adicionarCallbacksDePosProcessamentoPadrao($crud);
         $this->_crud_output($crud);
     }
-
 }

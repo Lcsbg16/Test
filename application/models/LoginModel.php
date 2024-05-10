@@ -9,6 +9,26 @@ require_once 'BaseModel.php';
 class LoginModel extends BaseModel
 {
 
+    private static $cachePermissoesUsuarioPorId = [];
+
+    /**
+     * Retorna verdadeiro para todas as checagem de login e permissão (para uso em API)
+     *
+     * Essa rotina foi criada para lidar com acoplamentos ligados ao usuário logado.
+     *
+     * @var bool
+     */
+    private $acessoSemLogin = false;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        // Antecipando chamadas de permissão para gerar cache
+        $this->checaPermissaoUsuarioLogado('VER_TODAS_AS_ESTACOES');
+        $this->checaPermissaoUsuarioLogado('EDITAR_TODAS_AS_ESTACOES');
+    }
+
     /**
      *
      * @return User
@@ -38,14 +58,17 @@ class LoginModel extends BaseModel
         {
             throw new LoginError('Usuário ou senha não conferem.');
         }
-        $this->getParametroControleAcesso();
 
-        
         return $this->setUsuarioLogado($usr['id']);
     }
 
     public function usuarioEstaLogado()
     {
+        if ($this->acessoSemLogin)
+        {
+            return true;
+        }
+
         return $this->session->usuarioEstaLogado;
     }
 
@@ -57,23 +80,47 @@ class LoginModel extends BaseModel
 
     public function checaPermissaoUsuarioLogado($permissao)
     {
+        if ($this->acessoSemLogin)
+        {
+            return true;
+        }
+
+        if ($dados_usuario = $this->getDadosUsuarioLogado())
+        {
+            return $this->checaPermissaoUsuarioPorId($permissao, $dados_usuario['id']);
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function checaPermissaoUsuarioPorId($permissao, $idUsuario)
+    {
+        if (isset(self::$cachePermissoesUsuarioPorId[$permissao]))
+        {
+            return self::$cachePermissoesUsuarioPorId[$permissao];
+        }
+
         $ci = & get_instance();
 
         $ci->load->model('PermissoesModel');
         $ci->load->model('UsuarioModel');
 
-        $dados_usuario = $this->getDadosUsuarioLogado();
-
-        if (isset($dados_usuario['id']))
+        if ($idUsuario)
         {
-            $grupos = $this->UsuarioModel->getGruposUsuario($dados_usuario['id']);
+            $grupos = $this->UsuarioModel->getGruposUsuario($idUsuario);
         }
         else
         {
             $grupos = [];
         }
 
-        return $permissao == 'GERAL' || $ci->PermissoesModel->checaPermissaoGrupos($permissao, $grupos);
+        $resultado = $permissao == 'GERAL' || $ci->PermissoesModel->checaPermissaoGrupos($permissao, $grupos);
+
+        self::$cachePermissoesUsuarioPorId[$permissao] = $resultado;
+
+        return $resultado;
     }
 
     public function esqueciSenha($email, $token, $criado, $expirado)
@@ -151,15 +198,15 @@ class LoginModel extends BaseModel
         }
     }
 
-    private function getParametroControleAcesso(){
-        $this->load->model('ParametrosModel');
-        $this->load->library('session');
+    public function getAcessoSemLogin()
+    {
+        return $this->acessoSemLogin;
+    }
 
-        $parametro = $this->ParametrosModel->getParametros('CONTROLE_ACESSO_ESTACAO');
-        //var_dump($parametro);
-        $this->session->parametroControleAcesso = $parametro;
-
-}
+    public function setAcessoSemLogin($acessoSemLogin)
+    {
+        $this->acessoSemLogin = $acessoSemLogin;
+    }
 }
 
 class LoginError extends Exception

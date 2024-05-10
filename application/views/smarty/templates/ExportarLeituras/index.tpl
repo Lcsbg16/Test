@@ -4,9 +4,9 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@0.9.16/dist/css/bootstrap-multiselect.min.css">
     <link rel="stylesheet" href="{$BASE_URL}/assets/chosen/bootstrap-multiselect.css"/>
-    
+
     <div class="container-fluid mt-3">
-        <form method="GET" action="{$BASE_URL}AdminLeituras/exportarLeitura">
+        <form method="GET" action="{$BASE_URL}Leituras/exportarLeitura">
             <div class="row">
                 <div class="col">
                     <div class="card shadow">
@@ -53,7 +53,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.16/js/bootstrap-multiselect.min.js"></script>
-    
+
     <script>
         $(document).ready(function () {
             $("#estacoesSelect").multiselect({
