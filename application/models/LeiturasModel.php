@@ -49,6 +49,21 @@ class LeiturasModel extends BaseModel
 
         return $insert_id;
     }
+    public function inserirLeituraAPI($estacaoId, $leitura_id, $postData)
+    {
+         //removendo valores para a tabela leitura_valor
+         unset($postData['identidade']);
+         unset($postData['timestamp']);
+         unset($postData['uid']);
+
+         foreach ($postData as $key => $value) { 
+             $this->inserirLeituraValor( $leitura_id, $key, $value);
+         }
+
+         foreach ($postData as $key => $value) { 
+             $this->inserirUltimaLeitura($estacaoId, $leitura_id, $key, $value);
+         }
+    }
 
     public function inserirLeituraValor($leituraId, $tag, $value)
     {
