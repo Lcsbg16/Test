@@ -53,6 +53,12 @@
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#legendasModal" style="margin: 21px!important;"> Legendas </button>
                             </div>
                         </div>
+                        <div class="form-check" style="margin: 0px 0px 0px 127px;">
+                        <input class="form-check-input" type="checkbox" value="" id="estacoes-online-checkbox">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Mostrar apenas estações online
+                        </label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -161,10 +167,9 @@
                 }
 
                 var controlaAcionamentoBounds = false; 
-                function HandleAjax(url, mapa) {
+                function carregarTodasEstacoes(url, mapa) {
                     $.get(url).done(
                             function (data) {
-                                console.log(data);
                                 estacoes = L.geoJSON([data], {
                                     style: function (feature) {
                                         return feature.properties && feature.properties.style;
@@ -173,6 +178,52 @@
                                     pointToLayer: function (feature, latlng) {
 
                                         if (feature.properties.estacao.online && feature.properties.camada.cor)
+                                        {
+                                            cor = feature.properties.camada.cor;
+                                        } else
+                                        {
+                                            cor = '#bebebe';
+                                        }
+
+                                        return L.circleMarker(latlng, {
+                                            radius: 16,
+                                            fillColor: cor,
+                                            color: '#000',
+                                            weight: 1,
+                                            opacity: 1,
+                                            fillOpacity: 0.8
+                                        });
+                                    }
+                                }).addTo(mapa);
+
+                                if (!controlaAcionamentoBounds) {
+                                   console.log("bounds: " + controlaAcionamentoBounds);
+                                     mapa.fitBounds(estacoes.getBounds());
+                                     controlaAcionamentoBounds = true; 
+                                     }                           
+                                })
+                            .fail(function (jqXHR, textStatus, errorThrown) {
+                                console.error(jqXHR);
+                                console.error(textStatus);
+                                console.error(errorThrown);
+                                alert('Houve erros durante o processamento da solicitação.');
+                            });
+                }
+
+
+                function carregarEstacoesOnline(url, mapa) {
+                    $.get(url).done(function (data) {
+                           var estacoesOnline = data.features.filter(function (feature) {
+                             return feature.properties.estacao.online;
+                                });
+                                estacoes = L.geoJSON(estacoesOnline, {
+                                    style: function (feature) {
+                                        return feature.properties && feature.properties.style;
+                                    },
+                                    onEachFeature: onEachFeature,
+                                    pointToLayer: function (feature, latlng) {
+
+                                        if (feature.properties.camada.cor)
                                         {
                                             cor = feature.properties.camada.cor;
                                         } else
@@ -240,18 +291,45 @@
                     });
                     let mapa = criaMapa();
                     let url = GerenciaMarcador(mapa);
-                    let result = HandleAjax(url, mapa);
+                    let result = carregarTodasEstacoes(url, mapa);
 
                     setInterval(() => {
                        let url = GerenciaMarcador(mapa);
-                        let result = HandleAjax(url, mapa);
-                    }, 30000);
-                   
-                    //EVENTO DE CHANGE DAS ESTAÇÕES
-                    $('.change_controller').change(function () {
+                       var isChecked = $("#estacoes-online-checkbox").is(":checked");
 
-                        let url = GerenciaMarcador(mapa); //organização dos macadores
-                        let result = HandleAjax(url, mapa); //Requisições + adiciona os markers
+                       if (isChecked == true) {
+                            let result = carregarEstacoesOnline(url, mapa); 
+                        }
+                        else {
+                            let result = carregarTodasEstacoes(url, mapa); 
+                        }
+
+                    }, 30000);
+
+                    //MUDANÇA DO CHECKBOX DAS ESTAÇÕES ONLINE / OFFILNE
+                    $('#estacoes-online-checkbox').change(function () {
+                        var isChecked = $("#estacoes-online-checkbox").is(":checked");
+                        if (isChecked == true) {
+                            let url = GerenciaMarcador(mapa); 
+                            let result = carregarEstacoesOnline(url, mapa); 
+                        }
+                        else {
+                            let url = GerenciaMarcador(mapa); 
+                            let result = carregarTodasEstacoes(url, mapa); 
+                        }
+                    });
+                   
+                    //EVENTO DE CHANGE DAS ESTAÇÕES E CAMADAS
+                    $('.change_controller').change(function () {
+                        var isChecked = $("#estacoes-online-checkbox").is(":checked");
+                        if (isChecked == true) {
+                            let url = GerenciaMarcador(mapa); 
+                            let result = carregarEstacoesOnline(url, mapa); 
+                        }
+                        else {
+                            let url = GerenciaMarcador(mapa); 
+                            let result = carregarTodasEstacoes(url, mapa); 
+                        }
                     });
                 });
             {/literal}
