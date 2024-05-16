@@ -39,7 +39,7 @@ class LeiturasModel extends BaseModel
     public function calcularEstatisticasPorPeriodo(FiltrosLeitura $filtros)
     {
 
-        $this->db->from('leitura');
+        $this->db->from('v_leitura_calculada'); //JAQUE: ALTERAÇÃO PARA V_LEITURA_CALCULADA, ANTERIORMENTE ESTAVA LEITURA. ALTERAÇÃO PARA RAJADA DE VENTOS (16/05)
         if ($filtros)
         {
             $estacoes       = $filtros->getEstacoes();
@@ -87,6 +87,9 @@ class LeiturasModel extends BaseModel
                     $colunaTipoInformacao = 'umidade_ar';
                     break;
 
+                    case FiltrosLeitura::TIPO_RAJADA_VENTO:
+                        $colunaTipoInformacao = 'rajada_vento_1h';
+                        break;
                 default:
                     throw new Exception('É necessário informar o tipo de informação desejada.');
             }
@@ -358,7 +361,7 @@ class LeiturasModel extends BaseModel
      */
     public function getUltimaLeituraRegistrada(FiltrosLeitura $filtros = NULL)
     {
-        $this->db->from('leitura');
+        $this->db->from('v_leitura_calculada'); //antes estava pela tabela Leitura, mas agora está pela v_leitura_calculada pensando na rajada vento
 
         if ($filtros)
         {
@@ -401,6 +404,10 @@ class LeiturasModel extends BaseModel
                     $colunaTipoInformacao = 'volume_acc_chuva';
                     break;
 
+                case FiltrosLeitura::TIPO_RAJADA_VENTO:
+                    $colunaTipoInformacao = 'rajada_vento_1h'; //Alteração pra rajada vento
+                        break;
+
                 default:
                     throw new Exception('É necessário informar o tipo de informação desejada.');
             }
@@ -413,6 +420,7 @@ class LeiturasModel extends BaseModel
             return $resultado;
         }
     }
+
 
     public function getUltimaTemperaturaMedia()
     {
@@ -756,12 +764,14 @@ class FiltrosLeitura
     const ESCALA_MINUTO         = 'minuto';
     const TIPO_VELOCIDADE_VENTO = 'velocidade_vento';
     const TIPO_DIRECAO_VENTO    = 'dir_vento'; //Jaque 31/07 -> monitoramento individual de estações
+    const TIPO_RAJADA_VENTO    = 'rajada_vento_1h'; //Jaque 15/05 -> monitoramento individual de estações - rajada vento
     const TIPO_TEMPERATURA      = 'temperatura';
     const TIPO_VOLUME_CHUVA     = 'volume_chuva';
     const TIPO_UMIDADE_AR       = 'umidade_ar';
     const TIPO_VOLUME_ACC_CHUVA = 'volume_acc_chuva';
     const DIRECAO_ASC           = 'ASC';
     const DIRECAO_DESC          = 'DESC';
+
 
     private $estacoes = array();
     private $dataInicial;
