@@ -25,7 +25,7 @@
         <div class="col">
             <div class="card shadow" >
                 <div class="card-body">
-                <!-- INFORMAÇÕES DA ESTAÇÃO --> 
+                <!-- INFORMAÇÕES DA ESTAÇÃO -->
                 {if $foto_estacao}
                 <img src="{$BASE_URL}assets\uploads\estacao\{$foto_estacao}" alt="Foto da Estação" data-toggle="modal" data-target="#fotoEstacaoModal" id="fotoEstacao" style="height: 100%;position: absolute;left: 10px;top: 0;width: auto; cursor: pointer;">
                 {/if}
@@ -141,7 +141,7 @@
                             <div class="row">
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Rajada de Vento:</h5>
-                                    <span class="h2 font-weight-bold mb-0" id="card_rajada_vento"> </span> <span class="h3 font-weight-bold mb-0"> km/h </span>
+                                    <span class="h2 font-weight-bold mb-0" id="card_rajada_vento"> </span> <span class="h3 font-weight-bold mb-0"> mm </span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-gradient-gray text-white rounded-circle shadow">
@@ -296,7 +296,6 @@
 
     function geraGrafico(canva, label_sup, label_inf, dados,  tipo_escala)
      {
-        console.log(canva.id);
      if (charts[canva.id]) {
         charts[canva.id].destroy();
         delete charts[canva.id]; // Remover a referência do gráfico
@@ -350,7 +349,7 @@
                                 tipo_dados: tipo_dados
                              },
                          }).done(function (data)
-                         {     console.log(data);
+                         {     
                                 if(data.length == 0)
                                 {
                                     let graficosArray = [graficoTemp, graficoUmid, graficoVelVento, graficoVolChuva, graficoRajadaVento];
@@ -386,8 +385,8 @@
                                     tipo_informação = "Volume de Chuva (mm)";
                                     geraGrafico(graficoVolChuva, tipo_informação, periodos, valores, escala);
 
-                                    break; 
-                                    
+                                    break;
+
                                     case 'TIPO_RAJADA_VENTO':
                                     tipo_informação = "Rajada do Vento (km/h)";
                                     geraGrafico(graficoRajadaVento, tipo_informação, periodos, valores, escala);
