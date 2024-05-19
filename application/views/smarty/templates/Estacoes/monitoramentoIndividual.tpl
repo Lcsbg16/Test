@@ -141,7 +141,7 @@
                             <div class="row">
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Rajada de Vento:</h5>
-                                    <span class="h2 font-weight-bold mb-0" id="card_rajada_vento"> </span> <span class="h3 font-weight-bold mb-0"> mm </span>
+                                    <span class="h2 font-weight-bold mb-0" id="card_rajada_vento"> </span> <span class="h3 font-weight-bold mb-0"> km/h </span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-gradient-gray text-white rounded-circle shadow">

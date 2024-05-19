@@ -159,9 +159,6 @@
                         method: 'GET',
                         success: function (response) {
                             let responseHTML = $(response);  
-                            console.log("RESPOSTA");
-                            console.log(response);
-
                             if (responseHTML.find('.carousel-item').length > 0) {
                                 $('#cards_row_acumulado').empty();
                                 $('#cards_row_acumulado').addClass('acumuladoChuvaPorPeriodo');
@@ -243,7 +240,7 @@
                     carregarCardAcumuladoChuva();
                 }
                 atualizarCards();
-                setInterval(atualizarCards, 1200);
+                setInterval(atualizarCards, 120000);
 
 
             {/literal}

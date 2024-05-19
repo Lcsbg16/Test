@@ -154,7 +154,9 @@ function selecionaDiaAtual(){
                 "volume_chuva": "Volume de Chuva (mm³)",
                 "temperatura": "Temperatura (°C)",
                 "velocidade_vento": "Velocidade do Vento (km/h)",
-                "umidade_ar": "Umidade do Ar (%)"
+                "umidade_ar": "Umidade do Ar (%)",
+                "rajada_vento": "Rajada de Vento (km/h)"
+
             };
 
             $(document).ready(function () {
@@ -193,6 +195,9 @@ function selecionaDiaAtual(){
                                 break;
                             case 'velocidade_vento':
                                 tipo_dados = "TIPO_VELOCIDADE_VENTO";
+                                break;
+                            case 'rajada_vento':
+                                tipo_dados = "TIPO_RAJADA_VENTO";
                                 break;
                                 default:
                                 tipo_dados = "TIPO_VOLUME_CHUVA";

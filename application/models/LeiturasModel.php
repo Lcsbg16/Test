@@ -39,7 +39,6 @@ class LeiturasModel extends BaseModel
     public function calcularEstatisticasPorPeriodo(FiltrosLeitura $filtros)
     {
 
-        $this->db->from('v_leitura_calculada'); //JAQUE: ALTERAÇÃO PARA V_LEITURA_CALCULADA, ANTERIORMENTE ESTAVA LEITURA. ALTERAÇÃO PARA RAJADA DE VENTOS (16/05)
         if ($filtros)
         {
             $estacoes       = $filtros->getEstacoes();
@@ -87,8 +86,8 @@ class LeiturasModel extends BaseModel
                     $colunaTipoInformacao = 'umidade_ar';
                     break;
 
-                    case FiltrosLeitura::TIPO_RAJADA_VENTO:
-                        $colunaTipoInformacao = 'rajada_vento_1h';
+                    case FiltrosLeitura::TIPO_RAJADA_VENTO: //#adicionando_rajada_vento .
+                        $colunaTipoInformacao = "rajada_vento_1h";
                         break;
                 default:
                     throw new Exception('É necessário informar o tipo de informação desejada.');
@@ -125,11 +124,20 @@ class LeiturasModel extends BaseModel
                     throw new Exception('É necessário informar a escala desejada.');
             }
 
-            $this->db->select($colunaPeriodo . ' AS periodo, ' . $agregador . '(' . $colunaTipoInformacao . ') AS valor');
-            $this->db->group_by($colunaPeriodo);
-            $this->db->order_by('periodo', $filtros->getDirecao());
-            $resultado = $this->db->get();
-
+            if ($colunaTipoInformacao == "rajada_vento_1h"){  //#adicionando_rajada_vento .
+                $this->db->from('v_leitura_calculada'); 
+                $this->db->select($colunaPeriodo . ' AS periodo, ' . $agregador . '(' . "v_leitura_calculada." . $colunaTipoInformacao . ') AS valor');
+                $this->db->group_by($colunaPeriodo);
+                $this->db->order_by('periodo', $filtros->getDirecao());
+                $resultado = $this->db->get();
+            }
+            else {
+                $this->db->from('leitura');  //#adicionando_rajada_vento .
+                $this->db->select($colunaPeriodo . ' AS periodo, ' . $agregador . '(' . $colunaTipoInformacao . ') AS valor');
+                $this->db->group_by($colunaPeriodo);
+                $this->db->order_by('periodo', $filtros->getDirecao());
+                $resultado = $this->db->get();
+            }
             //echo $this->db->last_query();
 
             $resultadoArray = $resultado->result_array();
@@ -145,7 +153,10 @@ class LeiturasModel extends BaseModel
             }
             return $retorno;
         }
+
+      
     }
+
 
     public function getLeiturasPorEscala(FiltrosLeitura $filtros = NULL, $retornarTudo = true)
     {
@@ -352,7 +363,6 @@ class LeiturasModel extends BaseModel
     /**
      * Essa função retorna a ultima leitura registrada no banco
      *
-     * Função criada por jaque 31/07. Motivo: retorno de NULL e utilização de data na função getUltimaSleituraS
      *
      * @param FiltrosLeitura $filtros
      * @param int $tempoLimite
@@ -361,7 +371,6 @@ class LeiturasModel extends BaseModel
      */
     public function getUltimaLeituraRegistrada(FiltrosLeitura $filtros = NULL)
     {
-        $this->db->from('v_leitura_calculada'); //antes estava pela tabela Leitura, mas agora está pela v_leitura_calculada pensando na rajada vento
 
         if ($filtros)
         {
@@ -405,19 +414,32 @@ class LeiturasModel extends BaseModel
                     break;
 
                 case FiltrosLeitura::TIPO_RAJADA_VENTO:
-                    $colunaTipoInformacao = 'rajada_vento_1h'; //Alteração pra rajada vento
+                    $colunaTipoInformacao = 'rajada_vento_1h'; // #adicionando_rajada_vento .
                         break;
 
                 default:
                     throw new Exception('É necessário informar o tipo de informação desejada.');
             }
 
-            $this->db->select("COALESCE({$colunaTipoInformacao}, 0) AS 'valor', datahora")
+            if ($colunaTipoInformacao == "rajada_vento_1h"){  //#adicionando_rajada_vento .
+                $this->db->from('v_leitura_calculada'); 
+                $this->db->select("COALESCE({$colunaTipoInformacao}, 0) AS 'valor', datahora")
                     ->order_by("datahora", "DESC")
                     ->limit(1);
+                $resultado = $this->db->get()->result_array();
+                return $resultado;
+            }
+            else {
+                $this->db->from('leitura');  //#adicionando_rajada_vento .
+                $this->db->select("COALESCE({$colunaTipoInformacao}, 0) AS 'valor', datahora")
+                ->order_by("datahora", "DESC")
+                ->limit(1);
 
-            $resultado = $this->db->get()->result_array();
-            return $resultado;
+                $resultado = $this->db->get()->result_array();
+                return $resultado;
+            }
+
+           
         }
     }
 
@@ -764,7 +786,7 @@ class FiltrosLeitura
     const ESCALA_MINUTO         = 'minuto';
     const TIPO_VELOCIDADE_VENTO = 'velocidade_vento';
     const TIPO_DIRECAO_VENTO    = 'dir_vento'; //Jaque 31/07 -> monitoramento individual de estações
-    const TIPO_RAJADA_VENTO    = 'rajada_vento_1h'; //Jaque 15/05 -> monitoramento individual de estações - rajada vento
+    const TIPO_RAJADA_VENTO    = 'rajada_vento_1h'; //Jaque 15/05 -> #adicionando_rajada_vento 
     const TIPO_TEMPERATURA      = 'temperatura';
     const TIPO_VOLUME_CHUVA     = 'volume_chuva';
     const TIPO_UMIDADE_AR       = 'umidade_ar';
