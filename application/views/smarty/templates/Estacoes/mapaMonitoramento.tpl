@@ -146,12 +146,12 @@
                         popupContent += '<br><br><strong>Status:</strong> ' + (feature.properties.estacao.online ? 'Online' : 'Offline');
                         if (feature.properties.ultimaLeitura)
                         { 
-
                             popupContent += '<br><strong>&Uacute;ltima leitura:</strong> ' + (feature.properties.ultimaLeitura.datahora_formatada ? feature.properties.ultimaLeitura.datahora_formatada : "Sem registro")
                             popupContent += "\
                         <br><strong>Temperatura:</strong> " + (feature.properties.ultimaLeitura.temperatura ? parseFloat(feature.properties.ultimaLeitura.temperatura).toFixed(2).replace(".", ",") + " &#176;C" : "Sem registro") + "\
                         <br><strong>Umidade do ar:</strong> " + (feature.properties.ultimaLeitura.umidade_ar ? parseFloat(feature.properties.ultimaLeitura.umidade_ar).toFixed(2).replace(".", ",") + "%" : "Sem registro") + "\
                         <br><strong>Velocidade do vento:</strong> " + (feature.properties.ultimaLeitura.velocidade_vento ? parseFloat(feature.properties.ultimaLeitura.velocidade_vento).toFixed(2).replace(".", ",") + " km/h" : "Sem registro") + "\
+                        <br><strong>Rajada de vento:</strong> " + (feature.properties.ultimaLeitura.rajada_vento_1h ? parseFloat(feature.properties.ultimaLeitura.rajada_vento_1h).toFixed(2).replace(".", ",") + " km/h" : "Sem registro") + "\
                         <br><strong>Direção do vento:</strong> " + (feature.properties.ultimaLeitura.dir_vento ? feature.properties.ultimaLeitura.dir_vento + "&#176;" : "Sem registro") + "\
                         <br><strong>Acúmulo de chuva (1h):</strong> " + (feature.properties.ultimaLeitura.volume_acumulado_1h ? parseFloat(feature.properties.ultimaLeitura.volume_acumulado_1h).toFixed(2).replace(".", ",") + " mm&sup3;" : "Sem registro") + "\
                         <br><strong>Acúmulo de chuva (24h):</strong> " + (feature.properties.ultimaLeitura.volume_acumulado_24h ? parseFloat(feature.properties.ultimaLeitura.volume_acumulado_24h).toFixed(2).replace(".", ",") + " mm&sup3;" : "Sem registro") + "\
