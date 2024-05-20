@@ -22,11 +22,11 @@
                         <div class="card bg-light-purple mt-4 custom-card">
                             {if $eAtual->foto_estacao}
                                 <a href="{$BASE_URL}Estacoes/monitoramentoIndividual/{$eAtual->id}" style="text-decoration: none;">
-                                    <img src="{$BASE_URL}assets/uploads/estacao/{$eAtual->foto_estacao}" class="card-img-top img-fluid" alt="Estação Image">
+                                    <img src="{$BASE_URL}ImageController/redimensionar?img=uploads/estacao/{$eAtual->foto_estacao|escape:'url'}&maxWidth=200&maxHeight=999999" class="card-img-top img-fluid" alt="Estação Image">
                                 </a>
                             {else}
                                 <a href="{$BASE_URL}Estacoes/monitoramentoIndividual/{$eAtual->id}" style="text-decoration: none;">
-                                    <img src="{$BASE_URL}assets/images/estacao.jpg" class="card-img-top img-fluid" alt="Default Image">
+                                    <img src="{$BASE_URL}ImageController/redimensionar?img=images/estacao.jpg&maxWidth=200&maxHeight=999999" class="card-img-top img-fluid" alt="Default Image">
                                 </a>    
                             {/if}
                             <div class="card-body text-center">
