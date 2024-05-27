@@ -83,7 +83,7 @@ $db['default'] = array(
     'database'     => APP_DB_DATABASE,
     'dbdriver'     => DB_DRIVER,
     'dbprefix'     => '',
-    'pconnect'     => FALSE,
+    'pconnect'     => TRUE,
     'db_debug'     => (ENVIRONMENT !== 'production') || defined('DB_DEBUG') ? DB_DEBUG : false,
     'cache_on'     => FALSE,
     'cachedir'     => APPPATH . 'cache/db',
