@@ -124,21 +124,21 @@ class LeiturasModel extends BaseModel
                     throw new Exception('É necessário informar a escala desejada.');
             }
 
-            if ($colunaTipoInformacao == "rajada_vento_1h"){  //#adicionando_rajada_vento .
+            if ($colunaTipoInformacao == "rajada_vento_1h")
+            {  //#adicionando_rajada_vento .
                 $this->db->from('v_leitura_calculada'); 
-                $this->db->select($colunaPeriodo . ' AS periodo, ' . $agregador . '(' . "v_leitura_calculada." . $colunaTipoInformacao . ') AS valor');
-                $this->db->group_by($colunaPeriodo);
-                $this->db->order_by('periodo', $filtros->getDirecao());
-                $resultado = $this->db->get();
             }
-            else {
+            else 
+            {
                 $this->db->from('leitura');  //#adicionando_rajada_vento .
-                $this->db->select($colunaPeriodo . ' AS periodo, ' . $agregador . '(' . $colunaTipoInformacao . ') AS valor');
-                $this->db->group_by($colunaPeriodo);
-                $this->db->order_by('periodo', $filtros->getDirecao());
-                $resultado = $this->db->get();
+             
             }
             //echo $this->db->last_query();
+
+            $this->db->select($colunaPeriodo . ' AS periodo, ' . $agregador . '(' . $colunaTipoInformacao . ') AS valor');
+            $this->db->group_by($colunaPeriodo);
+            $this->db->order_by('periodo', $filtros->getDirecao());
+            $resultado = $this->db->get();
 
             $resultadoArray = $resultado->result_array();
             $retorno        = [];
