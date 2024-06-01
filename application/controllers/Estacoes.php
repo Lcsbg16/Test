@@ -71,16 +71,14 @@ class Estacoes extends BasePrivateController
         header("Pragma: no-cache");
 
         $this->load->model('EstacoesModel');
-        $ids = $this->input->get('ids'); // IDs selecionados
+        $ids = $this->input->get('ids'); 
 
-        $atividade = $this->input->get('ativa'); //valor de atividade
+        $atividade = $this->input->get('ativa'); 
         $atividade = filter_var($atividade, FILTER_VALIDATE_BOOLEAN);
 
-        // Separa os IDs das estações em um array
         $estacoesIds = explode(',', $ids);
-        // var_dump($estacoesIds);
-        $estacoes    = $this->EstacoesModel->getEstacoesGeoJson($idCamada, $atividade, $estacoesIds); //segundo argumento: os IDs das estações
-        //var_dump($estacoes);
+        $estacoes    = $this->EstacoesModel->getEstacoesGeoJson($idCamada, $atividade, $estacoesIds); 
+        
         /* TODO: Filtrar melhor aqui quais informações serão retornadas no json */
         $this->jsonOutput($estacoes);
     }
@@ -158,7 +156,6 @@ class Estacoes extends BasePrivateController
 
         $variaveisView['estacoes'] = $this->EstacoesModel->getEstacaoComDadosMeteorologicos();
 
-        //var_dump($variaveisView['estacoes']);
         $this->loadSmartyView('Estacoes/visualizarEstacoes', $variaveisView);
     }
 }

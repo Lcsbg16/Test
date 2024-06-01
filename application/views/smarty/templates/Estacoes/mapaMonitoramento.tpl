@@ -42,7 +42,7 @@
                             </div>
                             <div class="col-lg-4 col-sm-12 form-group">
                                 <label for="estacao_selecionada">Esta&ccedil;&otilde;es Ativas:</label>
-                                <select class="form-control form-control-sm change_controller" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada -->
+                                <select class="form-control form-control-sm change_controller" id="estacao_selecionada" multiple> 
                                     {foreach $estacoes as $eAtual}
                                         <option value="{$eAtual.id}" selected id="estacao_descricao"> {$eAtual.descricao} ({$eAtual.identificador})</option>
                                     {/foreach}
@@ -265,14 +265,14 @@
 
                     // Iterar sobre todas as camadas do mapa e remover os marcadores circleMarker
                     mapa.eachLayer(function (layer) {
-                        if (isCircleMarker(layer)) { //SE FOR DO TIPO, REMOVE.
-                            mapa.removeLayer(layer); //ISSO É FEITO PARA NÃO APAGAR TODAS AS LAYERS, INCLUINDO A LAYER DO MAPA (MAP)
+                        if (isCircleMarker(layer)) { 
+                            mapa.removeLayer(layer); 
                         }
                     });
                     let estacaoIDS = $("#estacao_selecionada").val();
                     if (!estacaoIDS) {
                         let atividade = true;
-                        let url = BASE_URL + 'Estacoes/getEstacoesGeoJson/' + $('#camada_id').val() + '/?ids=&ativa=' + atividade; //SE NÃO HOUVER ESTAÇÃO MARCADA
+                        let url = BASE_URL + 'Estacoes/getEstacoesGeoJson/' + $('#camada_id').val() + '/?ids=&ativa=' + atividade; 
                         return url;
                     } else {
                         let atividade = true;

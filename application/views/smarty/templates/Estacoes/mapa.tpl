@@ -36,7 +36,7 @@
                     <div class="card-body card-body-top">
                        <div id="multiselect-div">
                         <label>Esta&ccedil;&atilde;o</label>
-                        <select class="form-control form-control-sm change_controller" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada -->
+                        <select class="form-control form-control-sm change_controller" id="estacao_selecionada" multiple> 
                             {foreach $estacoes as $eAtual}
                                 <option value="{$eAtual.id}" selected id="estacao_descricao"> {$eAtual.descricao} ({$eAtual.identificador})</option>
                             {/foreach}
@@ -150,7 +150,6 @@
                                             opcoesIcone = {}; //online interna
                                         }
                                         var marker = L.marker(latlng, opcoesIcone);
-                                    //    marker.bindTooltip(feature.properties.estacao.identificador, { permanent: true, direction: 'right', opacity: 1, backgroundColor: 'transparent'});
                                         
                                         marker.bindTooltip(feature.properties.estacao.identificador, { 
                                             direction: 'right',
@@ -168,7 +167,7 @@
                                         });
                                             return marker;
                                         }
-                                }).addTo(mapa); //adc os marcadores
+                                }).addTo(mapa); 
                                 mapa.fitBounds(estacoes.getBounds());
                             }).fail(function (jqXHR, textStatus, errorThrown)
                                     {
@@ -179,7 +178,7 @@
                                     });
                 }
 
-                        function carregarEstacoesOnline(url, mapa) //checkbox online only
+                        function carregarEstacoesOnline(url, mapa) 
                          {
                             $.get(url).done(function (data) {
                                 var estacoesOnline = data.features.filter(function (feature) {
@@ -228,24 +227,24 @@
                 function GerenciaMarcador(mapa)
                 {
                     // CORREÇÃO DE BUG: AO DESMARCAR A ESTAÇÃO, O MAP MARKER CONTINUAVA NO MAPA
-                    function isMarker(layer) { //ESSA FUNÇÃO VERIFICA SE A CAMADA (LAYER) É DE UM MARKERPOINT
+                    function isMarker(layer) { 
                         return layer instanceof L.Marker;
                     }
 
-                    // Iterar sobre todas as camadas do mapa e remover os marcadores Marker
+                    //PARA NÃO APAGAR TODAS AS LAYERS, INCLUINDO A LAYER principal DO MAPA 
                     mapa.eachLayer(function (layer) {
-                        if (isMarker(layer)) { //SE FOR DO TIPO, REMOVE.
-                            mapa.removeLayer(layer); //ISSO É FEITO PARA NÃO APAGAR TODAS AS LAYERS, INCLUINDO A LAYER principal DO MAPA (MAP)
+                        if (isMarker(layer)) { 
+                            mapa.removeLayer(layer); 
                         }
                     });
-                    let estacaoIDS = $("#estacao_selecionada").val(); //Organização da URL pelos IDs selecionados no multiselect menu
+                    let estacaoIDS = $("#estacao_selecionada").val(); 
                     if (!estacaoIDS) {
                         let atividade = true;
-                        let url = BASE_URL + 'Estacoes/getEstacoesGeoJson/?ids=&ativa=' + atividade; //SE NÃO HOUVER ESTAÇÃO MARCADA
+                        let url = BASE_URL + 'Estacoes/getEstacoesGeoJson/?ids=&ativa=' + atividade; 
                         return url;
                     } else {
                         let atividade = true;
-                        let url = BASE_URL + 'Estacoes/getEstacoesGeoJson/?ids=' + estacaoIDS.join(',') + '&ativa=' + atividade; //SE HOUVER, A URL É ORGANIZADA para retornar os IDs de marcadores selecionados
+                        let url = BASE_URL + 'Estacoes/getEstacoesGeoJson/?ids=' + estacaoIDS.join(',') + '&ativa=' + atividade; 
                         return url;
                     }
 
@@ -258,20 +257,20 @@
                         includeSelectAllOption: true,
                         buttonWidth: '100%'
                     });
-                    let mapa = criaMapa(); //ciação do mapa
-                    let url = GerenciaMarcador(mapa); //organização dos macadores
-                    let result = carregarTodasEstacoes(url, mapa); //Requisições + adiciona os markers
+                    let mapa = criaMapa(); 
+                    let url = GerenciaMarcador(mapa); 
+                    let result = carregarTodasEstacoes(url, mapa); 
 
                     //MUDANÇA DO CHECKBOX DAS ESTAÇÕES ONLINE / OFFILNE
                     $('#estacoes-online-checkbox').change(function () {
                         var isChecked = $("#estacoes-online-checkbox").is(":checked");
                         if (isChecked == true) {
-                            let url = GerenciaMarcador(mapa); //organização dos macadores
-                            let result = carregarEstacoesOnline(url, mapa); //Requisições + adiciona os markers
+                            let url = GerenciaMarcador(mapa); 
+                            let result = carregarEstacoesOnline(url, mapa); 
                         }
                         else {
-                            let url = GerenciaMarcador(mapa); //organização dos macadores
-                            let result = carregarTodasEstacoes(url, mapa); //Requisições + adiciona os markers
+                            let url = GerenciaMarcador(mapa); 
+                            let result = carregarTodasEstacoes(url, mapa); 
                         }
                     });
 
@@ -279,12 +278,12 @@
                     $('.change_controller').change(function () {
                         var isChecked = $("#estacoes-online-checkbox").is(":checked");
                         if (isChecked == true) {
-                            let url = GerenciaMarcador(mapa); //organização dos macadores
-                            let result = carregarEstacoesOnline(url, mapa); //Requisições + adiciona os markers
+                            let url = GerenciaMarcador(mapa); 
+                            let result = carregarEstacoesOnline(url, mapa); 
                         }
                         else {
-                            let url = GerenciaMarcador(mapa); //organização dos macadores
-                            let result = carregarTodasEstacoes(url, mapa); //Requisições + adiciona os markers
+                            let url = GerenciaMarcador(mapa); 
+                            let result = carregarTodasEstacoes(url, mapa); 
                         }
                     });
                 });
