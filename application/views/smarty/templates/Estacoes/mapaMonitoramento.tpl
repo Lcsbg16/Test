@@ -35,7 +35,7 @@
                     <div class="card-body card-body-top" style="padding-bottom: 0;">
                         <div class="row justify-content-center"> 
                             <div class="col-lg-4 col-sm-12 form-group">
-                                <label for="camada_id">Camada:</label>
+                                <label for="camada_id">Camada: </label>
                                 <select class="form-control form-control-sm change_controller" id="camada_id" name="camada_id">
                                     {html_options options=$camadas}
                                 </select>
@@ -52,6 +52,12 @@
                             <!-- Botão de abertura do Modal -->
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#legendasModal" style="margin: 21px!important;"> Legendas </button>
                             </div>
+                        </div>
+                        <div class="form-check" style="margin: 0px 0px 0px 127px;">
+                        <input class="form-check-input" type="checkbox" value="" id="estacoes-online-checkbox">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Mostrar apenas estações online
+                        </label>
                         </div>
                     </div>
                 </div>
@@ -140,12 +146,12 @@
                         popupContent += '<br><br><strong>Status:</strong> ' + (feature.properties.estacao.online ? 'Online' : 'Offline');
                         if (feature.properties.ultimaLeitura)
                         { 
-
                             popupContent += '<br><strong>&Uacute;ltima leitura:</strong> ' + (feature.properties.ultimaLeitura.datahora_formatada ? feature.properties.ultimaLeitura.datahora_formatada : "Sem registro")
                             popupContent += "\
                         <br><strong>Temperatura:</strong> " + (feature.properties.ultimaLeitura.temperatura ? parseFloat(feature.properties.ultimaLeitura.temperatura).toFixed(2).replace(".", ",") + " &#176;C" : "Sem registro") + "\
                         <br><strong>Umidade do ar:</strong> " + (feature.properties.ultimaLeitura.umidade_ar ? parseFloat(feature.properties.ultimaLeitura.umidade_ar).toFixed(2).replace(".", ",") + "%" : "Sem registro") + "\
                         <br><strong>Velocidade do vento:</strong> " + (feature.properties.ultimaLeitura.velocidade_vento ? parseFloat(feature.properties.ultimaLeitura.velocidade_vento).toFixed(2).replace(".", ",") + " km/h" : "Sem registro") + "\
+                        <br><strong>Rajada de vento:</strong> " + (feature.properties.ultimaLeitura.rajada_vento_1h ? parseFloat(feature.properties.ultimaLeitura.rajada_vento_1h).toFixed(2).replace(".", ",") + " km/h" : "Sem registro") + "\
                         <br><strong>Direção do vento:</strong> " + (feature.properties.ultimaLeitura.dir_vento ? feature.properties.ultimaLeitura.dir_vento + "&#176;" : "Sem registro") + "\
                         <br><strong>Acúmulo de chuva (1h):</strong> " + (feature.properties.ultimaLeitura.volume_acumulado_1h ? parseFloat(feature.properties.ultimaLeitura.volume_acumulado_1h).toFixed(2).replace(".", ",") + " mm&sup3;" : "Sem registro") + "\
                         <br><strong>Acúmulo de chuva (24h):</strong> " + (feature.properties.ultimaLeitura.volume_acumulado_24h ? parseFloat(feature.properties.ultimaLeitura.volume_acumulado_24h).toFixed(2).replace(".", ",") + " mm&sup3;" : "Sem registro") + "\
@@ -161,10 +167,9 @@
                 }
 
                 var controlaAcionamentoBounds = false; 
-                function HandleAjax(url, mapa) {
+                function carregarTodasEstacoes(url, mapa) {
                     $.get(url).done(
                             function (data) {
-                                console.log(data);
                                 estacoes = L.geoJSON([data], {
                                     style: function (feature) {
                                         return feature.properties && feature.properties.style;
@@ -173,6 +178,52 @@
                                     pointToLayer: function (feature, latlng) {
 
                                         if (feature.properties.estacao.online && feature.properties.camada.cor)
+                                        {
+                                            cor = feature.properties.camada.cor;
+                                        } else
+                                        {
+                                            cor = '#bebebe';
+                                        }
+
+                                        return L.circleMarker(latlng, {
+                                            radius: 16,
+                                            fillColor: cor,
+                                            color: '#000',
+                                            weight: 1,
+                                            opacity: 1,
+                                            fillOpacity: 0.8
+                                        });
+                                    }
+                                }).addTo(mapa);
+
+                                if (!controlaAcionamentoBounds) {
+                                   console.log("bounds: " + controlaAcionamentoBounds);
+                                     mapa.fitBounds(estacoes.getBounds());
+                                     controlaAcionamentoBounds = true; 
+                                     }                           
+                                })
+                            .fail(function (jqXHR, textStatus, errorThrown) {
+                                console.error(jqXHR);
+                                console.error(textStatus);
+                                console.error(errorThrown);
+                                alert('Houve erros durante o processamento da solicitação.');
+                            });
+                }
+
+
+                function carregarEstacoesOnline(url, mapa) {
+                    $.get(url).done(function (data) {
+                           var estacoesOnline = data.features.filter(function (feature) {
+                             return feature.properties.estacao.online;
+                                });
+                                estacoes = L.geoJSON(estacoesOnline, {
+                                    style: function (feature) {
+                                        return feature.properties && feature.properties.style;
+                                    },
+                                    onEachFeature: onEachFeature,
+                                    pointToLayer: function (feature, latlng) {
+
+                                        if (feature.properties.camada.cor)
                                         {
                                             cor = feature.properties.camada.cor;
                                         } else
@@ -240,18 +291,45 @@
                     });
                     let mapa = criaMapa();
                     let url = GerenciaMarcador(mapa);
-                    let result = HandleAjax(url, mapa);
+                    let result = carregarTodasEstacoes(url, mapa);
 
                     setInterval(() => {
                        let url = GerenciaMarcador(mapa);
-                        let result = HandleAjax(url, mapa);
-                    }, 30000);
-                   
-                    //EVENTO DE CHANGE DAS ESTAÇÕES
-                    $('.change_controller').change(function () {
+                       var isChecked = $("#estacoes-online-checkbox").is(":checked");
 
-                        let url = GerenciaMarcador(mapa); //organização dos macadores
-                        let result = HandleAjax(url, mapa); //Requisições + adiciona os markers
+                       if (isChecked == true) {
+                            let result = carregarEstacoesOnline(url, mapa); 
+                        }
+                        else {
+                            let result = carregarTodasEstacoes(url, mapa); 
+                        }
+
+                    }, 30000);
+
+                    //MUDANÇA DO CHECKBOX DAS ESTAÇÕES ONLINE / OFFILNE
+                    $('#estacoes-online-checkbox').change(function () {
+                        var isChecked = $("#estacoes-online-checkbox").is(":checked");
+                        if (isChecked == true) {
+                            let url = GerenciaMarcador(mapa); 
+                            let result = carregarEstacoesOnline(url, mapa); 
+                        }
+                        else {
+                            let url = GerenciaMarcador(mapa); 
+                            let result = carregarTodasEstacoes(url, mapa); 
+                        }
+                    });
+                   
+                    //EVENTO DE CHANGE DAS ESTAÇÕES E CAMADAS
+                    $('.change_controller').change(function () {
+                        var isChecked = $("#estacoes-online-checkbox").is(":checked");
+                        if (isChecked == true) {
+                            let url = GerenciaMarcador(mapa); 
+                            let result = carregarEstacoesOnline(url, mapa); 
+                        }
+                        else {
+                            let url = GerenciaMarcador(mapa); 
+                            let result = carregarTodasEstacoes(url, mapa); 
+                        }
                     });
                 });
             {/literal}

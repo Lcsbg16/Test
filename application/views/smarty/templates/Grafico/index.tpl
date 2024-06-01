@@ -174,7 +174,9 @@
                 "volume_chuva": "Volume de Chuva (mm³)",
                 "temperatura": "Temperatura (°C)",
                 "velocidade_vento": "Velocidade do Vento (km/h)",
-                "umidade_ar": "Umidade do Ar (%)"
+                "umidade_ar": "Umidade do Ar (%)",
+                "rajada_vento": "Rajada de Vento (km/h)"
+
             };
 
             $(document).ready(function () {
@@ -199,23 +201,26 @@
                     return tipo_dados; // Quando o usuário não selecionar nada, por padrão, o gráfico vai iniciar com o volume de chuva que é a info mais importante pro monitoramento
                 } else {
                     let tipo_dados;
-                    switch (tipo_informacao)
-                    {
-                        case 'temperatura':
-                            tipo_dados = "TIPO_TEMPERATURA";
-                            break;
-                        case 'volume_chuva':
-                            tipo_dados = "TIPO_VOLUME_CHUVA";
-                            break;
-                        case 'umidade_ar':
-                            tipo_dados = "TIPO_UMIDADE_AR";
-                            break;
-                        case 'velocidade_vento':
-                            tipo_dados = "TIPO_VELOCIDADE_VENTO";
-                            break;
-                        default:
-                            tipo_dados = "TIPO_VOLUME_CHUVA";
-                            console.log(`Erro na seleção de dados. Selecionado padrão default "volume de chuvas"`);
+                        switch (tipo_informacao)
+                        {
+                            case 'temperatura':
+                                tipo_dados = "TIPO_TEMPERATURA";
+                                break;
+                            case 'volume_chuva':
+                                tipo_dados = "TIPO_VOLUME_CHUVA";
+                                break;
+                            case 'umidade_ar':
+                                tipo_dados = "TIPO_UMIDADE_AR";
+                                break;
+                            case 'velocidade_vento':
+                                tipo_dados = "TIPO_VELOCIDADE_VENTO";
+                                break;
+                            case 'rajada_vento':
+                                tipo_dados = "TIPO_RAJADA_VENTO";
+                                break;
+                                default:
+                                tipo_dados = "TIPO_VOLUME_CHUVA";
+                                console.log(`Erro na seleção de dados. Selecionado padrão default "volume de chuvas"`);
 
                     }
                     return tipo_dados;

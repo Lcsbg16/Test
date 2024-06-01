@@ -34,6 +34,7 @@
             <div class="col">
                 <div class="card shadow">
                     <div class="card-body card-body-top">
+                       <div id="multiselect-div">
                         <label>Esta&ccedil;&atilde;o</label>
                         <select class="form-control form-control-sm change_controller" id="estacao_selecionada" multiple> <!-- Id indica qual estação foi selecionada -->
                             {foreach $estacoes as $eAtual}
@@ -41,6 +42,13 @@
                             {/foreach}
 
                         </select>
+                        </div>
+                        <div class="form-check" style=" margin: 5px;">
+                        <input class="form-check-input" type="checkbox" value="" id="estacoes-online-checkbox">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Mostrar apenas estações online
+                        </label>
+                        </div>
                     </div>
 
                     <div class="card-body card-body-bottom">
@@ -70,6 +78,28 @@
                     tooltipAnchor: [16, -28],
                     shadowSize: [41, 41]
                 });
+
+                var offlineExternalIcon = L.icon({
+                    iconUrl: BASE_URL + 'assets/images/grey_external_marker.png',
+                    shadowUrl: BASE_URL + 'assets/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    tooltipAnchor: [16, -28],
+                    shadowSize: [41, 41]
+                });
+
+                var onlineExternalIcon = L.icon({
+                    iconUrl: BASE_URL + 'assets/images/blue_internal_marker.png',
+                    shadowUrl: BASE_URL + 'assets/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    tooltipAnchor: [16, -28],
+                    shadowSize: [41, 41]
+                });
+
+
 
                 function criaMapa() {
                     var map = L.map('map').setView([-22.368461, -41.774747], 13);
@@ -101,53 +131,99 @@
                     layer.bindPopup(popupContent);
                 }
 
-                function HandleAjax(url, mapa)
-                { //Organiza AJAX
-                    $.get(url).done(//URL
+                function carregarTodasEstacoes(url, mapa)
+                { 
+                    $.get(url).done(
                             function (data) {
                                 estacoes = L.geoJSON([data], {
                                     onEachFeature: onEachFeature,
                                     pointToLayer: function (feature, latlng)
-                                    {
-                                        //console.log(feature)
-                                        if (!feature.properties.estacao.online)
-                                        {
-                                            opcoesIcone = {icon: offlineIcon};
-                                        } else
-                                        {
-                                            opcoesIcone = {};
+                                    {   
+                                        if (!feature.properties.estacao.online && feature.properties.estacao.tipo != "interna") 
+                                        {   
+                                             opcoesIcone = {icon: offlineExternalIcon}; // offline externa
+                                        } else if (!feature.properties.estacao.online && feature.properties.estacao.tipo == "interna"){
+                                            opcoesIcone = {icon: offlineIcon};          // offline  interna   
+                                        } else if (feature.properties.estacao.online && feature.properties.estacao.tipo != "interna"){
+                                        opcoesIcone = {icon: onlineExternalIcon}; //online externa
+                                        } else {
+                                            opcoesIcone = {}; //online interna
                                         }
                                         var marker = L.marker(latlng, opcoesIcone);
-                                        //    marker.bindTooltip(feature.properties.estacao.identificador, { permanent: true, direction: 'right', opacity: 1, backgroundColor: 'transparent'});
-
-                                        marker.bindTooltip(feature.properties.estacao.identificador, {
+                                    //    marker.bindTooltip(feature.properties.estacao.identificador, { permanent: true, direction: 'right', opacity: 1, backgroundColor: 'transparent'});
+                                        
+                                        marker.bindTooltip(feature.properties.estacao.identificador, { 
                                             direction: 'right',
                                             permanent: true,
                                             opacity: 1,
                                         });
 
+                                        marker.on('tooltipopen', function(e)
+                                        {
+                                        var tooltip = e.tooltip._container;
+                                        tooltip.style.background = 'transparent';
+                                        tooltip.style.border = 'none',
+                                        tooltip.style.boxShadow = 'none'; 
+                                        tooltip.style.color = 'green';  //ALTERAÇÃO DA COR DA FONTE DAS LEGENDAS DOS MARCADORES NO MAPA
+                                        });
+                                            return marker;
+                                        }
+                                }).addTo(mapa); //adc os marcadores
+                                mapa.fitBounds(estacoes.getBounds());
+                            }).fail(function (jqXHR, textStatus, errorThrown)
+                                    {
+                                        console.error(jqXHR);
+                                        console.error(textStatus);
+                                        console.error(errorThrown);
+                                        alert('Houve erros durante o processamento da solicitação.');
+                                    });
+                }
+
+                        function carregarEstacoesOnline(url, mapa) //checkbox online only
+                         {
+                            $.get(url).done(function (data) {
+                                var estacoesOnline = data.features.filter(function (feature) {
+                                    return feature.properties.estacao.online;
+                                });
+
+                                var estacoes = L.geoJSON(estacoesOnline, {
+                                    onEachFeature: onEachFeature,
+                                    pointToLayer: function (feature, latlng) {
+                                        var opcoesIcone = {};
+                                        if (feature.properties.estacao.tipo != "interna") {
+                                            opcoesIcone.icon = onlineExternalIcon;
+                                        } else { 
+                                            opcoesIcone = {};
+                                        }
+                                        var marker = L.marker(latlng, opcoesIcone);
+
+                                        marker.bindTooltip(feature.properties.estacao.identificador, { 
+                                            direction: 'right',
+                                            permanent: true,
+                                            opacity: 1,
+                                        });
 
                                         marker.on('tooltipopen', function (e) {
                                             var tooltip = e.tooltip._container;
                                             tooltip.style.background = 'transparent';
                                             tooltip.style.border = 'none';
-                                            tooltip.style.boxShadow = 'none';
-                                            tooltip.style.color = 'green';  //ALTERAÇÃO DA COR DA FONTE DAS LEGENDAS DOS MARCADORES NO MAPA
-
+                                            tooltip.style.boxShadow = 'none'; 
+                                            tooltip.style.color = 'green';
                                         });
 
                                         return marker;
                                     }
-                                }).addTo(mapa); //adc os marcadores
+                                }).addTo(mapa);
+
                                 mapa.fitBounds(estacoes.getBounds());
-                            }).fail(function (jqXHR, textStatus, errorThrown)
-                    {
-                        console.error(jqXHR);
-                        console.error(textStatus);
-                        console.error(errorThrown);
-                        alert('Houve erros durante o processamento da solicitação.');
-                    });
-                }
+                            }).fail(function (jqXHR, textStatus, errorThrown) {
+                                console.error(jqXHR);
+                                console.error(textStatus);
+                                console.error(errorThrown);
+                                alert('Houve erros durante o processamento da solicitação.');
+                            });
+                         }
+
 
                 function GerenciaMarcador(mapa)
                 {
@@ -175,7 +251,8 @@
 
                 }
 
-                $(function () { //onload da page
+                $(function () { 
+        
                     // Configurações do multiselect
                     $("#estacao_selecionada").multiselect({
                         includeSelectAllOption: true,
@@ -183,12 +260,32 @@
                     });
                     let mapa = criaMapa(); //ciação do mapa
                     let url = GerenciaMarcador(mapa); //organização dos macadores
-                    let result = HandleAjax(url, mapa); //Requisições + adiciona os markers
+                    let result = carregarTodasEstacoes(url, mapa); //Requisições + adiciona os markers
+
+                    //MUDANÇA DO CHECKBOX DAS ESTAÇÕES ONLINE / OFFILNE
+                    $('#estacoes-online-checkbox').change(function () {
+                        var isChecked = $("#estacoes-online-checkbox").is(":checked");
+                        if (isChecked == true) {
+                            let url = GerenciaMarcador(mapa); //organização dos macadores
+                            let result = carregarEstacoesOnline(url, mapa); //Requisições + adiciona os markers
+                        }
+                        else {
+                            let url = GerenciaMarcador(mapa); //organização dos macadores
+                            let result = carregarTodasEstacoes(url, mapa); //Requisições + adiciona os markers
+                        }
+                    });
 
                     //////EVENTO DE CHANGE DAS ESTAÇÕES
                     $('.change_controller').change(function () {
-                        let url = GerenciaMarcador(mapa); //organização dos macadores
-                        let result = HandleAjax(url, mapa); //Requisições + adiciona os markers
+                        var isChecked = $("#estacoes-online-checkbox").is(":checked");
+                        if (isChecked == true) {
+                            let url = GerenciaMarcador(mapa); //organização dos macadores
+                            let result = carregarEstacoesOnline(url, mapa); //Requisições + adiciona os markers
+                        }
+                        else {
+                            let url = GerenciaMarcador(mapa); //organização dos macadores
+                            let result = carregarTodasEstacoes(url, mapa); //Requisições + adiciona os markers
+                        }
                     });
                 });
             {/literal}
