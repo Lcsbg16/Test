@@ -131,6 +131,7 @@ class Estacoes extends BasePrivateController
     public function getLegendaMonitoramento($camada)
     {
         $this->jsonOutput('Legenda não disponível');
+        
     }
 
     //Metodo apenas para testar o envio de emails diretamente

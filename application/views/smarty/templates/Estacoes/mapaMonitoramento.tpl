@@ -78,7 +78,9 @@
                 </div>
                 </div>
             </div>
-
+        <div>
+            <img src="{$BASE_URL}assets/uploads/Legendas/pluviometria.png" alt="Legenda Pluviometria" width=700 height=250>
+        </div>
     </div>
 
     <!-- Modal para as legendas -->
