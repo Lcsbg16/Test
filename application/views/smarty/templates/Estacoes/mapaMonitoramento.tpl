@@ -78,9 +78,6 @@
                 </div>
                 </div>
             </div>
-        <div>
-            <img src="{$BASE_URL}assets/uploads/Legendas/pluviometria.png" alt="Legenda Pluviometria" width=700 height=250>
-        </div>
     </div>
 
     <!-- Modal para as legendas -->
@@ -111,21 +108,21 @@
                 /*AJAX PARA CARREGAMENTO DAS LEGENDAS NO MODAL*/ 
                 function buscaLegendaCamada(camada) {
                     let url = BASE_URL + 'Estacoes/getLegendaMonitoramento/' + camada;
-                        $.ajax({
-                            url: url,
-                            dataType: "json",
-                            method: "GET"
-                        }).done(function (data) {
-                            $("#modal-body").html(data);
-                        }).fail(function (jqXHR, textStatus, errorThrown) {
-                            console.error("Erro na requisição AJAX para gerar as legendas:", errorThrown);
-                        });
-                    }
-
-                    $('#legendasModal').on('shown.bs.modal', function (e) {
-                        let camada =  $('#camada_id').val();
-                        buscaLegendaCamada(camada);
+                    $.ajax({
+                        url: url,
+                        dataType: "json",
+                        method: "GET"
+                    }).done(function (data) {
+                        $("#modal-body").html(data);
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        console.error("Erro na requisição AJAX para gerar as legendas:", errorThrown);
                     });
+                }
+
+                $('#legendasModal').on('shown.bs.modal', function (e) {
+                    let camada = $('#camada_id').val();
+                    buscaLegendaCamada(camada);
+                });
 
                 /* FIM DO AJAX PARA CARREGAMENTO DAS LEGENDAS NO MODAL*/
 
