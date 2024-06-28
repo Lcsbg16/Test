@@ -128,20 +128,21 @@ class Estacoes extends BasePrivateController
         }
     }
 
-    public function getLegendaMonitoramento($camada)
+public function getLegendaMonitoramento($camada)
+{
+    switch ($camada) 
     {
-        switch ($camada) 
-        {
-            case 'volume_chuva':
-                $baseUrl = base_url();
-                $html = '<img src="' . $baseUrl . 'assets/uploads/Legendas/pluviometria.png" alt="Legenda Pluviometria" width=450>';
-                break;
-            default:
-                $html = 'Legenda não disponível';
-                break;
-        }
-        $this->jsonOutput($html);
+        case 'volume_chuva':
+            $baseUrl = base_url();
+            $mensagem = '<div style="text-align: center;">Pluviometria</div><br><img src="' . $baseUrl . 'assets/uploads/Legendas/pluviometria.png" alt="Legenda Pluviometria" width=450>';
+            break;
+        default:
+            $mensagem = 'Legenda não disponível';
+            break;
     }
+    $this->jsonOutput($mensagem);
+}
+
     
     
 
