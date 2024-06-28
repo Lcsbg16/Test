@@ -39,7 +39,7 @@ class Estacoes extends BasePrivateController
         $variaveisView['titulo_pagina'] = 'Mapa de Monitoramento';
 
         $this->EstacoesModel->getArrayEstacoesComAcesso();
-
+        
         $estacoes = $this->EstacoesModel->estacoesComAcesso;
 
         //  $imploded = implode(',', $estacoes);
@@ -130,8 +130,20 @@ class Estacoes extends BasePrivateController
 
     public function getLegendaMonitoramento($camada)
     {
-        $this->jsonOutput('Legenda não disponível');
+        switch ($camada) 
+        {
+            case 'volume_chuva':
+                $baseUrl = base_url();
+                $html = '<img src="' . $baseUrl . 'assets/uploads/Legendas/pluviometria.png" alt="Legenda Pluviometria" width=450>';
+                break;
+            default:
+                $html = 'Legenda não disponível';
+                break;
+        }
+        $this->jsonOutput($html);
     }
+    
+    
 
     //Metodo apenas para testar o envio de emails diretamente
     public function testarEnvioEmailEvento()
