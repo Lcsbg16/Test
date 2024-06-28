@@ -184,8 +184,8 @@
                                         {
                                             cor = '#bebebe';
                                         }
-
-                                        return L.circleMarker(latlng, {
+                                        if (feature.properties.estacao.tipo == "interna") {
+                                            var circleMarker = L.circleMarker(latlng, {
                                             radius: 16,
                                             fillColor: cor,
                                             color: '#000',
@@ -193,8 +193,44 @@
                                             opacity: 1,
                                             fillOpacity: 0.8
                                         });
-                                    }
-                                }).addTo(mapa);
+                                        } else { //coloca a circunferência vermelha para estações externas
+                                            var circleMarker = L.circleMarker(latlng, {
+                                            radius: 16,
+                                            fillColor: cor,
+                                            color: '#FF0000',
+                                            weight: 2,
+                                            opacity: 1,
+                                            fillOpacity: 0.8
+                                        });
+                                        }
+
+                                        // Adiciona o identificador à direita do marcador circular
+                                        circleMarker.bindTooltip(feature.properties.estacao.identificador, {
+                                            direction: 'right',
+                                            permanent: true,
+                                            opacity: 1,
+                                            offset: [10, 0]
+                                        });
+
+                                        circleMarker.on('tooltipopen', function(e) {
+                                        var tooltip = e.tooltip._container;
+                                        tooltip.style.background = 'transparent';
+                                        tooltip.style.border = 'none';
+                                        tooltip.style.boxShadow = 'none';
+                                        tooltip.style.color = 'green'; // Altera a cor da fonte das legendas dos marcadores no mapa
+                                        
+                                        //Remoção de pointer residual
+                                        var styles = ` .leaflet-tooltip-right:before, .leaflet-tooltip-left:before {  display: none !important; }`;
+                                        var styleSheet = document.createElement("style");
+                                        styleSheet.type = "text/css";
+                                        styleSheet.innerText = styles;
+                                        document.head.appendChild(styleSheet);
+
+                                    });
+
+                                        return circleMarker;
+                                        }
+                                        }).addTo(mapa);
 
                                 if (!controlaAcionamentoBounds) {
                                    console.log("bounds: " + controlaAcionamentoBounds);
