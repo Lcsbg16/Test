@@ -16,6 +16,9 @@
             <div class="row" id="cards_row">
 
             </div>
+            <div class="row" id="cards_row_acumulado">
+
+            </div>
         </div>
     </div>
     <!-- /estatisticas_gerais -->
@@ -155,13 +158,14 @@
                         url: url,
                         method: 'GET',
                         success: function (response) {
-                            let responseHTML = $(response);
-
+                            let responseHTML = $(response);  
                             if (responseHTML.find('.carousel-item').length > 0) {
-                                $('#alert_cards_row').addClass('acumuladoChuvaPorPeriodo');
-                                $('#alert_cards_row').append(response);
+                                $('#cards_row_acumulado').empty();
+                                $('#cards_row_acumulado').addClass('acumuladoChuvaPorPeriodo');
+                                $('#cards_row_acumulado').append(response);
                             } else {
-                                $('#alert_cards_row .acumuladoChuvaPorPeriodo').remove();
+                                $('#cards_row_acumulado .acumuladoChuvaPorPeriodo').remove();
+                                $('#cards_row_acumulado').empty();
                             }
                         },
                         error: function (error) {
@@ -169,8 +173,6 @@
                         }
                     });
                 }
-                carregarCardAcumuladoChuva();
-
 
 
                 ///////* MONTAGEM DOS CARDS DE ALERTA*//////////

@@ -261,7 +261,9 @@ class EstacoesModel extends BaseModel
                         'volume_chuva'         => $ultimoRegistro['volume_chuva'],
                         'volume_acumulado_1h'  => $ultimoRegistro['volume_chuva_ac_1h'],
                         'volume_acumulado_24h' => $ultimoRegistro['volume_chuva_ac_24h'],
-                        'volume_acumulado_96h' => $ultimoRegistro['volume_chuva_ac_96h']
+                        'volume_acumulado_96h' => $ultimoRegistro['volume_chuva_ac_96h'],
+                        'rajada_vento_1h' => $ultimoRegistro['rajada_vento_1h']
+
                     ];
                 }
                 else

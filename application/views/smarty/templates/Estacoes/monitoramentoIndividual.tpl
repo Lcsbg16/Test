@@ -7,13 +7,29 @@
 
     <div class="container-fluid mt-3">
     <div class="row">
+
+    <!-- Modal para as legendas -->
+    <div class="modal fade" id="fotoEstacaoModal" tabindex="-1" role="dialog" aria-labelledby="fotoEstacaoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content"> 
+        <div class="modal-body" id="modal-body" style="padding: 3px!important;
+    ">
+            <img src="" id="modal-fotoEstacao" style="max-width:100%; max-height:100%"> 
+            </img>
+        </div>
+    
+    </div>
+    </div>
+</div>
+
         <div class="col">
             <div class="card shadow" >
                 <div class="card-body">
-                <!-- INFORMAÇÕES DA ESTAÇÃO --> 
+                <!-- INFORMAÇÕES DA ESTAÇÃO -->
                 {if $foto_estacao}
-                <img src="{$BASE_URL}assets\uploads\estacao\{$foto_estacao}" alt="Foto da Estação" style="height: 100%;position: absolute;left: 10px;top: 0;width: auto;">
+                <img src="{$BASE_URL}assets\uploads\estacao\{$foto_estacao}" alt="Foto da Estação" data-toggle="modal" data-target="#fotoEstacaoModal" id="fotoEstacao" style="height: 100%;position: absolute;left: 10px;top: 0;width: auto; cursor: pointer;">
                 {/if}
+
                 <h5 class="text-center"> Identificação da Estação: </h5> <h2 class="card-title text-center"  id="estacao_id"> </h2> 
                 <h6 class="card-subtitle mb-2 text-muted text-center">A última leitura foi realizada em:  </h6>
                 <h6 class="card-subtitle mb-2 text-muted text-center" id='leitura_label'>data/hora ultima leitura </h6>
@@ -125,7 +141,7 @@
                             <div class="row">
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Rajada de Vento:</h5>
-                                    <span class="h2 font-weight-bold mb-0" id="card_rajada_vento"> </span> <span class="h3 font-weight-bold mb-0"> mm </span>
+                                    <span class="h2 font-weight-bold mb-0" id="card_rajada_vento"> </span> <span class="h3 font-weight-bold mb-0"> km/h </span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-gradient-gray text-white rounded-circle shadow">
@@ -238,7 +254,9 @@
     </div>
 
     <div class="row my-12" >
-        
+    <div class="col-md-12 col-lg-12 col-xl-6 py-1">
+    <canvas id="graficoRajadaVento" style="min-height: 350px;"></canvas>
+</div>
     </div>
 
             </div>
@@ -251,8 +269,14 @@
 </div>
 <script>
 
- function GetEscala(){ //função que devolve os dados da escala 
-            let escala_selecionada = $( "#escala_selecionada" ).val(); //Valor da escala 
+    $('#fotoEstacao').click(function(){
+      var fotoURL = $(this).attr('src'); 
+      $('#modal-fotoEstacao').attr('src', fotoURL);
+    });
+
+
+ function GetEscala(){ 
+            let escala_selecionada = $( "#escala_selecionada" ).val(); 
             if(!escala_selecionada){
                 throw new Error('Necessário informar a escala'); 
                 return;
@@ -262,7 +286,7 @@
                     escala = "ESCALA_"+ escala_selecionada.toUpperCase();
                 }
                 else {
-                    escala = "ESCALA_MES"; //Mês tem acento, tem que trocar 
+                    escala = "ESCALA_MES"; 
                 }
             return escala; 
         }
@@ -272,10 +296,9 @@
 
     function geraGrafico(canva, label_sup, label_inf, dados,  tipo_escala)
      {
-        console.log(canva.id);
      if (charts[canva.id]) {
         charts[canva.id].destroy();
-        delete charts[canva.id]; // Remover a referência do gráfico
+        delete charts[canva.id]; 
     }
         let labels_formatada = AjeitarLabels(label_inf, tipo_escala);
          
@@ -312,31 +335,30 @@
             let graficoVelVento = document.getElementById("graficoVelVento");
             let graficoDirVento = document.getElementById("graficoDirVento");
             let graficoVolChuva = document.getElementById("graficoVolChuva");
+            let graficoRajadaVento = document.getElementById("graficoRajadaVento");
 
                     $.ajax({
                         url: "{$BASE_URL}Leituras/getEstatisticasLeiturasJson",
                         dataType: "json",
                         method: "POST",
                         data: {
-                                estacao_selecionada: estacao_id,  //Estação - ID
-                                data_inicial: datas[0], //data inicial formatada
-                                data_final: datas[1], //data final formatada
+                                estacao_selecionada: estacao_id, 
+                                data_inicial: datas[0], 
+                                data_final: datas[1], 
                                 escala: escala, 
                                 tipo_dados: tipo_dados
                              },
                          }).done(function (data)
-                         {     console.log(data);
+                         {     
                                 if(data.length == 0)
                                 {
-                                    let graficosArray = [graficoTemp, graficoUmid, graficoVelVento, graficoVolChuva];
+                                    let graficosArray = [graficoTemp, graficoUmid, graficoVelVento, graficoVolChuva, graficoRajadaVento];
                                    graficosArray.forEach(grafico => geraGrafico(grafico, "Dados indisponíveis nesse período", "errro", "0"));
 
                              } 
                              else 
                             {
-                                //salva as keys/chaves como os periodos de tempo (no model: o dado vem como 2023=>20.55, ou seja, key = periodo 
                                 const periodos = Object.keys(data).map(function(key) { return key;  });
-                                //salva os value como valor (no model: 2023=>20.5555, ou seja, value = valor)
                                 const valores = Object.values(data).map(function(value) { return value;});
                                 let tipo_informação;
                                 
@@ -344,7 +366,7 @@
                                 { 
                                     case 'TIPO_TEMPERATURA':
                                     tipo_informação = "Temperatura (ºC)";
-                                    geraGrafico(graficoTemp, tipo_informação, periodos, valores, escala); //passa: canva de temperatura, Temperatura como label superior, periodos como label inferior e valores como dados finais
+                                    geraGrafico(graficoTemp, tipo_informação, periodos, valores, escala); 
                                     break; 
 
                                     case 'TIPO_UMIDADE_AR':    
@@ -363,6 +385,12 @@
 
                                     break;
 
+                                    case 'TIPO_RAJADA_VENTO':
+                                    tipo_informação = "Rajada do Vento (km/h)";
+                                    geraGrafico(graficoRajadaVento, tipo_informação, periodos, valores, escala);
+
+                                    break;
+
                                     default:
                                     throw new Exception('Tipo não especificado - Ajax, MonitoramentoIndividual');
 
@@ -370,7 +398,6 @@
                             
                             }
                    }).fail(function (jqXHR, textStatus, errorThrown) {
-                    // Tratamento de erro
                     console.log("Ocorreu um erro - " + errorThrown);
                 });
     }
@@ -414,16 +441,16 @@
         let dataInicial = $( "#dataInicial").val(); 
         let dataFinal = $( "#dataFinal" ).val(); 
 
-        let partesDataHora = dataInicial.replace(/\//g, ' ').split(' '); // dividindo a data em partes (dia, mês e ano e hora)
+        let partesDataHora = dataInicial.replace(/\//g, ' ').split(' '); 
 
-        let dataInicialFormatada = partesDataHora[2] + "-" + partesDataHora[1] + "-" + partesDataHora[0] + " " + partesDataHora[3]; //Organizando a data para o formato YYYY-MM-DD
+        let dataInicialFormatada = partesDataHora[2] + "-" + partesDataHora[1] + "-" + partesDataHora[0] + " " + partesDataHora[3];
 
-        let partesDataHoraFinal = dataFinal.replace(/\//g, ' ').split(' '); // dividindo a data em partes (dia, mês e ano e hora)
+        let partesDataHoraFinal = dataFinal.replace(/\//g, ' ').split(' '); 
         let dataFinalFormatada = partesDataHoraFinal[2] + "-" + partesDataHoraFinal[1] + "-" + partesDataHoraFinal[0] + " " + partesDataHoraFinal[3]; 
 
-        let datas = new Array(); //data em array
-        datas.push(dataInicialFormatada); //data[0] = data inicial
-        datas.push(dataFinalFormatada); //data [1] = data final 
+        let datas = new Array();
+        datas.push(dataInicialFormatada); 
+        datas.push(dataFinalFormatada); 
 
         return datas; 
     }
@@ -431,16 +458,16 @@
     
     function AjeitarLabels(labels, tipo_escala)
     {
-        if(labels.length>0)  //se tiver labels pra tratar //Essa labels é a inferior, onde indica o tipo de dado. Ex: mes (03-2023), hora, dia, etc
+        if(labels.length>0)  //Essa labels é a inferior, onde indica o tipo de dado. 
             {        
                 let dataFormatada = [];
                 if (tipo_escala == "ESCALA_MES") 
                     {
                         for (let i=0; i<labels.length; i++)
                             {
-                                let dateArray = labels[i].split("-"); //quebra a data que chega no formato yyyy-mm
-                                let date = new Date(dateArray[0], parseInt(dateArray[1]) - 1); // Cria uma varivel com o ano e o mês (Janeiro = 0)
-                                dataFormatada.push(date.toLocaleString('pt-BR', { month: 'short', year: 'numeric' }).replace(". de ", "/").toLowerCase());  // Formata a data para exibir o mês por extenso e o ano numerico
+                                let dateArray = labels[i].split("-"); 
+                                let date = new Date(dateArray[0], parseInt(dateArray[1]) - 1); 
+                                dataFormatada.push(date.toLocaleString('pt-BR', { month: 'short', year: 'numeric' }).replace(". de ", "/").toLowerCase()); 
                             }   
                         return dataFormatada;
 
@@ -449,8 +476,8 @@
                             let result = [];
                             for (let i=0; i<labels.length; i++)
                                 {
-                                    let dateArray = labels[i].split(/[-\s:]/); //quebra a data que chega no formato yyyy-mm
-                                    let date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]); // Cria uma varivel com o ano e o mês (Janeiro = 0)
+                                    let dateArray = labels[i].split(/[-\s:]/); 
+                                    let date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]); 
                                     dataFormatada.push(date.toLocaleString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(", ", "-")); 
                                     result[i]= dataFormatada[i].split('-');
 
@@ -463,8 +490,8 @@
                                 let result = [];
                                 for (let i=0; i<labels.length; i++)
                                     {
-                                        let dateArray = labels[i].split(/[-\s:]/); //quebra a data que chega no formato yyyy-mm
-                                        let date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3]); // Cria uma varivel com o ano e o mês (Janeiro = 0)
+                                        let dateArray = labels[i].split(/[-\s:]/); 
+                                        let date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3]); 
                                         dataFormatada.push(date.toLocaleString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(", ", "-")); 
                                         result[i]= dataFormatada[i].split('-');
                                     }    
@@ -473,8 +500,8 @@
                                 {
                                     for (let i=0; i<labels.length; i++)
                                             {
-                                                let dateArray = labels[i].split('-'); //quebra a data que chega no formato yyyy-semana
-                                                let date = new Date(dateArray[0], 0, (dateArray[1] *7)); // qnt dias
+                                                let dateArray = labels[i].split('-'); 
+                                                let date = new Date(dateArray[0], 0, (dateArray[1] *7)); 
                                                 
                                                 if(date.getDay() == 0)
                                                     {
@@ -487,10 +514,10 @@
                                                         }
                                                     } else if (date.getDay() == 1) 
                                                     {
-                                                        date.setDate(date.getDate()); //se o dia cair na segunda, manter
+                                                        date.setDate(date.getDate()); 
                                                     }
                                             
-                                                dataFormatada.push(date.toLocaleString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric' }));  // Formata a data para exibir o mês por extenso e o ano numerico
+                                                dataFormatada.push(date.toLocaleString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric' })); 
                                             
                                             }
                                     return dataFormatada   
@@ -498,16 +525,16 @@
                                     {
                                         for (let i=0; i<labels.length; i++)
                                             {
-                                                let dateArray = labels[i].split("-"); //quebra a data que chega no formato yyyy-mm
-                                                let date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]); // Cria uma varivel com o ano e o mês (Janeiro = 0)
-                                                dataFormatada.push(date.toLocaleString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric' }));  // Formata a data para exibir o mês por extenso e o ano numerico
+                                                let dateArray = labels[i].split("-"); 
+                                                let date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
+                                                dataFormatada.push(date.toLocaleString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric' }));  
                                             }    
                                     
                                         return dataFormatada;
                                     } 
                     
             } 
-        else //se o valor de labels vier vazio
+        else 
            return;
             
 }   
@@ -524,7 +551,7 @@
     function configureDateTimePicker(escala) 
     {
             let valorAnteriorData = null;
-            let padraoConfig = { //configuração padrão 
+            let padraoConfig = { 
                 format: 'd/m/Y H:i',
                 step: 1,
                 maxDate: '0',
@@ -532,7 +559,7 @@
                 onClose: function(dp, $input) {
                     let novoValorData = $input.val();
                     if (novoValorData !== valorAnteriorData) {
-                        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA"].forEach(function (tipo) {
+                        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO"].forEach(function (tipo) {
                             carregarGraficoPorTipo(tipo, {$estacao.id});
                         });
                         valorAnteriorData = novoValorData;
@@ -589,9 +616,9 @@
      $('.change_controller').change(function()  { //mudanças da escala
            
                     let novaEscala = GetEscala();
-                    configureDateTimePicker(novaEscala); //altera o tipo de calendario, se a escala for "minuto" há algumas alterações em relação as outras escalas
-                    ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_VOLUME_ACC_CHUVA"].forEach(function (tipo) {
-                    carregarGraficoPorTipo(tipo, {$estacao.id}); }); //carrega os gráficos 
+                    configureDateTimePicker(novaEscala); 
+                    ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_VOLUME_ACC_CHUVA", "TIPO_RAJADA_VENTO"].forEach(function (tipo) {
+                    carregarGraficoPorTipo(tipo, {$estacao.id}); }); 
 
                         
         });
@@ -603,11 +630,11 @@
        $('#dataFinal').val(dataHoraAtual);
 
         let dataInicial = new Date();
-        dataInicial.setHours(0,0,0,0) //horario de 00:00
+        dataInicial.setHours(0,0,0,0) 
         let dataHoraInicial = ("0" + dataInicial.getDate()).slice(-2) + "/" + ("0" + (dataInicial.getMonth() + 1)).slice(-2) + "/" + dataInicial.getFullYear() + " " + ("0" + dataInicial.getHours()).slice(-2) + ":" + ("0" + dataInicial.getMinutes()).slice(-2);
         $('#dataInicial').val(dataHoraInicial);
 
-        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA"].forEach(function (tipo) {
+        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO"].forEach(function (tipo) {
             carregarGraficoPorTipo(tipo, {$estacao.id}); });
 
     }
@@ -618,12 +645,12 @@
        $('#dataFinal').val(dataHoraAtual);
 
        let dataInicial = new Date();
-       dataInicial.setHours(0,0,0,0) //horario de 00:00
+       dataInicial.setHours(0,0,0,0) 
        dataInicial.setDate(1);
         let dataHoraInicial = ("0" + dataInicial.getDate()).slice(-2) + "/" + ("0" + (dataInicial.getMonth() + 1)).slice(-2) + "/" + dataInicial.getFullYear() + " " + ("0" + dataInicial.getHours()).slice(-2) + ":" + ("0" + dataInicial.getMinutes()).slice(-2);
         $('#dataInicial').val(dataHoraInicial);
 
-        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA"].forEach(function (tipo) {
+        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO"].forEach(function (tipo) {
             carregarGraficoPorTipo(tipo, {$estacao.id}); });
 
     }
@@ -634,14 +661,14 @@
        $('#dataFinal').val(dataHoraAtual);
 
        let dataInicial = new Date();
-       dataInicial.setHours(0,0,0,0) //horario de 00:00
+       dataInicial.setHours(0,0,0,0) 
        let diaAtual = dataInicial.getDay();
        let inicioSemana = new Date(dataInicial);
        inicioSemana.setDate(dataInicial.getDate() - diaAtual)
        let dataHoraInicial = ("0" + inicioSemana.getDate()).slice(-2) + "/" + ("0" + (inicioSemana.getMonth() + 1)).slice(-2) + "/" + inicioSemana.getFullYear() + " " + ("0" + dataInicial.getHours()).slice(-2) + ":" + ("0" + dataInicial.getMinutes()).slice(-2);
         $('#dataInicial').val(dataHoraInicial);
 
-        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA"].forEach(function (tipo) {
+        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO"].forEach(function (tipo) {
             carregarGraficoPorTipo(tipo, {$estacao.id}); });
 
     }
@@ -653,19 +680,18 @@
 
          configureDateTimePicker(GetEscala()); //Configura o calendário com a escala inicial "mes"
 
-         // coloca as informações dos cards
          document.getElementById("estacao_id").innerHTML = "{$estacao.descricao} ({$estacao.identificador})";
 
 
         /////Organização de data e tempo atual no placeholder de datainicial e datafinal: bug - data estava certa, horário errado em relação ao atual //////
         organizaLabelDataHora('padrao')
       
-            //COLOCA OS DADOS NOS CARDS 
             const parametrosHandleAjax = [
             ["#card_temperatura", {$estacao.id}, "TIPO_TEMPERATURA"],
             ["#card_umidade", {$estacao.id}, "TIPO_UMIDADE_AR"],
             ["#card_vel_vento",{$estacao.id}, "TIPO_VELOCIDADE_VENTO"],
-            ["#card_vol_chuva", {$estacao.id}, "TIPO_VOLUME_CHUVA"]
+            ["#card_vol_chuva", {$estacao.id}, "TIPO_VOLUME_CHUVA"],
+            ["#card_rajada_vento", {$estacao.id}, "TIPO_RAJADA_VENTO"]
             ];
 
             parametrosHandleAjax.forEach(parametro => {
@@ -678,8 +704,7 @@
             });
             }, 10000); 
 
-        //ATUALIZA O GRÁFICO COM OS VALORES PADRÃO NO LOAD DA PAGE
-        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA"].forEach(function (tipo) {
+        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO"].forEach(function (tipo) {
             carregarGraficoPorTipo(tipo, {$estacao.id}); });
 
   });

@@ -97,8 +97,7 @@ class Leituras extends BasePrivateController
                 $filtros->setEscala($colunaPeriodo);
             }
 
-            $filtros->setEstacoes($estacao);
-
+            $filtros->setEstacoes($estacoes);
             // Obter e exibir o conteúdo da variável $leituras
             $csvData = $this->LeiturasModel->exportarLeiturasParaCSV($filtros);
 
