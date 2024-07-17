@@ -32,7 +32,7 @@ class Estacoes extends BasePrivateController
     public function mapaMonitoramento()
     {
         $this->load->model('EstacoesModel');
-        $this->load->model('LeiturasModel');
+       // $this->load->model('LeiturasModel');
 
         $variaveisView = [];
 
@@ -159,7 +159,7 @@ public function getLegendaMonitoramento($camada)
     public function visualizarEstacoes()
     {
         $this->load->model('EstacoesModel');
-        $this->load->model('LeiturasModel');
+        //$this->load->model('LeiturasModel');
         $this->load->model('OcorrenciasModel');
 
         $variaveisView = [];

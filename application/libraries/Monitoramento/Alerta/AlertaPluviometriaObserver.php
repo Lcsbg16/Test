@@ -10,12 +10,12 @@ class AlertaPluviometriaObserver implements iMonitoramentoObserver
     {
         $ci = &get_instance();
         $ci->load->model('EstacoesModel');
-        $ci->load->model('LeiturasModel');
-
+       // $ci->load->model('LeiturasModel');
+        $objLeitura = new LeiturasModel(Fonte_Dashboard);
         $alertas = [];
 
-        $coresNiveisAlerta = $ci->LeiturasModel->getCoresNiveisAlertasPluviometria();
-        $nomesNiveisAlerta = $ci->LeiturasModel->getNomesNiveisAlertasPluviometria();
+        $coresNiveisAlerta =  $objLeitura->getCoresNiveisAlertasPluviometria();
+        $nomesNiveisAlerta =  $objLeitura->getNomesNiveisAlertasPluviometria();
 
 
         $estacoesAtivas = $ci->EstacoesModel->getEstacoes(true);
@@ -23,8 +23,8 @@ class AlertaPluviometriaObserver implements iMonitoramentoObserver
         {
             if ($ultimoRegistro = $ci->EstacoesModel->getUltimoRegistro($estacaoAtual['id'], 60, true))
             {
-                $tipoAlerta = $ci->LeiturasModel->calcularAlertaPluviometria($ultimoRegistro);
-                if ($tipoAlerta != LeiturasModel::PLUVIOMETRIA_NIVEL_NORMALIDADE)
+                $tipoAlerta =  $objLeitura->calcularAlertaPluviometria($ultimoRegistro);
+                if ($tipoAlerta != $objLeitura::PLUVIOMETRIA_NIVEL_NORMALIDADE)
                 {
                     $alerta   = new Alerta();
                     $alerta->setCor($coresNiveisAlerta[$tipoAlerta]);

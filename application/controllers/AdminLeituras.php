@@ -10,7 +10,7 @@ class AdminLeituras extends BaseCrudController
 
     public function index()
     {
-        $this->load->model('LeiturasModel');
+       // $this->load->model('LeiturasModel');
         $this->load->model('EstacoesModel');
 
         $crud = new AppGroceryCRUD();
@@ -110,7 +110,7 @@ class AdminLeituras extends BaseCrudController
 
     public function _callback_converterVelocidadeVento($value, $row)
     {
-        $this->load->model('LeiturasModel');
+        //$this->load->model('LeiturasModel');
 
         $velocidade_ms = $row->velocidade_vento;
 

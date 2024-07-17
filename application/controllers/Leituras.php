@@ -5,12 +5,26 @@ if (!defined('BASEPATH'))
 
 require_once 'BasePrivateController.php';
 
+require_once BASEPATH . '../application/models/LeiturasModel.php';
+
 class Leituras extends BasePrivateController
 {
 
+    private $objLeituraModel;
+    private $fonteDadosController;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->fonteDadosController = Fonte_Dashboard;
+        $this->objLeituraModel = new LeiturasModel($this->fonteDadosController); 
+
+    }
+
     public function getEstatisticasLeiturasJson() //Gerencia dados do Gráfico
     {
-        $this->load->model('LeiturasModel');
+       // $this->load->model('LeiturasModel');
 
         $estacao     = $this->input->post('estacao_selecionada');
         $dataInicial = $this->input->post('data_inicial');
@@ -26,7 +40,9 @@ class Leituras extends BasePrivateController
         $filtros->setTipoInformacao(constant("FiltrosLeitura::$tipo_dados"));
         $filtros->setDirecao(FiltrosLeitura::DIRECAO_ASC);
 
-        $leituras = $this->LeiturasModel->calcularEstatisticasPorPeriodo($filtros);
+       // $this->objLeituraModel = new LeiturasModel($this->fonteDadosController); 
+
+        $leituras = $this->objLeituraModel->calcularEstatisticasPorPeriodo($filtros);
 
         $this->jsonOutput($leituras);
     }
@@ -36,18 +52,18 @@ class Leituras extends BasePrivateController
         $estacao    = $this->input->post('estacao_selecionada');
         $tipo_dados = $this->input->post('tipo_dados');
 
-        $this->load->model('LeiturasModel');
+        //$this->load->model('LeiturasModel');
         $filtros  = new FiltrosLeitura();
         $filtros->setEstacoes($estacao);
         $filtros->setTipoInformacao(constant("FiltrosLeitura::$tipo_dados"));
-        $leituras = $this->LeiturasModel->getUltimaLeituraRegistrada($filtros);
+        $leituras = $this->objLeituraModel->getUltimaLeituraRegistrada($filtros);
 
         $this->jsonOutput($leituras);
     }
 
     public function exportarLeitura()
     {
-        $this->load->model('LeiturasModel');
+       // $this->load->model('LeiturasModel');
         $this->load->model('EstacoesModel');
         $this->load->model('LoginModel');
 
@@ -99,7 +115,7 @@ class Leituras extends BasePrivateController
 
             $filtros->setEstacoes($estacoes);
             // Obter e exibir o conteúdo da variável $leituras
-            $csvData = $this->LeiturasModel->exportarLeiturasParaCSV($filtros);
+            $csvData = $this->objLeituraModel->exportarLeiturasParaCSV($filtros);
 
             $filename = 'leituras.csv';
             header('Content-Type: text/csv');
