@@ -7,6 +7,9 @@
                 -
             {else}
                 {$velocidade_maxima|number_format:1:","}km/h
+                <span  style="font-size: 10px"> 
+                &nbsp; ({$estacao_id} - {$descricao})
+                </span>
             {/if}
         </span>
     </div>

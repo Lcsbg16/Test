@@ -646,34 +646,37 @@ class LeiturasModel extends BaseModel
             $this->db->cache_on();
         }
 
-        $this->db->from('estacao E')
-                ->select("
-            MAX(
-                (
-                    SELECT
-                            volume_chuva
-                    FROM
-                            leitura L1
-                    WHERE
-                            L1.estacao_id = E.id
-                            AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
-                    ORDER BY
-                            datahora DESC
-                    LIMIT 1
-                )
-            )
-            AS vol_chuva_max
-        ");
-        $this->filtrarEstacoesComAcesso('E.id');
-        $linha = $this->db->get()->row_array();
+    $this->db->select('E.id AS estacao_id, E.descricao, 
+    (
+        SELECT
+                MAX(L1.volume_chuva)
+        FROM 
+                leitura L1 
+        WHERE
+                L1.estacao_id = E.id 
+                AND L1.datahora >= DATE_SUB(NOW(), INTERVAL 30 MINUTE) 
+        ORDER BY 
+                L1.datahora DESC 
+        LIMIT 1
+       ) AS vol_chuva_max')
+    
+        ->from('estacao E')
+        ->order_by('vol_chuva_max', 'DESC')
+        ->limit(1);
+
+              $linha = $this->db->get()->row_array();
 
         if (DB_CACHE_ESTATISTICAS)
         {
             $this->db->cache_off();
         }
 
-        return $linha['vol_chuva_max'];
-    }
+        return [
+            'vol_chuva_max' => $linha['vol_chuva_max'],
+            'estacao_id' => $linha['estacao_id'],
+            'descricao' => $linha['descricao']
+        ];    
+     }
 
     public function getTemperaturaMinima()
     {
@@ -683,25 +686,23 @@ class LeiturasModel extends BaseModel
             $this->db->cache_on();
         }
 
-        $this->db->from('estacao E')
-                ->select("
-                    MIN(
-                        (
-                            SELECT
-                                    temperatura
-                            FROM
-                                    leitura L1
-                            WHERE
-                                    L1.estacao_id = E.id
-                                    AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
-                            ORDER BY
-                                    datahora DESC
-                            LIMIT 1
-                        )
-                    )
-                    AS temperatura_minima
-                ");
+        $this->db->select('E.id AS estacao_id, E.descricao, 
+        (
+            SELECT
+                    MIN(L1.temperatura)
+            FROM 
+                    leitura L1 
+            WHERE
+                   L1.estacao_id = E.id 
+                   AND L1.datahora >= DATE_SUB(NOW(), INTERVAL 30 MINUTE) 
+        ) AS temperatura_minima')
+        ->from('estacao E')
+        ->having('temperatura_minima IS NOT NULL')
+        ->order_by('temperatura_minima', 'ASC')
+        ->limit(1);
+
         $this->filtrarEstacoesComAcesso('E.id');
+
         $linha = $this->db->get()->row_array();
 
         if (DB_CACHE_ESTATISTICAS)
@@ -709,35 +710,38 @@ class LeiturasModel extends BaseModel
             $this->db->cache_off();
         }
 
-        return $linha['temperatura_minima'];
+        return [
+            'temperatura_minima' => $linha['temperatura_minima'],
+            'estacao_id' => $linha['estacao_id'],
+            'descricao' => $linha['descricao']
+        ]; 
     }
 
     public function getTemperaturaMaxima()
     {
-        $this->getArrayEstacoesComAcesso();
         if (DB_CACHE_ESTATISTICAS)
         {
             $this->db->cache_on();
         }
 
-        $this->db->from('estacao E')
-                ->select("
-                    MAX(
-                        (
-                            SELECT
-                                    temperatura
-                            FROM
-                                    leitura L1
-                            WHERE
-                                L1.estacao_id = E.id
-                                AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
-                            ORDER BY
-                                    datahora DESC
-                            LIMIT 1
-                        )
-                    )
-                    AS temperatura_maxima
-                ");
+        $this->db->select('E.id AS estacao_id, E.descricao, 
+        (
+            SELECT
+                    MAX(L1.temperatura)
+            FROM 
+                     leitura L1 
+            WHERE
+                    L1.estacao_id = E.id 
+                    AND L1.datahora >= DATE_SUB(NOW(), INTERVAL 30 MINUTE) 
+            ORDER BY L1.datahora DESC 
+            LIMIT 1
+           ) AS temperatura_maxima')
+        
+        ->from('estacao E')
+        ->order_by('temperatura_maxima', 'DESC')
+        ->limit(1);
+        
+
         $this->filtrarEstacoesComAcesso('E.id');
         $linha = $this->db->get()->row_array();
 
@@ -746,7 +750,11 @@ class LeiturasModel extends BaseModel
             $this->db->cache_off();
         }
 
-        return $linha['temperatura_maxima'];
+        return [
+            'temperatura_maxima' => $linha['temperatura_maxima'],
+            'estacao_id' => $linha['estacao_id'],
+            'descricao' => $linha['descricao']
+        ];  
     }
 
     public function getVelocidadeMinima()
@@ -794,24 +802,21 @@ class LeiturasModel extends BaseModel
             $this->db->cache_on();
         }
 
-        $this->db->from("estacao E")
-                ->select("
-                    MAX(
-                        (
-                            SELECT
-                                velocidade_vento
-                            FROM
-                                    leitura L1
-                            WHERE
-                                L1.estacao_id = E.id
-                                AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
-                            ORDER BY
-                                    datahora DESC
-                            LIMIT 1
-                        )
-                    )
-                    AS velocidade_maxima
-                    ");
+        
+        $this->db->select('E.id AS estacao_id, E.descricao, 
+        (
+            SELECT 
+                    MAX(L1.velocidade_vento) 
+            FROM 
+                    leitura L1 
+            WHERE 
+                    L1.estacao_id = E.id 
+                    AND L1.datahora >= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
+        ) AS velocidade_maxima')
+        ->from('estacao E')
+        ->order_by('velocidade_maxima', 'DESC')
+        ->limit(1);
+        
         $this->filtrarEstacoesComAcesso('E.id');
         $linha = $this->db->get()->row_array();
 
@@ -820,7 +825,12 @@ class LeiturasModel extends BaseModel
             $this->db->cache_off();
         }
 
-        return $linha["velocidade_maxima"];
+        return [
+            'velocidade_maxima' => $linha['velocidade_maxima'],
+            'estacao_id' => $linha['estacao_id'],
+            'descricao' => $linha['descricao']
+        ];  
+        
     }
 
     public function calcularAlertaPluviometria($leitura)
