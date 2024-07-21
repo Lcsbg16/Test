@@ -1,38 +1,36 @@
-{* <div class="container">
-<form method="get" action="{$BASE_URL}AdminLeituras" class="form-inline" onsubmit="saveFormValues()">
-<div class="form-group">
-<label for="data_inicial">Data/hora de:</label>
-<input type="datetime-local" class="form-control" id="data_inicial" name="data_inicial" value="<?php echo isset($_GET['data_inicial']) ? $_GET['data_inicial'] : ''; ?>">
-</div>
-<div class="form-group">
-<label for="data_final">a:</label>
-<input type="datetime-local" class="form-control" id="data_final" name="data_final" value="<?php echo isset($_GET['data_final']) ? $_GET['data_final'] : ''; ?>">
-</div>
-<button type="submit" class="btn btn-primary mr-auto">Buscar</button>
-</form>
-</div> *}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Filtrar Leituras</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@0.9.16/dist/css/bootstrap-multiselect.min.css">
+    <link rel="stylesheet" href="{$BASE_URL}/assets/chosen/bootstrap-multiselect.css"/>
+    <script type="text/javascript" src="{$BASE_URL}/assets/chosen/bootstrap-multiselect.js"></script>
+</head>
+<body>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-<script>
-    // Função para salvar os valores dos campos de entrada no armazenamento local
-    function saveFormValues() {
-        var dataInicial = document.getElementById('data_inicial').value;
-        var dataFinal = document.getElementById('data_final').value;
+    <div>
+        <form method="get" action="{$BASE_URL}AdminLeituras/">
+            <div class="form-row">
+                <div class="form-group col-md-2">
+                    <label for="data_inicial">Data Hora Inicial:</label>
+                    <input type="datetime-local" class="form-control" id="data_inicial" name="data_inicial" value="{if isset($smarty.get.data_inicial)}{$smarty.get.data_inicial}{/if}">
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="data_final">Data Hora Final:</label>
+                    <input type="datetime-local" class="form-control" id="data_final" name="data_final" value="{if isset($smarty.get.data_final)}{$smarty.get.data_final}{/if}">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='{$BASE_URL}AdminLeituras/resetFilters'">Resetar Filtro</button>
+        </form>
 
-        localStorage.setItem('dataInicial', dataInicial);
-        localStorage.setItem('dataFinal', dataFinal);
-    }
+        <div class="mt-4">
+            {$output}
+        </div>
+    </div>
 
-    // Restaurar os valores dos campos de entrada do armazenamento local quando a página for carregada
-    window.onload = function () {
-        var dataInicial = localStorage.getItem('dataInicial');
-        var dataFinal = localStorage.getItem('dataFinal');
-
-        if (dataInicial) {
-            document.getElementById('data_inicial').value = dataInicial;
-        }
-
-        if (dataFinal) {
-            document.getElementById('data_final').value = dataFinal;
-        }
-    };
-</script>
+</body>
+</html>
