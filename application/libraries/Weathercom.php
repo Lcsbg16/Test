@@ -24,6 +24,8 @@ class Weathercom
     {
         $urlRequisicao = self::BASE_URL . '?stationId=' . $stationId . '&format=' . $format . '&units=' . $this->units . '&apiKey=' . $apiKey;
 
+        // Workaround para tentar resolver o problema de SSL no Weather.com
+        // TODO: Encontrar uma solução definitiva para o problema com o SSL do Weather.com
         $arrContextOptions = array(
             "ssl" => array(
                 "verify_peer"      => false,
