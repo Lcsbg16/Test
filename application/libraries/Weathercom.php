@@ -23,7 +23,15 @@ class Weathercom
     public function getDadosEstacao($stationId, $apiKey, $format = 'json')
     {
         $urlRequisicao = self::BASE_URL . '?stationId=' . $stationId . '&format=' . $format . '&units=' . $this->units . '&apiKey=' . $apiKey;
-        if ($dadosLeitura  = file_get_contents($urlRequisicao))
+
+        $arrContextOptions = array(
+            "ssl" => array(
+                "verify_peer"      => false,
+                "verify_peer_name" => false,
+            ),
+        );
+
+        if ($dadosLeitura = file_get_contents($urlRequisicao, false, stream_context_create($arrContextOptions)))
         {
             $dadosLeituraArray = json_decode($dadosLeitura, true);
             return $dadosLeituraArray['observations'][0];
