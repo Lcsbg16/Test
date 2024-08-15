@@ -7,9 +7,11 @@
                 -
             {else}
                 {$temperatura_maxima|number_format:1:","}&deg;C
+                <span  style="font-size: 10px"> 
+                &nbsp; ({$estacao_id} - {$descricao})
+                </span>
             {/if}
         </span>
-
     </div>
     <div class="col-auto">
         <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">

@@ -138,7 +138,7 @@ class Dashboard extends BasePrivateController
     {
         $this->load->model('LeiturasModel');
         $variaveisView                       = [];
-        $variaveisView['temperatura_minima'] = $this->LeiturasModel->getTemperaturaMinima();
+        $variaveisView = $this->LeiturasModel->getTemperaturaMinima();
 
         $this->loadSmartyView('Dashboard/cards/cardTemperaturaMinima', $variaveisView);
     }
@@ -153,8 +153,7 @@ class Dashboard extends BasePrivateController
     {
         $this->load->model('LeiturasModel');
         $variaveisView                       = [];
-        $variaveisView['temperatura_maxima'] = $this->LeiturasModel->getTemperaturaMaxima();
-
+        $variaveisView = $this->LeiturasModel->getTemperaturaMaxima();
         $this->loadSmartyView('Dashboard/cards/cardTemperaturaMaxima', $variaveisView);
     }
 
@@ -162,7 +161,7 @@ class Dashboard extends BasePrivateController
     {
         $this->load->model('LeiturasModel');
         $variaveisView                  = [];
-        $variaveisView['vol_chuva_min'] = $this->LeiturasModel->getVolumeChuvaMinimo();
+        $variaveisView = $this->LeiturasModel->getVolumeChuvaMinimo();
 
         $this->loadSmartyView('Dashboard/cards/cardVolumeChuvaMinimo', $variaveisView);
     }
@@ -171,7 +170,7 @@ class Dashboard extends BasePrivateController
     {
         $this->load->model('LeiturasModel');
         $variaveisView                  = [];
-        $variaveisView['vol_chuva_max'] = $this->LeiturasModel->getVolumeChuvaMaxima();
+        $variaveisView = $this->LeiturasModel->getVolumeChuvaMaxima();
 
         $this->loadSmartyView('Dashboard/cards/cardVolumeChuvaMaximo', $variaveisView);
     }
@@ -190,8 +189,11 @@ class Dashboard extends BasePrivateController
     {
         $this->load->model('LeiturasModel');
         $variaveisView = [];
+        $variaveisView = $this->LeiturasModel->getVelocidadeMaxima();
 
-        $variaveisView['velocidade_maxima'] = $this->LeiturasModel->getVelocidadeMaxima() ? Conversao::metroPorSegundoParaKmPorHora($this->LeiturasModel->getVelocidadeMaxima()) : NULL;
+        if ($variaveisView) {
+            $variaveisView['velocidade_maxima'] = Conversao::metroPorSegundoParaKmPorHora($variaveisView['velocidade_maxima']);
+        }
 
         $this->loadSmartyView('Dashboard/cards/cardVelocidadeMaximaVento', $variaveisView);
     }

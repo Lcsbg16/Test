@@ -6,8 +6,11 @@
                 -
             {else}
                 {$vol_chuva_max|number_format:1:","}mm
+                <span  style="font-size: 10px"> 
+                &nbsp; ({$estacao_id} - {$descricao})
+                </span>
             {/if}
-        </span>
+        </span>        
     </div>
     <div class="col-auto">
         <div class="icon icon-shape bg-gradient-gray text-white rounded-circle shadow">
