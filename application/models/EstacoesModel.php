@@ -249,7 +249,7 @@ class EstacoesModel extends BaseModel
             if ($eAtual['latitude'] && $eAtual['longitude'])
             {
 
-                if ($ultimoRegistro = $this->getUltimoRegistro($eAtual['id'], NULL, true))
+                if ($ultimoRegistro = $this->getUltimoRegistro($eAtual['id'], NULL, false)) //alterei pra false / jaque / 26/07
                 {
                     $ultimaLeituraRetorno = [
                         'datahora'             => $ultimoRegistro['datahora'],
