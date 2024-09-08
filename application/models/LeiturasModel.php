@@ -703,10 +703,9 @@ class LeiturasModel extends BaseModel
                    L1.estacao_id = E.id
                    AND L1.datahora >= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
         ) AS temperatura_minima')
-                ->from('estacao E')
-                ->having('temperatura_minima IS NOT NULL')
-                ->order_by('temperatura_minima', 'ASC')
-                ->limit(1);
+        ->from('estacao E')
+        ->order_by('temperatura_minima', 'ASC')
+        ->limit(1);
 
         $this->filtrarEstacoesComAcesso('E.id');
 

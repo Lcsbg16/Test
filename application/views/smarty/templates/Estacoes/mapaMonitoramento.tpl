@@ -255,6 +255,10 @@
 
                 function carregarTodasEstacoes(url, mapa) {
                         let camada = $('#camada_id').val();
+                        if (camada == "dir_vento") {
+                                        carregarEstacoesOnline(url, mapa)
+                                        return;
+                        }
                         $.get(url).done(
                             function (data) {
                                 estacoes = L.geoJSON([data], {
@@ -269,13 +273,9 @@
                                         } else {
                                             cor = '#bebebe';
                                         }     
-                                        if (camada == "dir_vento") {
-                                        GerenciaMarcador(mapa);
-                                        carregarEstacoesOnline(url, mapa)
-                                        return;
-                                        } else {
+                                      
                                         return criaCircleMarker(latlng, cor, feature);
-                                        }
+                                        
                                     }
                         }).addTo(mapa);
                                 if (!controlaAcionamentoBounds) {
@@ -293,7 +293,6 @@
                 }
             
                 function carregarEstacoesOnline(url, mapa) {
-                    GerenciaMarcador(mapa);
                     let camada = $('#camada_id').val();
                     $.get(url).done(function (data) {
                         var estacoesOnline = data.features.filter(function (feature) {
@@ -329,29 +328,31 @@
                      })
                 }
 
-                function GerenciaMarcador(mapa) 
-                {
-                    function isMarker(layer) {
-                         return layer instanceof L.CircleMarker || layer instanceof L.Marker; 
-                    }
-                        
-                    mapa.eachLayer(function (layer) { //remove os marcadores para evitar sobreposição
-                        if (isMarker(layer)) { 
-                            mapa.removeLayer(layer); 
+                    function removerMarcadores(mapa) {
+                        function isMarker(layer) {
+                            return layer instanceof L.CircleMarker || layer instanceof L.Marker;
                         }
-                    });
 
-                    let idEstacoes = $("#estacao_selecionada").val();
-                    let atividade = true; //não mostra as inativas
-                    if (!idEstacoes)
-                        {
-                            let url = BASE_URL + 'Estacoes/getEstacoesGeoJson/' + $('#camada_id').val() + '/?ids=&ativa=' + atividade; 
-                            return url;
-                        } else {   
-                            var url = BASE_URL + 'Estacoes/getEstacoesGeoJson/' + $('#camada_id').val() + '/?ids=' + idEstacoes.join(',') + '&ativa=' + atividade;
-                            return url;
+                        mapa.eachLayer(function (layer) {
+                            if (isMarker(layer)) {
+                                mapa.removeLayer(layer);
+                            }
+                        });
+                    }
+
+                    function gerarUrlEstacoes() {
+                        let idEstacoes = $("#estacao_selecionada").val();
+                        let atividade = true; // não mostra as inativas
+                        let url;
+
+                        if (!idEstacoes) {
+                            url = BASE_URL + 'Estacoes/getEstacoesGeoJson/' + $('#camada_id').val() + '/?ids=&ativa=' + atividade;
+                        } else {
+                            url = BASE_URL + 'Estacoes/getEstacoesGeoJson/' + $('#camada_id').val() + '/?ids=' + idEstacoes.join(',') + '&ativa=' + atividade;
                         }
-                }
+
+                        return url;
+                    }
 
                 $(function () 
                 {
@@ -361,12 +362,14 @@
                     });
                     
                     let mapa = criaMapa();
-                    let url = GerenciaMarcador(mapa);
+                    removerMarcadores(mapa)
+                    let url = gerarUrlEstacoes();
                     let result = carregarTodasEstacoes(url, mapa);
 
                 
                         setInterval(() => {
-                        let url = GerenciaMarcador(mapa);
+                            removerMarcadores(mapa)
+                        let url = gerarUrlEstacoes();
                         var checkboxMarcada = $("#estacoes-online-checkbox").is(":checked");
                         if (checkboxMarcada == true) {
                                 let result = carregarEstacoesOnline(url, mapa); 
@@ -377,7 +380,8 @@
 
                     $('#estacoes-online-checkbox, .change_controller').change(function () {
                         var checkboxMarcada = $("#estacoes-online-checkbox").is(":checked");
-                        let url = GerenciaMarcador(mapa); 
+                        removerMarcadores(mapa)
+                        let url = gerarUrlEstacoes(); 
                         if (checkboxMarcada) {
                             carregarEstacoesOnline(url, mapa); 
                         } else {
