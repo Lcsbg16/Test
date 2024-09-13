@@ -47,22 +47,27 @@ class LeiturasModel extends BaseModel
 
         $insert_id = $this->db->insert_id();
 
+        $this->inserirLeituraAPI($estacaoId, $insert_id, $dadosLeitura);
+
         return $insert_id;
     }
+
     public function inserirLeituraAPI($estacaoId, $leitura_id, $postData)
     {
-         //removendo valores para a tabela leitura_valor
-         unset($postData['identidade']);
-         unset($postData['timestamp']);
-         unset($postData['uid']);
+        //removendo valores para a tabela leitura_valor
+        unset($postData['identidade']);
+        unset($postData['timestamp']);
+        unset($postData['uid']);
 
-         foreach ($postData as $key => $value) { 
-             $this->inserirLeituraValor( $leitura_id, $key, $value);
-         }
+        foreach ($postData as $key => $value)
+        {
+            $this->inserirLeituraValor($leitura_id, $key, $value);
+        }
 
-         foreach ($postData as $key => $value) { 
-             $this->inserirUltimaLeitura($estacaoId, $leitura_id, $key, $value);
-         }
+        foreach ($postData as $key => $value)
+        {
+            $this->inserirUltimaLeitura($estacaoId, $leitura_id, $key, $value);
+        }
     }
 
     public function inserirLeituraValor($leituraId, $tag, $value)
@@ -185,9 +190,9 @@ class LeiturasModel extends BaseModel
                     $colunaTipoInformacao = 'umidade_ar';
                     break;
 
-                    case FiltrosLeitura::TIPO_RAJADA_VENTO: //#adicionando_rajada_vento .
-                        $colunaTipoInformacao = "rajada_vento_1h";
-                        break;
+                case FiltrosLeitura::TIPO_RAJADA_VENTO: //#adicionando_rajada_vento .
+                    $colunaTipoInformacao = "rajada_vento_1h";
+                    break;
                 default:
                     throw new Exception('É necessário informar o tipo de informação desejada.');
             }
@@ -225,12 +230,11 @@ class LeiturasModel extends BaseModel
 
             if ($colunaTipoInformacao == "rajada_vento_1h")
             {  //#adicionando_rajada_vento .
-                $this->db->from('v_leitura_calculada'); 
+                $this->db->from('v_leitura_calculada');
             }
-            else 
+            else
             {
                 $this->db->from('leitura');  //#adicionando_rajada_vento .
-             
             }
             //echo $this->db->last_query();
 
@@ -254,10 +258,7 @@ class LeiturasModel extends BaseModel
             }
             return $retorno;
         }
-
-      
     }
-
 
     public function getLeiturasPorEscala(FiltrosLeitura $filtros = NULL, $retornarTudo = true)
     {
@@ -531,34 +532,33 @@ class LeiturasModel extends BaseModel
 
                 case FiltrosLeitura::TIPO_RAJADA_VENTO:
                     $colunaTipoInformacao = 'rajada_vento_1h'; // #adicionando_rajada_vento .
-                        break;
+                    break;
 
                 default:
                     throw new Exception('É necessário informar o tipo de informação desejada.');
             }
 
-            if ($colunaTipoInformacao == "rajada_vento_1h"){  //#adicionando_rajada_vento .
-                $this->db->from('v_leitura_calculada'); 
+            if ($colunaTipoInformacao == "rajada_vento_1h")
+            {  //#adicionando_rajada_vento .
+                $this->db->from('v_leitura_calculada');
                 $this->db->select("COALESCE({$colunaTipoInformacao}, 0) AS 'valor', datahora")
-                    ->order_by("datahora", "DESC")
-                    ->limit(1);
+                        ->order_by("datahora", "DESC")
+                        ->limit(1);
                 $resultado = $this->db->get()->result_array();
                 return $resultado;
             }
-            else {
+            else
+            {
                 $this->db->from('leitura');  //#adicionando_rajada_vento .
                 $this->db->select("COALESCE({$colunaTipoInformacao}, 0) AS 'valor', datahora")
-                ->order_by("datahora", "DESC")
-                ->limit(1);
+                        ->order_by("datahora", "DESC")
+                        ->limit(1);
 
                 $resultado = $this->db->get()->result_array();
                 return $resultado;
             }
-
-           
         }
     }
-
 
     public function getUltimaTemperaturaMedia()
     {
@@ -646,25 +646,24 @@ class LeiturasModel extends BaseModel
             $this->db->cache_on();
         }
 
-    $this->db->select('E.id AS estacao_id, E.descricao, 
+        $this->db->select('E.id AS estacao_id, E.descricao,
     (
         SELECT
                 MAX(L1.volume_chuva)
-        FROM 
-                leitura L1 
+        FROM
+                leitura L1
         WHERE
-                L1.estacao_id = E.id 
-                AND L1.datahora >= DATE_SUB(NOW(), INTERVAL 30 MINUTE) 
-        ORDER BY 
-                L1.datahora DESC 
+                L1.estacao_id = E.id
+                AND L1.datahora >= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
+        ORDER BY
+                L1.datahora DESC
         LIMIT 1
        ) AS vol_chuva_max')
-    
-        ->from('estacao E')
-        ->order_by('vol_chuva_max', 'DESC')
-        ->limit(1);
+                ->from('estacao E')
+                ->order_by('vol_chuva_max', 'DESC')
+                ->limit(1);
 
-              $linha = $this->db->get()->row_array();
+        $linha = $this->db->get()->row_array();
 
         if (DB_CACHE_ESTATISTICAS)
         {
@@ -673,10 +672,10 @@ class LeiturasModel extends BaseModel
 
         return [
             'vol_chuva_max' => $linha['vol_chuva_max'],
-            'estacao_id' => $linha['estacao_id'],
-            'descricao' => $linha['descricao']
-        ];    
-     }
+            'estacao_id'    => $linha['estacao_id'],
+            'descricao'     => $linha['descricao']
+        ];
+    }
 
     public function getTemperaturaMinima()
     {
@@ -686,20 +685,20 @@ class LeiturasModel extends BaseModel
             $this->db->cache_on();
         }
 
-        $this->db->select('E.id AS estacao_id, E.descricao, 
+        $this->db->select('E.id AS estacao_id, E.descricao,
         (
             SELECT
                     MIN(L1.temperatura)
-            FROM 
-                    leitura L1 
+            FROM
+                    leitura L1
             WHERE
-                   L1.estacao_id = E.id 
-                   AND L1.datahora >= DATE_SUB(NOW(), INTERVAL 30 MINUTE) 
+                   L1.estacao_id = E.id
+                   AND L1.datahora >= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
         ) AS temperatura_minima')
-        ->from('estacao E')
-        ->having('temperatura_minima IS NOT NULL')
-        ->order_by('temperatura_minima', 'ASC')
-        ->limit(1);
+                ->from('estacao E')
+                ->having('temperatura_minima IS NOT NULL')
+                ->order_by('temperatura_minima', 'ASC')
+                ->limit(1);
 
         $this->filtrarEstacoesComAcesso('E.id');
 
@@ -712,9 +711,9 @@ class LeiturasModel extends BaseModel
 
         return [
             'temperatura_minima' => $linha['temperatura_minima'],
-            'estacao_id' => $linha['estacao_id'],
-            'descricao' => $linha['descricao']
-        ]; 
+            'estacao_id'         => $linha['estacao_id'],
+            'descricao'          => $linha['descricao']
+        ];
     }
 
     public function getTemperaturaMaxima()
@@ -724,23 +723,21 @@ class LeiturasModel extends BaseModel
             $this->db->cache_on();
         }
 
-        $this->db->select('E.id AS estacao_id, E.descricao, 
+        $this->db->select('E.id AS estacao_id, E.descricao,
         (
             SELECT
                     MAX(L1.temperatura)
-            FROM 
-                     leitura L1 
+            FROM
+                     leitura L1
             WHERE
-                    L1.estacao_id = E.id 
-                    AND L1.datahora >= DATE_SUB(NOW(), INTERVAL 30 MINUTE) 
-            ORDER BY L1.datahora DESC 
+                    L1.estacao_id = E.id
+                    AND L1.datahora >= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
+            ORDER BY L1.datahora DESC
             LIMIT 1
            ) AS temperatura_maxima')
-        
-        ->from('estacao E')
-        ->order_by('temperatura_maxima', 'DESC')
-        ->limit(1);
-        
+                ->from('estacao E')
+                ->order_by('temperatura_maxima', 'DESC')
+                ->limit(1);
 
         $this->filtrarEstacoesComAcesso('E.id');
         $linha = $this->db->get()->row_array();
@@ -752,9 +749,9 @@ class LeiturasModel extends BaseModel
 
         return [
             'temperatura_maxima' => $linha['temperatura_maxima'],
-            'estacao_id' => $linha['estacao_id'],
-            'descricao' => $linha['descricao']
-        ];  
+            'estacao_id'         => $linha['estacao_id'],
+            'descricao'          => $linha['descricao']
+        ];
     }
 
     public function getVelocidadeMinima()
@@ -802,21 +799,21 @@ class LeiturasModel extends BaseModel
             $this->db->cache_on();
         }
 
-        
-        $this->db->select('E.id AS estacao_id, E.descricao, 
+
+        $this->db->select('E.id AS estacao_id, E.descricao,
         (
-            SELECT 
-                    MAX(L1.velocidade_vento) 
-            FROM 
-                    leitura L1 
-            WHERE 
-                    L1.estacao_id = E.id 
+            SELECT
+                    MAX(L1.velocidade_vento)
+            FROM
+                    leitura L1
+            WHERE
+                    L1.estacao_id = E.id
                     AND L1.datahora >= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
         ) AS velocidade_maxima')
-        ->from('estacao E')
-        ->order_by('velocidade_maxima', 'DESC')
-        ->limit(1);
-        
+                ->from('estacao E')
+                ->order_by('velocidade_maxima', 'DESC')
+                ->limit(1);
+
         $this->filtrarEstacoesComAcesso('E.id');
         $linha = $this->db->get()->row_array();
 
@@ -827,10 +824,9 @@ class LeiturasModel extends BaseModel
 
         return [
             'velocidade_maxima' => $linha['velocidade_maxima'],
-            'estacao_id' => $linha['estacao_id'],
-            'descricao' => $linha['descricao']
-        ];  
-        
+            'estacao_id'        => $linha['estacao_id'],
+            'descricao'         => $linha['descricao']
+        ];
     }
 
     public function calcularAlertaPluviometria($leitura)
@@ -956,14 +952,13 @@ class FiltrosLeitura
     const ESCALA_MINUTO         = 'minuto';
     const TIPO_VELOCIDADE_VENTO = 'velocidade_vento';
     const TIPO_DIRECAO_VENTO    = 'dir_vento'; //Jaque 31/07 -> monitoramento individual de estações
-    const TIPO_RAJADA_VENTO    = 'rajada_vento_1h'; //Jaque 15/05 -> #adicionando_rajada_vento 
+    const TIPO_RAJADA_VENTO     = 'rajada_vento_1h'; //Jaque 15/05 -> #adicionando_rajada_vento
     const TIPO_TEMPERATURA      = 'temperatura';
     const TIPO_VOLUME_CHUVA     = 'volume_chuva';
     const TIPO_UMIDADE_AR       = 'umidade_ar';
     const TIPO_VOLUME_ACC_CHUVA = 'volume_acc_chuva';
     const DIRECAO_ASC           = 'ASC';
     const DIRECAO_DESC          = 'DESC';
-
 
     private $estacoes = array();
     private $dataInicial;
