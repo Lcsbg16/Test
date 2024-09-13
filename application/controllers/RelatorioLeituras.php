@@ -17,6 +17,7 @@ class RelatorioLeituras extends BaseCrudController
     {
        // $this->load->model('LeiturasModel');
        $this->fonteDadosController = Fonte_Dashboard;
+       //$this->fonteDadosController = Fonte_AdminLeituras;
        $this->objLeituraModel = new LeiturasModel($this->fonteDadosController); 
         $this->load->model('EstacoesModel');
         $variaveisView = [];
@@ -59,6 +60,7 @@ class RelatorioLeituras extends BaseCrudController
             }
             $filtros->setDirecao(FiltrosLeitura::DIRECAO_ASC);
             $leituras = $this->objLeituraModel->calcularEstatisticasPorPeriodo($filtros);
+            
         }
         else
         {

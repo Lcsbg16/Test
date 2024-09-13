@@ -2,6 +2,7 @@
 
 require_once 'FonteDadosLeitura.php';
 require_once 'LeiturasModelEstatica.php';
+require_once 'LeiturasModelDinamica.php';
 
 class LeiturasModel 
 {
@@ -20,13 +21,14 @@ class LeiturasModel
                 $this->fonteDados = new LeiturasModelEstatica();
                 break;
             case 'dinamica' :
-                echo 'dinamica';
+                $this->fonteDados = new LeiturasModelDinamica();
                 break;
             case 'mongo' :
                 echo 'mongo';
                 break;
             default :
-            die('Necessário informar uma fonte de dados valida.');
+            $this->fonteDados = new LeiturasModelEstatica();
+            break;
             
 
         }
@@ -171,10 +173,7 @@ class LeiturasModel
         return $this->fonteDados->exportarLeiturasParaCSV($filtros);
     }
 
-    public static function converterVelocidadeVentoKMH($velocidadeMS)
-    {
-        return number_format($velocidadeMS * 3.6, 1);
-    }
+   
 
     public function atualizarCacheLeituraCalculada()
     {

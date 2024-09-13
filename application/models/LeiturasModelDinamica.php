@@ -189,21 +189,25 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
             if ($colunaTipoInformacao == "rajada_vento_1h")
             {  //#adicionando_rajada_vento .
                 $this->db->from('v_leitura_calculada'); 
+                $this->db->select($colunaPeriodo . ' AS periodo, ' . $agregador . '('.$colunaTipoInformacao.') AS valor');
             }
             else 
             {
                 $this->db->from('leitura');  //#adicionando_rajada_vento .
+                $this->db->join('leitura_valor lv','lv.leitura_id = leitura.id');
+                $this->db->where('lv.leitura_dimensao_tag', $colunaTipoInformacao);
+                $this->db->select($colunaPeriodo . ' AS periodo, ' . $agregador . '(valor_texto) AS valor');
              
             }
-            //echo $this->db->last_query();
-
-            $this->db->select($colunaPeriodo . ' AS periodo, ' . $agregador . '(' . $colunaTipoInformacao . ') AS valor');
+           
+            
+            //$this->db->select($colunaPeriodo . ' AS periodo, ' . $agregador . '(valor_texto) AS valor');
             $this->db->group_by($colunaPeriodo);
             $this->db->order_by('periodo', $filtros->getDirecao());
             $resultado = $this->db->get();
 
             $resultadoArray = $resultado->result_array();
-
+            
             //var_dump( $this->db->last_query());
             $retorno = [];
             foreach ($resultadoArray as $linha)
@@ -224,7 +228,17 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
 
     public function getLeiturasPorEscala(FiltrosLeitura $filtros = NULL, $retornarTudo = true)
     {
+
+
         $this->getArrayEstacoesComAcesso();
+
+        $this->db->from('leitura_valor');
+        $this->db->select('leitura_dimensao_tag');
+        $this->db->group_by('leitura_dimensao_tag');
+        $resultado = $this->db->get();
+        $res = $resultado->result_array();
+
+                    
         $this->db->from('leitura L');
         if ($filtros)
         {
@@ -274,6 +288,7 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
                     throw new Exception('É necessário informar a escala desejada.');
             }
 
+            
             $this->db->select(
                     $colunaPeriodo . ' AS periodo,
                             E.id as estacao_id,
@@ -281,38 +296,70 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
                             E.descricao as estacao_descricao,
                             E.endereco as estacao_endereco,
                             E.latitude as estacao_latitude,
-                            E.longitude as estacao_longitude,
-                            AVG(L.temperatura) as temperatura,
-                            AVG(L.umidade_ar) as umidade_ar,
-                            AVG(L.velocidade_vento) as velocidade_vento,
-                            MAX(L.velocidade_vento) as rajada_vento,
-                            SUM(L.volume_chuva) as volume_chuva,
-                            MAX(L.datahora_cadastro) as datahora_cadastro
-                        ');
+                            E.longitude as estacao_longitude
+                           ');
+                        foreach ($res as $key => $value) {
+                
+                            $varFunc = '';
+                            switch ($value['leitura_dimensao_tag']) {
+                                case 'temepratura':
+                                    $varFunc = 'AVG';
+                                    break;
+                                    case 'umidade_ar':
+                                        $varFunc = 'AVG';
+                                        break;
+                                        case 'velocidade_vento':
+                                            $varFunc = 'AVG';
+                                            break;
+                                            case 'rajada_vento':
+                                                $varFunc = 'MAX';
+                                                break;
+                                                case 'volume_chuva':
+                                                    $varFunc = 'SUM';
+                                                    break;
+                                                    case 'datahora_cadastro':
+                                                        $varFunc = 'MAX';
+                                                        break;
+                                default:
+                                    # code...
+                                    break;
+                            }
+                            if($varFunc != ''){
+                            $this->db->select('(select '.$varFunc.'(lv.valor_texto) 
+                            from leitura_valor lv where`lv`.`leitura_dimensao_tag` = '.$value['leitura_dimensao_tag'].' 
+                            and lv.leitura_id = L.id) as '.$value['leitura_dimensao_tag']);
+                            }
+
+                        }
+                        $this->db->select('(select AVG(lv.valor_texto) 
+                        from leitura_valor lv where`lv`.`leitura_dimensao_tag` = \'velocidade_vento\' 
+                        and lv.leitura_id = L.id) as rajada_vento' );
+                        
 
             $this->db->join('estacao E', 'L.estacao_id = E.id');
+            //$this->db->join('leitura_valor LV', 'L.id = LV.leitura_id');
+           // $this->db->where('LV.leitura_dimensao_tag', $value['leitura_dimensao_tag']);
             $this->db->group_by(
-                    $colunaPeriodo . ',
-                            E.id,
-                            E.identificador,
-                            E.descricao,
-                            E.endereco,
-                            E.latitude,
-                            E.longitude
-            ');
+                    $colunaPeriodo );
             $this->db->order_by('periodo', 'ASC');
             $resultado = $this->db->get();
+
             //echo $this->db->last_query();
 
-            if ($retornarTudo)
+           if ($retornarTudo)
             {
-                return $resultado->result_array();
+                $r =  $resultado->result_array();
+                var_dump($r);
+                return $r;
+
             }
             else
             {
                 return $resultado;
             }
-        }
+            
+            }
+          
     }
 
     public function getAcumuladoChuvaPorPeriodoGeral($cacheBD = true) //Acumulos de chuva + descrição da estação + temperatura // jaque
@@ -417,10 +464,12 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
 
                     (
                         SELECT
-                                {$colunaTipoInformacao}
+                                valor_texto
                         FROM
                                 leitura L1
+                        JOIN ultima_leitura_valor ulv on ulv.leitura_id = L1.id
                         WHERE
+                                ulv.leitura_dimensao_tag = {$colunaTipoInformacao}
                                 L1.estacao_id = E.id
                                 AND datahora >= DATE_SUB(now(), INTERVAL {$tempoLimite} MINUTE)
                         ORDER BY
@@ -443,6 +492,8 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
      * @return array
      * @throws Exception
      */
+
+    
     public function getUltimaLeituraRegistrada(FiltrosLeitura $filtros = NULL)
     {
         $this->getArrayEstacoesComAcesso();
@@ -459,7 +510,7 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
 
             if ($estacoes)
             {
-                $this->db->where_in('estacao_id', $estacoes);
+                $this->db->where_in('leitura.estacao_id', $estacoes);
             }
             else
             {
@@ -509,12 +560,15 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
                 return $resultado;
             }
             else {
-                $this->db->from('leitura');  //#adicionando_rajada_vento .
-                $this->db->select("COALESCE({$colunaTipoInformacao}, 0) AS 'valor', datahora")
+                $this->db->from('leitura');  
+                $this->db->join('ultima_leitura_valor ulv', 'leitura.id = ulv.leitura_id');
+                $this->db->where('leitura_dimensao_tag', $colunaTipoInformacao);
+                $this->db->select("COALESCE(valor_texto, 0) AS 'valor', datahora")
                 ->order_by("datahora", "DESC")
                 ->limit(1);
 
                 $resultado = $this->db->get()->result_array();
+               // var_dump($this->db->last_query());
                 return $resultado;
             }
 
@@ -523,8 +577,7 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
     }
 
 
-    public function getUltimaTemperaturaMedia()
-    {
+    public function getUltimaTemperaturaMedia(){
 
         $this->getArrayEstacoesComAcesso();
 
@@ -539,10 +592,12 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
                     AVG(
                         (
                             SELECT
-                                    temperatura
+                                    valor_texto
                             FROM
                                     leitura L1
+                            JOIN    ultima_leitura_valor ulv on ulv.leitura_id = L1.id
                             WHERE
+                                    ulv.leitura_dimensao_tag = 'temperatura'
                                     L1.estacao_id = E.id
                                     AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
@@ -577,10 +632,12 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
                     MIN(
                         (
                             SELECT
-                                    volume_chuva
+                            valor_texto
                             FROM
                                     leitura L1
+                                    JOIN    ultima_leitura_valor ulv on ulv.leitura_id = L1.id
                             WHERE
+                                    ulv.leitura_dimensao_tag = 'volume_chuva'
                                     L1.estacao_id = E.id
                                     AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
@@ -614,10 +671,12 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
             MAX(
                 (
                     SELECT
-                            volume_chuva
+                            valor_texto
                     FROM
                             leitura L1
+                            JOIN    ultima_leitura_valor ulv on ulv.leitura_id = L1.id
                     WHERE
+                            ulv.leitura_dimensao_tag = 'volume_chuva'
                             L1.estacao_id = E.id
                             AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                     ORDER BY
@@ -651,10 +710,12 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
                     MIN(
                         (
                             SELECT
-                                    temperatura
+                                    valor_texto
                             FROM
                                     leitura L1
+                            JOIN    ultima_leitura_valor ulv on ulv.leitura_id = L1.id           
                             WHERE
+                                    ulv.leitura_dimensao_tag = 'temperatura'
                                     L1.estacao_id = E.id
                                     AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
@@ -688,10 +749,12 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
                     MAX(
                         (
                             SELECT
-                                    temperatura
+                                    valor_texto
                             FROM
                                     leitura L1
+                            JOIN    ultima_leitura_valor ulv on ulv.leitura_id = L1.id   
                             WHERE
+                                ulv.leitura_dimensao_tag = 'temperatura'
                                 L1.estacao_id = E.id
                                 AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
@@ -725,10 +788,12 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
                     MIN(
                         (
                             SELECT
-                                velocidade_vento
+                                    valor_texto
                             FROM
                                 leitura L1
+                            JOIN    ultima_leitura_valor ulv on ulv.leitura_id = L1.id   
                             WHERE
+                                ulv.leitura_dimensao_tag = 'velocidade_vento'
                                 L1.estacao_id = E.id
                                 AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
@@ -762,10 +827,12 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
                     MAX(
                         (
                             SELECT
-                                velocidade_vento
+                                    valor_texto
                             FROM
                                     leitura L1
-                            WHERE
+                            JOIN    ultima_leitura_valor ulv on ulv.leitura_id = L1.id   
+                             WHERE
+                                ulv.leitura_dimensao_tag = 'velocidade_vento'
                                 L1.estacao_id = E.id
                                 AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
@@ -789,15 +856,69 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
 
     public function getAllLeituras()
     {
-        $this->db->select('leitura.id, leitura.datahora, estacao.identificador as estacao_identificador, estacao.descricao as estacao_descricao,
-                           estacao.endereco as estacao_edereco, estacao.latitude as estacao_latitude, estacao.longitude as estacao_longitude,
-                           leitura.temperatura, leitura.umidade_ar, leitura.velocidade_vento, leitura.dir_vento, leitura.volume_chuva,datahora_cadastro'); // Adiciona os campos de estacao
+        $this->db->select('leitura.id, leitura.datahora, estacao.identificador as estacao_identificador, 
+        estacao.descricao as estacao_descricao, estacao.endereco as estacao_edereco, 
+        estacao.latitude as estacao_latitude, estacao.longitude as estacao_longitude,
+        leitura.temperatura, leitura.umidade_ar, leitura.velocidade_vento, leitura.dir_vento, 
+        leitura.volume_chuva,datahora_cadastro, lv.*'); // Adiciona os campos de estacao
         $this->db->from('leitura');
+        $this->db->join('leitura_valor lv', 'leitura.id = lv.leitura_id');
         $this->db->join('estacao', 'leitura.estacao_id = estacao.id');
         //$this->db->order_by('leitura.datahora', 'DESC');
         $this->db->order_by('leitura.id', 'ASC');
         $query = $this->db->get();
-        return $query->result_array();
+        $result = $query->result_array();
+       // var_dump($this->db->last_query());
+        return $result;
+    }
+
+    public function exportarLeiturasParaCSV($filtros)
+    {
+
+        $leituras = $this->getLeiturasPorEscala($filtros, false);
+
+        $csvData = array();
+
+        $header = array(
+            'periodo',
+            'estacao_id',
+            'estacao_identificador',
+            'estacao_descricao',
+            'estacao_endereco',
+            'estacao_latitude',
+            'estacao_longitude',
+            'temperatura',
+            'umidade_ar',
+            'velocidade_vento',
+            'rajada_vento',
+            'volume_chuva',
+            'datahora_cadastro'
+        );
+
+        $csvData[] = $header;
+
+        while ($leitura = $leituras->unbuffered_row('array'))
+        {
+            // Substituir vírgulas por pontos nas colunas de velocidade do vento e rajada de vento
+            $leitura['velocidade_vento'] = str_replace(',', '.', $leitura['velocidade_vento']);
+            $leitura['rajada_vento']     = str_replace(',', '.', $leitura['rajada_vento']);
+
+            // Converter velocidade do vento e rajada de vento para km/h
+            $leitura['velocidade_vento'] = self::converterVelocidadeVentoKMH((float)$leitura['velocidade_vento']);
+            $leitura['rajada_vento']     = self::converterVelocidadeVentoKMH((float)$leitura['rajada_vento']);
+
+            // Substituir o separador decimal de . para ,
+            $leitura = array_map(function ($value)
+            {
+                return str_replace('.', ',', $value);
+            }, $leitura);
+
+            // Adicionar a linha ao CSV
+            $csvData[] = $leitura;
+        }
+        //var_dump($csvData);
+
+        return $csvData;
     }
 }
    
