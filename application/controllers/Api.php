@@ -94,30 +94,6 @@ class Api extends BaseController
                 $this->db->db_debug = FALSE;
                 $leitura_id         = $this->LeiturasModel->inserirLeitura($estacao['id'], $dadosLeitura);
 
-                //removendo valores para a tabela leitura_valor
-                unset($postData['identidade']);
-                unset($postData['timestamp']);
-                unset($postData['uid']);
-
-                foreach ($postData as $key => $value)
-                {
-                    $this->LeiturasModel->inserirLeituraValor($leitura_id, $key, $value);
-                }
-
-                foreach ($postData as $key => $value)
-                {
-                    $this->LeiturasModel->inserirUltimaLeitura($estacao['id'], $leitura_id, $key, $value);
-                }
-
-                $error = $this->db->error();
-
-                if ($error['code'])
-                {
-                    http_response_code(500);
-                    echo var_dump($error['message']);
-                    return;
-                }
-
                 echo 'OK';
             }
             else
