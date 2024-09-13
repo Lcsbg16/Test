@@ -47,8 +47,6 @@ class LeiturasModel extends BaseModel
 
         $insert_id = $this->db->insert_id();
 
-        $this->inserirLeituraAPI($estacaoId, $insert_id, $dadosLeitura);
-
         return $insert_id;
     }
 
