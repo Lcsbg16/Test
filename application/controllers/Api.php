@@ -87,6 +87,7 @@ class Api extends BaseController
                     'umidade_ar'        => $postData['umidade_ar'],
                     'velocidade_vento'  => $postData['velocidade_vento'],
                     'volume_chuva'      => $postData['volume_chuva'],
+                    'pressao_atm'       => $postData['pressao_atm'],
                     'datahora_cadastro' => date('Y-m-d H:i:s'),
                     'payload'           => json_encode($postData)
                 ];

@@ -48,10 +48,11 @@ class AdminLeituras extends BaseCrudController
         $crud->display_as('volume_chuva', 'Volume da Chuva (mm³)');
         $crud->display_as('volume_acc_chuva', 'Volume Acumulado de Chuva (mm&sup3;)');
         $crud->display_as('dir_vento', 'Direção do Vento (&#176;)');
+        $crud->display_as('pressao_atm', 'Pressão atmosférica');
 
-        $crud->set_read_fields('datahora', 'estacao_id', 'temperatura', 'umidade_ar', 'velocidade_vento', 'dir_vento', 'volume_chuva');
+        $crud->set_read_fields('datahora', 'estacao_id', 'temperatura', 'umidade_ar', 'velocidade_vento', 'dir_vento', 'volume_chuva', 'pressao_atm');
 
-        $crud->columns('datahora', 'estacao_id', 'temperatura', 'umidade_ar', 'velocidade_vento', 'dir_vento', 'volume_chuva');
+        $crud->columns('datahora', 'estacao_id', 'temperatura', 'umidade_ar', 'velocidade_vento', 'dir_vento', 'volume_chuva', 'pressao_atm');
         $crud->unset_add();
         $crud->unset_edit();
 

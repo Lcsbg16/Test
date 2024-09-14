@@ -191,6 +191,9 @@ class LeiturasModel extends BaseModel
                 case FiltrosLeitura::TIPO_RAJADA_VENTO: //#adicionando_rajada_vento .
                     $colunaTipoInformacao = "rajada_vento_1h";
                     break;
+                case FiltrosLeitura::TIPO_PRESSAO_ATMOSFERICA:    
+                    $colunaTipoInformacao = "pressao_atm";
+                    break;
                 default:
                     throw new Exception('É necessário informar o tipo de informação desejada.');
             }
@@ -323,6 +326,7 @@ class LeiturasModel extends BaseModel
                             AVG(L.velocidade_vento) as velocidade_vento,
                             MAX(L.velocidade_vento) as rajada_vento,
                             SUM(L.volume_chuva) as volume_chuva,
+                            AVG(L.pressao_atm) as pressao_atm,
                             MAX(L.datahora_cadastro) as datahora_cadastro
                         ');
 
@@ -444,6 +448,10 @@ class LeiturasModel extends BaseModel
                     $colunaTipoInformacao = 'volume_acc_chuva';
                     break;
 
+                case FiltrosLeitura::TIPO_PRESSAO_ATMOSFERICA:
+                    $colunaTipoInformacao = 'pressao_atm';
+                    break;
+
                 default:
                     throw new Exception('É necessário informar o tipo de informação desejada.');
             }
@@ -531,7 +539,9 @@ class LeiturasModel extends BaseModel
                 case FiltrosLeitura::TIPO_RAJADA_VENTO:
                     $colunaTipoInformacao = 'rajada_vento_1h'; // #adicionando_rajada_vento .
                     break;
-
+                case FiltrosLeitura::TIPO_PRESSAO_ATMOSFERICA:
+                    $colunaTipoInformacao = 'pressao_atm';
+                    break;
                 default:
                     throw new Exception('É necessário informar o tipo de informação desejada.');
             }
@@ -851,7 +861,7 @@ class LeiturasModel extends BaseModel
     {
         $this->db->select('leitura.id, leitura.datahora, estacao.identificador as estacao_identificador, estacao.descricao as estacao_descricao,
                            estacao.endereco as estacao_edereco, estacao.latitude as estacao_latitude, estacao.longitude as estacao_longitude,
-                           leitura.temperatura, leitura.umidade_ar, leitura.velocidade_vento, leitura.dir_vento, leitura.volume_chuva,datahora_cadastro'); // Adiciona os campos de estacao
+                           leitura.temperatura, leitura.umidade_ar, leitura.velocidade_vento, leitura.dir_vento, leitura.volume_chuva, leitura.pressao_atm,datahora_cadastro'); // Adiciona os campos de estacao
         $this->db->from('leitura');
         $this->db->join('estacao', 'leitura.estacao_id = estacao.id');
         //$this->db->order_by('leitura.datahora', 'DESC');
@@ -880,6 +890,7 @@ class LeiturasModel extends BaseModel
             'velocidade_vento',
             'rajada_vento',
             'volume_chuva',
+            'pressao_atm',
             'datahora_cadastro'
         );
 
@@ -942,21 +953,22 @@ class LeiturasModel extends BaseModel
 class FiltrosLeitura
 {
 
-    const ESCALA_ANO            = 'ano';
-    const ESCALA_MES            = 'mes';
-    const ESCALA_SEMANA         = 'semana';
-    const ESCALA_DIA            = 'dia';
-    const ESCALA_HORA           = 'hora';
-    const ESCALA_MINUTO         = 'minuto';
-    const TIPO_VELOCIDADE_VENTO = 'velocidade_vento';
-    const TIPO_DIRECAO_VENTO    = 'dir_vento'; //Jaque 31/07 -> monitoramento individual de estações
-    const TIPO_RAJADA_VENTO     = 'rajada_vento_1h'; //Jaque 15/05 -> #adicionando_rajada_vento
-    const TIPO_TEMPERATURA      = 'temperatura';
-    const TIPO_VOLUME_CHUVA     = 'volume_chuva';
-    const TIPO_UMIDADE_AR       = 'umidade_ar';
-    const TIPO_VOLUME_ACC_CHUVA = 'volume_acc_chuva';
-    const DIRECAO_ASC           = 'ASC';
-    const DIRECAO_DESC          = 'DESC';
+    const ESCALA_ANO                = 'ano';
+    const ESCALA_MES                = 'mes';
+    const ESCALA_SEMANA             = 'semana';
+    const ESCALA_DIA                = 'dia';
+    const ESCALA_HORA               = 'hora';
+    const ESCALA_MINUTO             = 'minuto';
+    const TIPO_VELOCIDADE_VENTO     = 'velocidade_vento';
+    const TIPO_DIRECAO_VENTO        = 'dir_vento'; //Jaque 31/07 -> monitoramento individual de estações
+    const TIPO_RAJADA_VENTO         = 'rajada_vento_1h'; //Jaque 15/05 -> #adicionando_rajada_vento
+    const TIPO_TEMPERATURA          = 'temperatura';
+    const TIPO_VOLUME_CHUVA         = 'volume_chuva';
+    const TIPO_UMIDADE_AR           = 'umidade_ar';
+    const TIPO_VOLUME_ACC_CHUVA     = 'volume_acc_chuva';
+    const TIPO_PRESSAO_ATMOSFERICA  = 'pressao_atmosferica';
+    const DIRECAO_ASC               = 'ASC';
+    const DIRECAO_DESC              = 'DESC';
 
     private $estacoes = array();
     private $dataInicial;
@@ -968,11 +980,12 @@ class FiltrosLeitura
     public static function getTodosTiposInformacao()
     {
         return [
-            self::TIPO_VOLUME_CHUVA     => 'Pluviometria',
-            self::TIPO_TEMPERATURA      => 'Temperatura',
-            self::TIPO_DIRECAO_VENTO    => 'Direção do Vento',
-            self::TIPO_UMIDADE_AR       => 'Umidade do Ar',
-            self::TIPO_VELOCIDADE_VENTO => 'Velocidade do Vento'
+            self::TIPO_VOLUME_CHUVA         => 'Pluviometria',
+            self::TIPO_TEMPERATURA          => 'Temperatura',
+            self::TIPO_DIRECAO_VENTO        => 'Direção do Vento',
+            self::TIPO_UMIDADE_AR           => 'Umidade do Ar',
+            self::TIPO_VELOCIDADE_VENTO     => 'Velocidade do Vento',
+            self::TIPO_PRESSAO_ATMOSFERICA  => 'Pressão Atmosférica'
         ];
     }
 
