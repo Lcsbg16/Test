@@ -152,6 +152,23 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-xl-6 col-lg-6 p-1">
+                <div class="card card-stats mb-4 mb-xl-4">
+                    <div class="card-body" style="min-height: 100px !important;">
+                        <div class="row">
+                            <div class="col">
+                                <h5 class="card-title text-uppercase text-muted mb-0">Pressão atmosférica:</h5>
+                                <span class="h2 font-weight-bold mb-0" id="card_pressao_atm"> </span> <span class="h3 font-weight-bold mb-0"> atm </span>
+                            </div>
+                            <div class="col-auto">
+                                <div class="icon icon-shape bg-gradient-gray text-white rounded-circle shadow">
+                                    <i class="fa-solid fa-wind" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
                 </div>
             </div>
@@ -256,7 +273,11 @@
     <div class="row my-12" >
     <div class="col-md-12 col-lg-12 col-xl-6 py-1">
     <canvas id="graficoRajadaVento" style="min-height: 350px;"></canvas>
-</div>
+</div>    
+
+    <div class="col-md-12 col-lg-12 col-xl-6 py-1">
+    <canvas id="graficoPressaoAtm" style="min-height: 350px;"></canvas> 
+    </div>
     </div>
 
             </div>
@@ -289,8 +310,7 @@
                     escala = "ESCALA_MES"; 
                 }
             return escala; 
-        }
-
+    }
 
     var charts = {};
 
@@ -301,28 +321,27 @@
         delete charts[canva.id]; 
     }
         let labels_formatada = AjeitarLabels(label_inf, tipo_escala);
-         
         var config = 
-         {
-            type: 'line',
-            data: {
-                    labels:  labels_formatada,
-                    datasets: [{
-                                label: label_sup,
-                                data: dados,
-                                fill: false,
-                                borderColor: "#8B9DC8",
-                                backgroundColor: "#8B9DC8"
-                                }]
-                    },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                        y: { beginAtZero: true },
-                        x: { beginAtZero: true, offset: true }
+            {
+                type: 'line',
+                data: {
+                        labels:  labels_formatada,
+                        datasets: [{
+                                    label: label_sup,
+                                    data: dados,
+                                    fill: false,
+                                    borderColor: "#8B9DC8",
+                                    backgroundColor: "#8B9DC8"
+                                    }]
+                        },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                            y: { beginAtZero: true },
+                            x: { beginAtZero: true, offset: true }
+                            }
                         }
-                    }
             };
 
         charts[canva.id] = new Chart(canva, config);
@@ -336,100 +355,87 @@
             let graficoDirVento = document.getElementById("graficoDirVento");
             let graficoVolChuva = document.getElementById("graficoVolChuva");
             let graficoRajadaVento = document.getElementById("graficoRajadaVento");
+            let graficoPressaoAtm = document.getElementById("graficoPressaoAtm");
 
-                    $.ajax({
-                        url: "{$BASE_URL}Leituras/getEstatisticasLeiturasJson",
-                        dataType: "json",
-                        method: "POST",
-                        data: {
-                                estacao_selecionada: estacao_id, 
-                                data_inicial: datas[0], 
-                                data_final: datas[1], 
-                                escala: escala, 
-                                tipo_dados: tipo_dados
-                             },
-                         }).done(function (data)
-                         {     
-                                if(data.length == 0)
-                                {
-                                    let graficosArray = [graficoTemp, graficoUmid, graficoVelVento, graficoVolChuva, graficoRajadaVento];
-                                   graficosArray.forEach(grafico => geraGrafico(grafico, "Dados indisponíveis nesse período", "errro", "0"));
-
-                             } 
-                             else 
-                            {
-                                const periodos = Object.keys(data).map(function(key) { return key;  });
-                                const valores = Object.values(data).map(function(value) { return value;});
-                                let tipo_informação;
-                                
-                                switch (tipo_dados) 
-                                { 
-                                    case 'TIPO_TEMPERATURA':
-                                    tipo_informação = "Temperatura (ºC)";
-                                    geraGrafico(graficoTemp, tipo_informação, periodos, valores, escala); 
-                                    break; 
-
-                                    case 'TIPO_UMIDADE_AR':    
-                                    tipo_informação = "Umidade (%)";
-                                    geraGrafico(graficoUmid, tipo_informação, periodos, valores, escala); 
-                                    break;
-
-                                    case 'TIPO_VELOCIDADE_VENTO':
-                                    tipo_informação = "Velocidade do Vento (km/h)";
-                                    geraGrafico(graficoVelVento, tipo_informação, periodos, valores, escala);
-                                    break;
-
-                                    case 'TIPO_VOLUME_CHUVA':
-                                    tipo_informação = "Volume de Chuva (mm)";
-                                    geraGrafico(graficoVolChuva, tipo_informação, periodos, valores, escala);
-
-                                    break;
-
-                                    case 'TIPO_RAJADA_VENTO':
-                                    tipo_informação = "Rajada do Vento (km/h)";
-                                    geraGrafico(graficoRajadaVento, tipo_informação, periodos, valores, escala);
-
-                                    break;
-
-                                    default:
-                                    throw new Exception('Tipo não especificado - Ajax, MonitoramentoIndividual');
-
-                                }     
+            $.ajax({
+                url: "{$BASE_URL}AdminLeituras/getEstatisticasLeiturasJson",
+                dataType: "json",
+                method: "POST",
+                data: {
+                    estacao_selecionada: estacao_id,  //Estação - ID
+                    data_inicial: datas[0], //data inicial formatada
+                    data_final: datas[1], //data final formatada
+                    escala: escala, 
+                    tipo_dados: tipo_dados
+                    },
+            }).done(function (data){                   
+                if(data.length == 0){
+                    let graficosArray = [graficoTemp, graficoUmid, graficoVelVento, graficoVolChuva, graficoRajadaVento, graficoPressaoAtm];
+                    graficosArray.forEach(grafico => geraGrafico(grafico, "Dados indisponíveis nesse período", "errro", "0"));
+                } else {
+                    //salva as keys/chaves como os periodos de tempo (no model: o dado vem como 2023=>20.55, ou seja, key = periodo 
+                    const periodos = Object.keys(data).map(function(key) { return key;  });
+                    //salva os value como valor (no model: 2023=>20.5555, ou seja, value = valor)
+                    const valores = Object.values(data).map(function(value) { return value;});
+                    let tipo_informação;
+                    switch (tipo_dados) { 
+                        case 'TIPO_TEMPERATURA':
+                            tipo_informação = "Temperatura (ºC)";
+                            geraGrafico(graficoTemp, tipo_informação, periodos, valores, escala); //passa: canva de temperatura, Temperatura como label superior, periodos como label inferior e valores como dados finais
+                            break; 
+                        case 'TIPO_UMIDADE_AR':    
+                            tipo_informação = "Umidade (%)";
+                            geraGrafico(graficoUmid, tipo_informação, periodos, valores, escala); 
+                            break;
+                        case 'TIPO_VELOCIDADE_VENTO':
+                            tipo_informação = "Velocidade do Vento (km/h)";
+                            geraGrafico(graficoVelVento, tipo_informação, periodos, valores, escala);
+                            break;
+                        case 'TIPO_VOLUME_CHUVA':
+                            tipo_informação = "Volume de Chuva (mm)";
+                            geraGrafico(graficoVolChuva, tipo_informação, periodos, valores, escala);
+                            break;
+                        case 'TIPO_RAJADA_VENTO':
+                            tipo_informação = "Rajada do Vento (km/h)";
+                            geraGrafico(graficoRajadaVento, tipo_informação, periodos, valores, escala);
+                            break;
+                        case 'TIPO_PRESSAO_ATM':
+                            tipo_informação = "Pressão Atmosférica (atm)";
+                            geraGrafico(graficoPressaoAtm, tipo_informação, periodos, valores, escala);
                             
-                            }
-                   }).fail(function (jqXHR, textStatus, errorThrown) {
+                        default:
+                            throw new Exception('Tipo não especificado - Ajax, MonitoramentoIndividual');
+                    }     
+                            
+                }
+            }).fail(function (jqXHR, textStatus, errorThrown) {
                     console.log("Ocorreu um erro - " + errorThrown);
                 });
-    }
+        }
 
-
-        function handleAjax(card_id, estacao_id, tipo_dados)
-    { 
-                 $.ajax({
-                        url: "{$BASE_URL}/Leituras/getUltimaLeituraRegistrada",
-                        dataType: "json",
-                        method: "POST",
-                        data: {
-                            estacao_selecionada: estacao_id,
-                            tipo_dados: tipo_dados
+        function handleAjax(card_id, estacao_id, tipo_dados) { 
+            $.ajax({
+                url: "{$BASE_URL}/Leituras/getUltimaLeituraRegistrada",
+                dataType: "json",
+                method: "POST",
+                data: {
+                    estacao_selecionada: estacao_id,
+                    tipo_dados: tipo_dados
                      },
                 }).done(function (data)
                  {
-                    if(data.length == 0)
-                    {
+                    if(data.length == 0){
                         $(card_id).text("Erro leitura");
                         $('#leitura_label').text('Não foram localizados dados para essa estação:');
                         console.log("Não há dados registrados para essa estação");
                         return;
-                    }  
-                    else {
+                    } else {
                             $(card_id).text(parseFloat(data[0].valor).toFixed(2).replace('.', ','));
                              let [dataOriginal, hora] = data[0].datahora.split(' ');
                             let [ano, mes, dia] = dataOriginal.split('-');
                            $('#leitura_label').text(dia + "/" + mes + "/" + ano + " - " + hora );
                         }
-                }).fail(function (jqXHR, textStatus, errorThrown) 
-                    { 
+                }).fail(function (jqXHR, textStatus, errorThrown) { 
                     $(card_id).text("Erro leitura");
                     console.log("Ocorreu um erro - " + errorThrown);
                      });
@@ -458,98 +464,70 @@
     
     function AjeitarLabels(labels, tipo_escala)
     {
-        if(labels.length>0)  //Essa labels é a inferior, onde indica o tipo de dado. 
-            {        
-                let dataFormatada = [];
-                if (tipo_escala == "ESCALA_MES") 
-                    {
-                        for (let i=0; i<labels.length; i++)
-                            {
-                                let dateArray = labels[i].split("-"); 
-                                let date = new Date(dateArray[0], parseInt(dateArray[1]) - 1); 
-                                dataFormatada.push(date.toLocaleString('pt-BR', { month: 'short', year: 'numeric' }).replace(". de ", "/").toLowerCase()); 
-                            }   
-                        return dataFormatada;
-
-                    } else if (tipo_escala == "ESCALA_MINUTO") 
-                        {
-                            let result = [];
-                            for (let i=0; i<labels.length; i++)
-                                {
-                                    let dateArray = labels[i].split(/[-\s:]/); 
-                                    let date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]); 
-                                    dataFormatada.push(date.toLocaleString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(", ", "-")); 
-                                    result[i]= dataFormatada[i].split('-');
-
-                                }    
-                        
-                            return result;
-
-                     } else if(tipo_escala == "ESCALA_HORA")
-                            {
-                                let result = [];
-                                for (let i=0; i<labels.length; i++)
-                                    {
-                                        let dateArray = labels[i].split(/[-\s:]/); 
-                                        let date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3]); 
-                                        dataFormatada.push(date.toLocaleString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(", ", "-")); 
-                                        result[i]= dataFormatada[i].split('-');
-                                    }    
-                                return result;
-                            }  else if(tipo_escala == "ESCALA_SEMANA")
-                                {
-                                    for (let i=0; i<labels.length; i++)
-                                            {
-                                                let dateArray = labels[i].split('-'); 
-                                                let date = new Date(dateArray[0], 0, (dateArray[1] *7)); 
-                                                
-                                                if(date.getDay() == 0)
-                                                    {
-                                                        date.setDate(date.getDate() - 6); //se o dia cair no domingo, tirar 6 dias pra chegar na segunda
-                                                    } else if (date.getDay() > 1)
-                                                    { //se o dia cair entre dia 2 e 5, diminuir até o dia 1    
-                                                        while (date.getDay() > 1)
-                                                        {
-                                                            date.setDate(date.getDate() - 1);
-                                                        }
-                                                    } else if (date.getDay() == 1) 
-                                                    {
-                                                        date.setDate(date.getDate()); 
-                                                    }
-                                            
-                                                dataFormatada.push(date.toLocaleString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric' })); 
-                                            
-                                            }
-                                    return dataFormatada   
-                                } else if (tipo_escala == "ESCALA_DIA") 
-                                    {
-                                        for (let i=0; i<labels.length; i++)
-                                            {
-                                                let dateArray = labels[i].split("-"); 
-                                                let date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
-                                                dataFormatada.push(date.toLocaleString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric' }));  
-                                            }    
-                                    
-                                        return dataFormatada;
-                                    } 
-                    
+        if(labels.length>0){ //se tiver labels pra tratar //Essa labels é a inferior, onde indica o tipo de dado. Ex: mes (03-2023), hora, dia, etc  
+            let dataFormatada = [];
+            if (tipo_escala == "ESCALA_MES") {
+                for (let i=0; i<labels.length; i++){
+                    let dateArray = labels[i].split("-"); //quebra a data que chega no formato yyyy-mm
+                    let date = new Date(dateArray[0], parseInt(dateArray[1]) - 1); // Cria uma varivel com o ano e o mês (Janeiro = 0)
+                    dataFormatada.push(date.toLocaleString('pt-BR', { month: 'short', year: 'numeric' }).replace(". de ", "/").toLowerCase());  // Formata a data para exibir o mês por extenso e o ano numerico
+                }   
+                return dataFormatada;
+             } else if (tipo_escala == "ESCALA_MINUTO")  {
+                let result = [];
+                for (let i=0; i<labels.length; i++){
+                    let dateArray = labels[i].split(/[-\s:]/); //quebra a data que chega no formato yyyy-mm
+                    let date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]); // Cria uma varivel com o ano e o mês (Janeiro = 0)
+                    dataFormatada.push(date.toLocaleString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(", ", "-")); 
+                    result[i]= dataFormatada[i].split('-');
+                 }    
+                return result;
+                } else if(tipo_escala == "ESCALA_HORA"){ 
+                    let result = [];
+                    for (let i=0; i<labels.length; i++){
+                        let dateArray = labels[i].split(/[-\s:]/); //quebra a data que chega no formato yyyy-mm
+                        let date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3]); // Cria uma varivel com o ano e o mês (Janeiro = 0)
+                        dataFormatada.push(date.toLocaleString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(", ", "-")); 
+                        result[i]= dataFormatada[i].split('-');
+                    }    
+                    return result;
+                }  else if(tipo_escala == "ESCALA_SEMANA") {
+                        for (let i=0; i<labels.length; i++){
+                            let dateArray = labels[i].split('-'); //quebra a data que chega no formato yyyy-semana
+                            let date = new Date(dateArray[0], 0, (dateArray[1] *7)); // qnt dias
+                            if(date.getDay() == 0){
+                                date.setDate(date.getDate() - 6); //se o dia cair no domingo, tirar 6 dias pra chegar na segunda
+                                } else if (date.getDay() > 1){ //se o dia cair entre dia 2 e 5, diminuir até o dia 1    
+                                    while (date.getDay() > 1){
+                                        date.setDate(date.getDate() - 1);
+                                    }
+                                } else if (date.getDay() == 1) {
+                                    date.setDate(date.getDate()); //se o dia cair na segunda, manter
+                                }               
+                            dataFormatada.push(date.toLocaleString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric' }));  // Formata a data para exibir o mês por extenso e o ano numerico             
+                        }
+                            return dataFormatada   
+                        } else if (tipo_escala == "ESCALA_DIA") {
+                            for (let i=0; i<labels.length; i++) {
+                                let dateArray = labels[i].split("-"); //quebra a data que chega no formato yyyy-mm
+                                let date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]); // Cria uma varivel com o ano e o mês (Janeiro = 0)
+                                dataFormatada.push(date.toLocaleString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric' }));  // Formata a data para exibir o mês por extenso e o ano numerico
+                            }    
+                            return dataFormatada;
+                        }     
             } 
         else 
-           return;
-            
-}   
+           return;      
+    }   
 
     ///////CARREGAR OS GRÁFICOS /////////////
-    function carregarGraficoPorTipo(tipo_dados, estacao) 
-                {
+    function carregarGraficoPorTipo(tipo_dados, estacao) {
                     let escala = GetEscala();
                     let datas = GetData();
-
                     handleAjaxGraficos(estacao, datas, escala, tipo_dados);
-                }
+    }
 
-    function configureDateTimePicker(escala) 
-    {
+    function configuraDateTimePicker(escala) {
             let valorAnteriorData = null;
             let padraoConfig = { 
                 format: 'd/m/Y H:i',
@@ -559,7 +537,7 @@
                 onClose: function(dp, $input) {
                     let novoValorData = $input.val();
                     if (novoValorData !== valorAnteriorData) {
-                        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO"].forEach(function (tipo) {
+                        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO", "TIPO_PRESSAO_ATM"].forEach(function (tipo) {
                             carregarGraficoPorTipo(tipo, {$estacao.id});
                         });
                         valorAnteriorData = novoValorData;
@@ -616,9 +594,9 @@
      $('.change_controller').change(function()  { //mudanças da escala
            
                     let novaEscala = GetEscala();
-                    configureDateTimePicker(novaEscala); 
-                    ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_VOLUME_ACC_CHUVA", "TIPO_RAJADA_VENTO"].forEach(function (tipo) {
-                    carregarGraficoPorTipo(tipo, {$estacao.id}); }); 
+                    configuraDateTimePicker(novaEscala); //altera o tipo de calendario, se a escala for "minuto" há algumas alterações em relação as outras escalas
+                    ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_VOLUME_ACC_CHUVA", "TIPO_RAJADA_VENTO", "TIPO_PRESSAO_ATM"].forEach(function (tipo) {
+                    carregarGraficoPorTipo(tipo, {$estacao.id}); }); //carrega os gráficos 
 
                         
         });
@@ -634,7 +612,7 @@
         let dataHoraInicial = ("0" + dataInicial.getDate()).slice(-2) + "/" + ("0" + (dataInicial.getMonth() + 1)).slice(-2) + "/" + dataInicial.getFullYear() + " " + ("0" + dataInicial.getHours()).slice(-2) + ":" + ("0" + dataInicial.getMinutes()).slice(-2);
         $('#dataInicial').val(dataHoraInicial);
 
-        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO"].forEach(function (tipo) {
+        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO", "TIPO_PRESSAO_ATM"].forEach(function (tipo) {
             carregarGraficoPorTipo(tipo, {$estacao.id}); });
 
     }
@@ -650,7 +628,7 @@
         let dataHoraInicial = ("0" + dataInicial.getDate()).slice(-2) + "/" + ("0" + (dataInicial.getMonth() + 1)).slice(-2) + "/" + dataInicial.getFullYear() + " " + ("0" + dataInicial.getHours()).slice(-2) + ":" + ("0" + dataInicial.getMinutes()).slice(-2);
         $('#dataInicial').val(dataHoraInicial);
 
-        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO"].forEach(function (tipo) {
+        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO", "TIPO_PRESSAO_ATM"].forEach(function (tipo) {
             carregarGraficoPorTipo(tipo, {$estacao.id}); });
 
     }
@@ -668,7 +646,7 @@
        let dataHoraInicial = ("0" + inicioSemana.getDate()).slice(-2) + "/" + ("0" + (inicioSemana.getMonth() + 1)).slice(-2) + "/" + inicioSemana.getFullYear() + " " + ("0" + dataInicial.getHours()).slice(-2) + ":" + ("0" + dataInicial.getMinutes()).slice(-2);
         $('#dataInicial').val(dataHoraInicial);
 
-        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO"].forEach(function (tipo) {
+        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO", "TIPO_PRESSAO_ATM"].forEach(function (tipo) {
             carregarGraficoPorTipo(tipo, {$estacao.id}); });
 
     }
@@ -678,7 +656,7 @@
 
   $(function () {
 
-         configureDateTimePicker(GetEscala()); //Configura o calendário com a escala inicial "mes"
+         configuraDateTimePicker(GetEscala()); //Configura o calendário com a escala inicial "mes"
 
          document.getElementById("estacao_id").innerHTML = "{$estacao.descricao} ({$estacao.identificador})";
 
@@ -691,7 +669,9 @@
             ["#card_umidade", {$estacao.id}, "TIPO_UMIDADE_AR"],
             ["#card_vel_vento",{$estacao.id}, "TIPO_VELOCIDADE_VENTO"],
             ["#card_vol_chuva", {$estacao.id}, "TIPO_VOLUME_CHUVA"],
-            ["#card_rajada_vento", {$estacao.id}, "TIPO_RAJADA_VENTO"]
+            ["#card_rajada_vento", {$estacao.id}, "TIPO_RAJADA_VENTO"],
+            ["#card_pressao_atm", {$estacao.id}, "TIPO_PRESSAO_ATM"]
+
             ];
 
             parametrosHandleAjax.forEach(parametro => {
@@ -704,7 +684,8 @@
             });
             }, 10000); 
 
-        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO"].forEach(function (tipo) {
+        //ATUALIZA O GRÁFICO COM OS VALORES PADRÃO NO LOAD DA PAGE
+        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO", "TIPO_PRESSAO_ATM"].forEach(function (tipo) {
             carregarGraficoPorTipo(tipo, {$estacao.id}); });
 
   });
