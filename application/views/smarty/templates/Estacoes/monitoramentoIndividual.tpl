@@ -358,7 +358,7 @@
             let graficoPressaoAtm = document.getElementById("graficoPressaoAtm");
 
             $.ajax({
-                url: "{$BASE_URL}AdminLeituras/getEstatisticasLeiturasJson",
+                url: "{$BASE_URL}Leituras/getEstatisticasLeiturasJson",
                 dataType: "json",
                 method: "POST",
                 data: {
