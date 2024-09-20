@@ -174,8 +174,8 @@
                 "temperatura": "Temperatura (°C)",
                 "velocidade_vento": "Velocidade do Vento (km/h)",
                 "umidade_ar": "Umidade do Ar (%)",
-                "rajada_vento": "Rajada de Vento (km/h)"
-
+                "rajada_vento": "Rajada de Vento (km/h)",
+                "pressao_atmosferica": "Pressao Atmosferica (atm)",
             };
 
             $(document).ready(function () {
@@ -216,10 +216,12 @@
                             case 'rajada_vento':
                                 tipo_dados = "TIPO_RAJADA_VENTO";
                                 break;
-                                default:
+                            case 'pressao_atmosferica':
+                                tipo_dados = "TIPO_PRESSAO_ATMOSFERICA";
+                                break;
+                            default:
                                 tipo_dados = "TIPO_VOLUME_CHUVA";
                                 console.log(`Erro na seleção de dados. Selecionado padrão default "volume de chuvas"`);
-
                     }
                     return tipo_dados;
                 }

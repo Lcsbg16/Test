@@ -189,8 +189,11 @@ class LeiturasModel extends BaseModel
                 case FiltrosLeitura::TIPO_UMIDADE_AR:
                     $colunaTipoInformacao = 'umidade_ar';
                     break;
-
-                case FiltrosLeitura::TIPO_RAJADA_VENTO: //#adicionando_rajada_vento .
+                    case FiltrosLeitura::TIPO_PRESSAO_ATM: //#adicionando_pressao_atm
+                    $colunaTipoInformacao = "pressao_atm";
+                    break;
+            
+                    case FiltrosLeitura::TIPO_RAJADA_VENTO: //#adicionando_rajada_vento .
                     $colunaTipoInformacao = "rajada_vento_1h";
                     break;
                 default:
@@ -325,6 +328,7 @@ class LeiturasModel extends BaseModel
                             AVG(L.velocidade_vento) as velocidade_vento,
                             MAX(L.velocidade_vento) as rajada_vento,
                             SUM(L.volume_chuva) as volume_chuva,
+                            AVG(L.pressao_atm) as pressao_atm,
                             MAX(L.datahora_cadastro) as datahora_cadastro
                         ');
 
@@ -446,6 +450,10 @@ class LeiturasModel extends BaseModel
                     $colunaTipoInformacao = 'volume_acc_chuva';
                     break;
 
+                case FiltrosLeitura::TIPO_PRESSAO_ATMOSFERICA:
+                    $colunaTipoInformacao = 'pressao_atm';
+                    break;
+
                 default:
                     throw new Exception('É necessário informar o tipo de informação desejada.');
             }
@@ -532,6 +540,10 @@ class LeiturasModel extends BaseModel
 
                 case FiltrosLeitura::TIPO_RAJADA_VENTO:
                     $colunaTipoInformacao = 'rajada_vento_1h'; // #adicionando_rajada_vento .
+                    break;
+
+                case FiltrosLeitura::TIPO_PRESSAO_ATM:
+                    $colunaTipoInformacao = 'pressao_atm'; // #adicionando_pressao atm
                     break;
 
                 default:
@@ -695,10 +707,9 @@ class LeiturasModel extends BaseModel
                    L1.estacao_id = E.id
                    AND L1.datahora >= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
         ) AS temperatura_minima')
-                ->from('estacao E')
-                ->having('temperatura_minima IS NOT NULL')
-                ->order_by('temperatura_minima', 'ASC')
-                ->limit(1);
+        ->from('estacao E')
+        ->order_by('temperatura_minima', 'ASC')
+        ->limit(1);
 
         $this->filtrarEstacoesComAcesso('E.id');
 
@@ -853,7 +864,7 @@ class LeiturasModel extends BaseModel
     {
         $this->db->select('leitura.id, leitura.datahora, estacao.identificador as estacao_identificador, estacao.descricao as estacao_descricao,
                            estacao.endereco as estacao_edereco, estacao.latitude as estacao_latitude, estacao.longitude as estacao_longitude,
-                           leitura.temperatura, leitura.umidade_ar, leitura.velocidade_vento, leitura.dir_vento, leitura.volume_chuva,datahora_cadastro'); // Adiciona os campos de estacao
+                           leitura.temperatura, leitura.umidade_ar, leitura.velocidade_vento, leitura.dir_vento, leitura.volume_chuva, leitura.pressao_atm,datahora_cadastro'); // Adiciona os campos de estacao
         $this->db->from('leitura');
         $this->db->join('estacao', 'leitura.estacao_id = estacao.id');
         //$this->db->order_by('leitura.datahora', 'DESC');
@@ -882,6 +893,7 @@ class LeiturasModel extends BaseModel
             'velocidade_vento',
             'rajada_vento',
             'volume_chuva',
+            'pressao_atm',
             'datahora_cadastro'
         );
 
@@ -952,7 +964,8 @@ class FiltrosLeitura
     const ESCALA_MINUTO         = 'minuto';
     const TIPO_VELOCIDADE_VENTO = 'velocidade_vento';
     const TIPO_DIRECAO_VENTO    = 'dir_vento'; //Jaque 31/07 -> monitoramento individual de estações
-    const TIPO_RAJADA_VENTO     = 'rajada_vento_1h'; //Jaque 15/05 -> #adicionando_rajada_vento
+    const TIPO_RAJADA_VENTO    = 'rajada_vento_1h'; //Jaque 15/05 -> #adicionando_rajada_vento 
+    const TIPO_PRESSAO_ATM    = 'pressao_atm'; //Jaque 19/09 -> #adicionando_pressao_atm 
     const TIPO_TEMPERATURA      = 'temperatura';
     const TIPO_VOLUME_CHUVA     = 'volume_chuva';
     const TIPO_UMIDADE_AR       = 'umidade_ar';
@@ -970,11 +983,12 @@ class FiltrosLeitura
     public static function getTodosTiposInformacao()
     {
         return [
-            self::TIPO_VOLUME_CHUVA     => 'Pluviometria',
-            self::TIPO_TEMPERATURA      => 'Temperatura',
-            self::TIPO_DIRECAO_VENTO    => 'Direção do Vento',
-            self::TIPO_UMIDADE_AR       => 'Umidade do Ar',
-            self::TIPO_VELOCIDADE_VENTO => 'Velocidade do Vento'
+            self::TIPO_VOLUME_CHUVA         => 'Pluviometria',
+            self::TIPO_TEMPERATURA          => 'Temperatura',
+            self::TIPO_DIRECAO_VENTO        => 'Direção do Vento',
+            self::TIPO_UMIDADE_AR           => 'Umidade do Ar',
+            self::TIPO_VELOCIDADE_VENTO     => 'Velocidade do Vento',
+            self::TIPO_PRESSAO_ATMOSFERICA  => 'Pressão Atmosférica'
         ];
     }
 

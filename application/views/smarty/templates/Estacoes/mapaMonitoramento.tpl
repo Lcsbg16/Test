@@ -166,8 +166,100 @@
                 }
 
                 var controlaAcionamentoBounds = false; 
+
+
+                function criaCircleMarker(latlng, cor, feature){
+                    let options;
+
+                    if (feature.properties.estacao.tipo === "interna") {
+                        options = {
+                            radius: 16,
+                            fillColor: cor,
+                            color: '#000',
+                            weight: 1,
+                            opacity: 1,
+                            fillOpacity: 0.8
+                        };
+                    } else {
+                        options = {
+                            radius: 16,
+                            fillColor: cor,
+                            color: '#FF0000',
+                            weight: 2,
+                            opacity: 1,
+                            fillOpacity: 0.8
+                        };
+                    }
+
+                    let circleMarker = L.circleMarker(latlng, options);
+
+                    circleMarker.bindTooltip(feature.properties.estacao.identificador, {
+                        direction: 'right',
+                        permanent: true,
+                        opacity: 1,
+                        offset: [10, 0]
+                    });
+
+                    circleMarker.on('tooltipopen', function (e) {
+                        let tooltip = e.tooltip._container;
+                        tooltip.style.background = 'transparent';
+                        tooltip.style.border = 'none';
+                        tooltip.style.boxShadow = 'none';
+                        tooltip.style.color = 'green';
+                    });
+
+                     // Remoção de pointer residual
+                    let styles = ` .leaflet-tooltip-right:before, .leaflet-tooltip-left:before {  display: none !important; }`;
+                    let styleSheet = document.createElement("style");
+                    styleSheet.type = "text/css";
+                    styleSheet.innerText = styles;
+                    document.head.appendChild(styleSheet);
+
+                    return circleMarker;
+                }
+
+                function criaArrowMarker(latlng, feature) {
+                    let angulo = feature.properties.ultimaLeitura ? feature.properties.ultimaLeitura.dir_vento : 0;
+                    let arrowHead = BASE_URL + 'assets/images/arrowHead.png'
+                    let marker = L.marker(latlng, {
+                        icon: L.divIcon({
+                            className: 'leaflet-rotated-icon', 
+                            html: `<div style="transform: rotate(${angulo}deg);"><img src="${arrowHead}" width="23" height="23" /></div>`,
+                            iconSize: [32, 32] 
+                        })
+                    });
+
+                    marker.bindTooltip(feature.properties.estacao.identificador, { 
+                        direction: 'right',
+                        permanent: true,
+                        opacity: 1,
+                    });
+
+                    marker.on('tooltipopen', function (e) {
+                        let tooltip = e.tooltip._container;
+                        tooltip.style.background = 'transparent';
+                        tooltip.style.border = 'none';
+                        tooltip.style.boxShadow = 'none'; 
+                        tooltip.style.color = 'green';
+                    });
+
+                    // Remoção de pointer residual
+                    let styles = ` .leaflet-tooltip-right:before, .leaflet-tooltip-left:before {  display: none !important; }`;
+                    let styleSheet = document.createElement("style");
+                    styleSheet.type = "text/css";
+                    styleSheet.innerText = styles;
+                    document.head.appendChild(styleSheet);
+
+                    return marker;
+                }
+
                 function carregarTodasEstacoes(url, mapa) {
-                    $.get(url).done(
+                        let camada = $('#camada_id').val();
+                        if (camada == "dir_vento") {
+                                        carregarEstacoesOnline(url, mapa)
+                                        return;
+                        }
+                        $.get(url).done(
                             function (data) {
                                 estacoes = L.geoJSON([data], {
                                     style: function (feature) {
@@ -175,67 +267,22 @@
                                     },
                                     onEachFeature: onEachFeature,
                                     pointToLayer: function (feature, latlng) {
-
                                         if (feature.properties.estacao.online && feature.properties.camada.cor)
                                         {
                                             cor = feature.properties.camada.cor;
-                                        } else
-                                        {
+                                        } else {
                                             cor = '#bebebe';
-                                        }
-                                        if (feature.properties.estacao.tipo == "interna") {
-                                            var circleMarker = L.circleMarker(latlng, {
-                                            radius: 16,
-                                            fillColor: cor,
-                                            color: '#000',
-                                            weight: 1,
-                                            opacity: 1,
-                                            fillOpacity: 0.8
-                                        });
-                                        } else { //coloca a circunferência vermelha para estações externas
-                                            var circleMarker = L.circleMarker(latlng, {
-                                            radius: 16,
-                                            fillColor: cor,
-                                            color: '#FF0000',
-                                            weight: 2,
-                                            opacity: 1,
-                                            fillOpacity: 0.8
-                                        });
-                                        }
-
-                                        // Adiciona o identificador à direita do marcador circular
-                                        circleMarker.bindTooltip(feature.properties.estacao.identificador, {
-                                            direction: 'right',
-                                            permanent: true,
-                                            opacity: 1,
-                                            offset: [10, 0]
-                                        });
-
-                                        circleMarker.on('tooltipopen', function(e) {
-                                        var tooltip = e.tooltip._container;
-                                        tooltip.style.background = 'transparent';
-                                        tooltip.style.border = 'none';
-                                        tooltip.style.boxShadow = 'none';
-                                        tooltip.style.color = 'green'; // Altera a cor da fonte das legendas dos marcadores no mapa
+                                        }     
+                                      
+                                        return criaCircleMarker(latlng, cor, feature);
                                         
-                                        //Remoção de pointer residual
-                                        var styles = ` .leaflet-tooltip-right:before, .leaflet-tooltip-left:before {  display: none !important; }`;
-                                        var styleSheet = document.createElement("style");
-                                        styleSheet.type = "text/css";
-                                        styleSheet.innerText = styles;
-                                        document.head.appendChild(styleSheet);
-
-                                    });
-
-                                        return circleMarker;
-                                        }
-                                        }).addTo(mapa);
-
+                                    }
+                        }).addTo(mapa);
                                 if (!controlaAcionamentoBounds) {
                                    console.log("bounds: " + controlaAcionamentoBounds);
                                      mapa.fitBounds(estacoes.getBounds());
                                      controlaAcionamentoBounds = true; 
-                                     }                           
+                                     }                         
                                 })
                             .fail(function (jqXHR, textStatus, errorThrown) {
                                 console.error(jqXHR);
@@ -244,129 +291,104 @@
                                 alert('Houve erros durante o processamento da solicitação.');
                             });
                 }
-
-
+            
                 function carregarEstacoesOnline(url, mapa) {
+                    let camada = $('#camada_id').val();
                     $.get(url).done(function (data) {
-                           var estacoesOnline = data.features.filter(function (feature) {
-                             return feature.properties.estacao.online;
-                                });
-                                estacoes = L.geoJSON(estacoesOnline, {
-                                    style: function (feature) {
-                                        return feature.properties && feature.properties.style;
+                        var estacoesOnline = data.features.filter(function (feature) {
+                            return feature.properties.estacao.online;
+                        })
+                        estacoes = L.geoJSON(estacoesOnline, {
+                                    style: function (feature){
+                                         return feature.properties && feature.properties.style 
                                     },
                                     onEachFeature: onEachFeature,
                                     pointToLayer: function (feature, latlng) {
-
-                                        if (feature.properties.camada.cor)
-                                        {
-                                            cor = feature.properties.camada.cor;
-                                        } else
-                                        {
-                                            cor = '#bebebe';
-                                        }
-
-                                        return L.circleMarker(latlng, {
-                                            radius: 16,
-                                            fillColor: cor,
-                                            color: '#000',
-                                            weight: 1,
-                                            opacity: 1,
-                                            fillOpacity: 0.8
-                                        });
+                                        if (feature.properties.camada.cor) {
+                                            cor = feature.properties.camada.cor 
+                                            } else { cor = '#bebebe'
+                                            }
+                                            if (camada == "dir_vento")
+                                                return criaArrowMarker(latlng, feature)
+                                            else 
+                                                return criaCircleMarker(latlng, cor, feature)
                                     }
-                                }).addTo(mapa);
-                                if (!controlaAcionamentoBounds) {
-                                    console.log("bounds: " + controlaAcionamentoBounds);
-                                     mapa.fitBounds(estacoes.getBounds());
-                                     controlaAcionamentoBounds = true; 
-                                     }                           
-                                })
-                            .fail(function (jqXHR, textStatus, errorThrown) {
-                                console.error(jqXHR);
-                                console.error(textStatus);
-                                console.error(errorThrown);
-                                alert('Houve erros durante o processamento da solicitação.');
-                            });
+                        }).addTo(mapa)
+                        if (!controlaAcionamentoBounds) {
+                            console.log("bounds: " + controlaAcionamentoBounds)
+                            mapa.fitBounds(estacoes.getBounds());
+                            controlaAcionamentoBounds = true
+                        }       
+                    })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
+                        console.error(jqXHR)
+                        console.error(textStatus)
+                        console.error(errorThrown)
+                        alert('Houve erros durante o processamento de carregamento das estações...')
+                     })
                 }
 
-                function GerenciaMarcador(mapa) {
-                    /*
-                     * ESSA FUNÇÃO VERIFICA SE A CAMADA (LAYER) É DO TIPO CIRCLEMARKER
-                     */
-                    function isCircleMarker(layer) {
-                        return layer instanceof L.CircleMarker;
-                    }
-
-                    // Iterar sobre todas as camadas do mapa e remover os marcadores circleMarker
-                    mapa.eachLayer(function (layer) {
-                        if (isCircleMarker(layer)) { 
-                            mapa.removeLayer(layer); 
+                    function removerMarcadores(mapa) {
+                        function isMarker(layer) {
+                            return layer instanceof L.CircleMarker || layer instanceof L.Marker;
                         }
-                    });
-                    let estacaoIDS = $("#estacao_selecionada").val();
-                    if (!estacaoIDS) {
-                        let atividade = true;
-                        let url = BASE_URL + 'Estacoes/getEstacoesGeoJson/' + $('#camada_id').val() + '/?ids=&ativa=' + atividade; 
-                        return url;
-                    } else {
-                        let atividade = true;
-                        var url = BASE_URL + 'Estacoes/getEstacoesGeoJson/' + $('#camada_id').val() + '/?ids=' + estacaoIDS.join(',') + '&ativa=' + atividade;
+
+                        mapa.eachLayer(function (layer) {
+                            if (isMarker(layer)) {
+                                mapa.removeLayer(layer);
+                            }
+                        });
+                    }
+
+                    function gerarUrlEstacoes() {
+                        let idEstacoes = $("#estacao_selecionada").val();
+                        let atividade = true; // não mostra as inativas
+                        let url;
+
+                        if (!idEstacoes) {
+                            url = BASE_URL + 'Estacoes/getEstacoesGeoJson/' + $('#camada_id').val() + '/?ids=&ativa=' + atividade;
+                        } else {
+                            url = BASE_URL + 'Estacoes/getEstacoesGeoJson/' + $('#camada_id').val() + '/?ids=' + idEstacoes.join(',') + '&ativa=' + atividade;
+                        }
+
                         return url;
                     }
 
-                }
-
-
-                $(function () {
-
+                $(function () 
+                {
                     $("#estacao_selecionada").multiselect({
                         includeSelectAllOption: true,
                         buttonWidth: '100%'
                     });
+                    
                     let mapa = criaMapa();
-                    let url = GerenciaMarcador(mapa);
+                    removerMarcadores(mapa)
+                    let url = gerarUrlEstacoes();
                     let result = carregarTodasEstacoes(url, mapa);
 
-                    setInterval(() => {
-                       let url = GerenciaMarcador(mapa);
-                       var isChecked = $("#estacoes-online-checkbox").is(":checked");
+                
+                        setInterval(() => {
+                            removerMarcadores(mapa)
+                        let url = gerarUrlEstacoes();
+                        var checkboxMarcada = $("#estacoes-online-checkbox").is(":checked");
+                        if (checkboxMarcada == true) {
+                                let result = carregarEstacoesOnline(url, mapa); 
+                            } else {
+                                let result = carregarTodasEstacoes(url, mapa); 
+                            } 
+                        }, 30000);
 
-                       if (isChecked == true) {
-                            let result = carregarEstacoesOnline(url, mapa); 
+                    $('#estacoes-online-checkbox, .change_controller').change(function () {
+                        var checkboxMarcada = $("#estacoes-online-checkbox").is(":checked");
+                        removerMarcadores(mapa)
+                        let url = gerarUrlEstacoes(); 
+                        if (checkboxMarcada) {
+                            carregarEstacoesOnline(url, mapa); 
+                        } else {
+                            carregarTodasEstacoes(url, mapa); 
                         }
-                        else {
-                            let result = carregarTodasEstacoes(url, mapa); 
-                        }
-
-                    }, 30000);
-
-                    //MUDANÇA DO CHECKBOX DAS ESTAÇÕES ONLINE / OFFILNE
-                    $('#estacoes-online-checkbox').change(function () {
-                        var isChecked = $("#estacoes-online-checkbox").is(":checked");
-                        if (isChecked == true) {
-                            let url = GerenciaMarcador(mapa); 
-                            let result = carregarEstacoesOnline(url, mapa); 
-                        }
-                        else {
-                            let url = GerenciaMarcador(mapa); 
-                            let result = carregarTodasEstacoes(url, mapa); 
-                        }
-                    });
-                   
-                    //EVENTO DE CHANGE DAS ESTAÇÕES E CAMADAS
-                    $('.change_controller').change(function () {
-                        var isChecked = $("#estacoes-online-checkbox").is(":checked");
-                        if (isChecked == true) {
-                            let url = GerenciaMarcador(mapa); 
-                            let result = carregarEstacoesOnline(url, mapa); 
-                        }
-                        else {
-                            let url = GerenciaMarcador(mapa); 
-                            let result = carregarTodasEstacoes(url, mapa); 
-                        }
-                    });
-                });
+                    })
+                })
             {/literal}
         </script>
     {/if}
