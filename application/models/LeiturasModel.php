@@ -189,7 +189,7 @@ class LeiturasModel extends BaseModel
                 case FiltrosLeitura::TIPO_UMIDADE_AR:
                     $colunaTipoInformacao = 'umidade_ar';
                     break;
-                    case FiltrosLeitura::TIPO_PRESSAO_ATM: //#adicionando_pressao_atm
+                    case FiltrosLeitura::TIPO_PRESSAO_ATMOSFERICA: //#adicionando_pressao_atm
                     $colunaTipoInformacao = "pressao_atm";
                     break;
             
@@ -542,7 +542,7 @@ class LeiturasModel extends BaseModel
                     $colunaTipoInformacao = 'rajada_vento_1h'; // #adicionando_rajada_vento .
                     break;
 
-                case FiltrosLeitura::TIPO_PRESSAO_ATM:
+                case FiltrosLeitura::TIPO_PRESSAO_ATMOSFERICA:
                     $colunaTipoInformacao = 'pressao_atm'; // #adicionando_pressao atm
                     break;
 
@@ -965,7 +965,7 @@ class FiltrosLeitura
     const TIPO_VELOCIDADE_VENTO = 'velocidade_vento';
     const TIPO_DIRECAO_VENTO    = 'dir_vento'; //Jaque 31/07 -> monitoramento individual de estações
     const TIPO_RAJADA_VENTO    = 'rajada_vento_1h'; //Jaque 15/05 -> #adicionando_rajada_vento 
-    const TIPO_PRESSAO_ATM    = 'pressao_atm'; //Jaque 19/09 -> #adicionando_pressao_atm 
+    const TIPO_PRESSAO_ATMOSFERICA    = 'pressao_atm'; //Jaque 19/09 -> #adicionando_pressao_atm 
     const TIPO_TEMPERATURA      = 'temperatura';
     const TIPO_VOLUME_CHUVA     = 'volume_chuva';
     const TIPO_UMIDADE_AR       = 'umidade_ar';
