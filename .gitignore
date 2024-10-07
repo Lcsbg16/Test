@@ -41,3 +41,4 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 /assets/uploads/*
 !/assets/uploads/files/index.html
 !/assets/uploads/estacao/index.html
+!/application/cache/imagemdim_cache/index.html
