@@ -2,6 +2,8 @@
 
 require_once 'BaseModel.php';
 
+require_once 'LeiturasModel.php';
+
 class EstacoesModel extends BaseModel
 {
 
@@ -296,16 +298,16 @@ class EstacoesModel extends BaseModel
 
     private function getConfiguracoesCamada($leitura, $camada)
     {
-        $this->load->model('LeiturasModel');
-
+        //$this->load->model('LeiturasModel');
+        $objLeitura = new LeiturasModel('estatica');
         $corDaEstacao = '#0000FF';
         switch ($camada)
         {
-            case FiltrosLeitura::TIPO_VOLUME_CHUVA:
+            case  FiltrosLeitura::TIPO_VOLUME_CHUVA:
                 if ($leitura)
                 {
-                    $coresPluviometria = $this->LeiturasModel->getCoresNiveisAlertasPluviometria();
-                    $nivel             = $this->LeiturasModel->calcularAlertaPluviometria($leitura);
+                    $coresPluviometria = $objLeitura->getCoresNiveisAlertasPluviometria();
+                    $nivel             = $objLeitura->calcularAlertaPluviometria($leitura);
                     $corDaEstacao      = $coresPluviometria[$nivel];
                 }
                 break;

@@ -3,9 +3,14 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 require_once 'BasePrivateController.php';
+require_once BASEPATH . '../application/models/LeiturasModel.php';
 
 class Dashboard extends BasePrivateController
 {
+
+    private $objLeituraModel;
+    private $fonteDadosController;
+
 
     public function __construct()
     {
@@ -14,13 +19,22 @@ class Dashboard extends BasePrivateController
         parent::__construct();
 
         $this->session->cardsAlertaDashboard = [];
+        $this->fonteDadosController = Fonte_Dashboard;
+        $this->objLeituraModel = new LeiturasModel($this->fonteDadosController); 
+
     }
 
     public function index()
     {
+        if(defined('Fonte_Dashboard_index')){
+            $this->objLeituraModel = new LeiturasModel(Fonte_Dashboard_index); 
+        }
+        
         $this->load->model('OcorrenciasModel');
         $this->load->model('EstacoesModel');
-        $this->load->model('LeiturasModel');
+       // $this->load->model('LeiturasModel');
+      
+       
 
         $variaveisView = [];
 
@@ -33,9 +47,10 @@ class Dashboard extends BasePrivateController
 
     public function cardAcumuladoChuvaPorPeriodoGeral()
     {
-        $this->load->model('LeiturasModel');
+        //$this->load->model('LeiturasModel');
+        //$this->objLeituraModel = new LeiturasModel($this->fonteDadosController); 
         $variaveisView = [];
-       $variaveisView['acumulados'] = $this->LeiturasModel->getAcumuladoChuvaPorPeriodoGeral(); 
+       $variaveisView['acumulados'] = $this->objLeituraModel->getAcumuladoChuvaPorPeriodoGeral(); 
         $this->loadSmartyView('Dashboard/cards/cardAcumuladoChuvaPorPeriodoGeral', $variaveisView );
     }
 
@@ -127,18 +142,18 @@ class Dashboard extends BasePrivateController
 
     public function cardTemperaturaMedia()
     {
-        $this->load->model('LeiturasModel');
+        //$this->load->model('LeiturasModel');
         $variaveisView                      = [];
-        $variaveisView['temperatura_media'] = $this->LeiturasModel->getUltimaTemperaturaMedia();
+        $variaveisView['temperatura_media'] = $this->objLeituraModel->getUltimaTemperaturaMedia();
 
         $this->loadSmartyView('Dashboard/cards/cardTemperaturaMedia', $variaveisView);
     }
 
     public function cardTemperaturaMinima()
     {
-        $this->load->model('LeiturasModel');
+       // $this->load->model('LeiturasModel');
         $variaveisView                       = [];
-        $variaveisView = $this->LeiturasModel->getTemperaturaMinima();
+        $variaveisView = $this->objLeituraModel->getTemperaturaMinima();
 
         $this->loadSmartyView('Dashboard/cards/cardTemperaturaMinima', $variaveisView);
     }
@@ -151,15 +166,15 @@ class Dashboard extends BasePrivateController
 
     public function cardTemperaturaMaxima()
     {
-        $this->load->model('LeiturasModel');
+       // $this->load->model('LeiturasModel');
         $variaveisView                       = [];
-        $variaveisView = $this->LeiturasModel->getTemperaturaMaxima();
+        $variaveisView = $this->objLeituraModel->getTemperaturaMaxima();
         $this->loadSmartyView('Dashboard/cards/cardTemperaturaMaxima', $variaveisView);
     }
 
     public function cardVolumeChuvaMinimo()
     {
-        $this->load->model('LeiturasModel');
+       // $this->load->model('LeiturasModel');
         $variaveisView                  = [];
         $variaveisView = $this->LeiturasModel->getVolumeChuvaMinimo();
 
@@ -168,26 +183,26 @@ class Dashboard extends BasePrivateController
 
     public function cardVolumeChuvaMaximo()
     {
-        $this->load->model('LeiturasModel');
+        //$this->load->model('LeiturasModel');
         $variaveisView                  = [];
-        $variaveisView = $this->LeiturasModel->getVolumeChuvaMaxima();
+        $variaveisView = $this->objLeituraModel->getVolumeChuvaMaxima();
 
         $this->loadSmartyView('Dashboard/cards/cardVolumeChuvaMaximo', $variaveisView);
     }
 
     public function cardVelocidadeMinimaVento()
     {
-        $this->load->model('LeiturasModel');
+       // $this->load->model('LeiturasModel');
         $variaveisView = [];
 
-        $variaveisView['velocidade_minima'] = $this->LeiturasModel->getVelocidadeMinima() !== NULL ? Conversao::metroPorSegundoParaKmPorHora($this->LeiturasModel->getVelocidadeMinima()) : NULL;
+        $variaveisView['velocidade_minima'] = $this->objLeituraModel->getVelocidadeMinima() !== NULL ? Conversao::metroPorSegundoParaKmPorHora($this->LeiturasModel->getVelocidadeMinima()) : NULL;
 
         $this->loadSmartyView('Dashboard/cards/cardVelocidadeMinimaVento', $variaveisView);
     }
 
     public function cardVelocidadeMaximaVento()
     {
-        $this->load->model('LeiturasModel');
+      //  $this->load->model('LeiturasModel');
         $variaveisView = [];
         $variaveisView = $this->LeiturasModel->getVelocidadeMaxima();
 

@@ -4,13 +4,21 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 require_once 'BaseCrudController.php';
+require_once BASEPATH . '../application/models/LeiturasModel.php';
 
 class RelatorioLeituras extends BaseCrudController
 {
 
+
+    private $objLeituraModel;
+    private $fonteDadosController;
+
     public function index()
     {
-        $this->load->model('LeiturasModel');
+       // $this->load->model('LeiturasModel');
+       $this->fonteDadosController = Fonte_Dashboard;
+       //$this->fonteDadosController = Fonte_AdminLeituras;
+       $this->objLeituraModel = new LeiturasModel($this->fonteDadosController); 
         $this->load->model('EstacoesModel');
         $variaveisView = [];
         $filtros       = new FiltrosLeitura(); //New filtro -> contato com o BD
@@ -51,7 +59,8 @@ class RelatorioLeituras extends BaseCrudController
                 $filtros->setTipoInformacao($colunaTipoInformacao);
             }
             $filtros->setDirecao(FiltrosLeitura::DIRECAO_ASC);
-            $leituras = $this->LeiturasModel->calcularEstatisticasPorPeriodo($filtros);
+            $leituras = $this->objLeituraModel->calcularEstatisticasPorPeriodo($filtros);
+            
         }
         else
         {
