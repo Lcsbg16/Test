@@ -11,14 +11,18 @@ class Leituras extends BasePrivateController
 {
 
     private $objLeituraModel;
-    private $fonteDadosController;
+    private $fonteDadosController = "";
 
     public function __construct()
     {
         parent::__construct();
 
-       //$this->fonteDadosController = Fonte_Dashboard;
-        $this->fonteDadosController = Fonte_AdminLeituras;
+       
+       if(defined('Fonte_AdminLeituras')){
+        $this->fonteDadosController = Fonte_AdminLeituras ;
+    }
+
+       
         $this->objLeituraModel = new LeiturasModel($this->fonteDadosController); 
 
     }

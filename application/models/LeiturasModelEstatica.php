@@ -205,7 +205,7 @@ class LeiturasModelEstatica extends LeiturasModelAbstract
 
             $resultadoArray = $resultado->result_array();
 
-            
+            //var_dump( $this->db->last_query());
             $retorno = [];
             foreach ($resultadoArray as $linha)
             {
@@ -805,7 +805,6 @@ class LeiturasModelEstatica extends LeiturasModelAbstract
     {
 
         $leituras = $this->getLeiturasPorEscala($filtros, false);
-       
 
         $csvData = array();
 

@@ -470,7 +470,7 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
                         JOIN ultima_leitura_valor ulv on ulv.leitura_id = L1.id
                         WHERE
                                 ulv.leitura_dimensao_tag = {$colunaTipoInformacao}
-                                L1.estacao_id = E.id
+                                AND L1.estacao_id = E.id
                                 AND datahora >= DATE_SUB(now(), INTERVAL {$tempoLimite} MINUTE)
                         ORDER BY
                                 datahora DESC
@@ -598,7 +598,7 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
                             JOIN    ultima_leitura_valor ulv on ulv.leitura_id = L1.id
                             WHERE
                                     ulv.leitura_dimensao_tag = 'temperatura'
-                                    L1.estacao_id = E.id
+                                    AND L1.estacao_id = E.id
                                     AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
                                     datahora DESC
@@ -638,7 +638,7 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
                                     JOIN    ultima_leitura_valor ulv on ulv.leitura_id = L1.id
                             WHERE
                                     ulv.leitura_dimensao_tag = 'volume_chuva'
-                                    L1.estacao_id = E.id
+                                    AND L1.estacao_id = E.id
                                     AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
                                     datahora DESC
@@ -677,7 +677,7 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
                             JOIN    ultima_leitura_valor ulv on ulv.leitura_id = L1.id
                     WHERE
                             ulv.leitura_dimensao_tag = 'volume_chuva'
-                            L1.estacao_id = E.id
+                            AND L1.estacao_id = E.id
                             AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                     ORDER BY
                             datahora DESC
@@ -716,7 +716,7 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
                             JOIN    ultima_leitura_valor ulv on ulv.leitura_id = L1.id           
                             WHERE
                                     ulv.leitura_dimensao_tag = 'temperatura'
-                                    L1.estacao_id = E.id
+                                    AND L1.estacao_id = E.id
                                     AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
                                     datahora DESC
@@ -755,7 +755,7 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
                             JOIN    ultima_leitura_valor ulv on ulv.leitura_id = L1.id   
                             WHERE
                                 ulv.leitura_dimensao_tag = 'temperatura'
-                                L1.estacao_id = E.id
+                                AND L1.estacao_id = E.id
                                 AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
                                     datahora DESC
@@ -794,7 +794,7 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
                             JOIN    ultima_leitura_valor ulv on ulv.leitura_id = L1.id   
                             WHERE
                                 ulv.leitura_dimensao_tag = 'velocidade_vento'
-                                L1.estacao_id = E.id
+                                AND L1.estacao_id = E.id
                                 AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
                                 datahora DESC
@@ -833,7 +833,7 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
                             JOIN    ultima_leitura_valor ulv on ulv.leitura_id = L1.id   
                              WHERE
                                 ulv.leitura_dimensao_tag = 'velocidade_vento'
-                                L1.estacao_id = E.id
+                                AND L1.estacao_id = E.id
                                 AND datahora >= date_sub(now(), INTERVAL 30 MINUTE)
                             ORDER BY
                                     datahora DESC

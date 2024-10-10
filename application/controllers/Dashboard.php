@@ -9,7 +9,7 @@ class Dashboard extends BasePrivateController
 {
 
     private $objLeituraModel;
-    private $fonteDadosController;
+    private $fonteDadosController = "";
 
 
     public function __construct()
@@ -19,7 +19,12 @@ class Dashboard extends BasePrivateController
         parent::__construct();
 
         $this->session->cardsAlertaDashboard = [];
-        $this->fonteDadosController = Fonte_Dashboard;
+        
+        if(defined('Fonte_Dashbolard')){
+            $this->fonteDadosController = Fonte_Dashboard ;
+        }
+
+        
         $this->objLeituraModel = new LeiturasModel($this->fonteDadosController); 
 
     }
@@ -152,8 +157,8 @@ class Dashboard extends BasePrivateController
     public function cardTemperaturaMinima()
     {
        // $this->load->model('LeiturasModel');
-        $variaveisView                       = [];
-        $variaveisView = $this->objLeituraModel->getTemperaturaMinima();
+        $variaveisView  = [];
+        $variaveisView['temperatura_minima']  = $this->objLeituraModel->getTemperaturaMinima();
 
         $this->loadSmartyView('Dashboard/cards/cardTemperaturaMinima', $variaveisView);
     }
@@ -168,7 +173,7 @@ class Dashboard extends BasePrivateController
     {
        // $this->load->model('LeiturasModel');
         $variaveisView                       = [];
-        $variaveisView = $this->objLeituraModel->getTemperaturaMaxima();
+        $variaveisView['temperatura_maxima'] = $this->objLeituraModel->getTemperaturaMaxima();
         $this->loadSmartyView('Dashboard/cards/cardTemperaturaMaxima', $variaveisView);
     }
 
@@ -176,7 +181,7 @@ class Dashboard extends BasePrivateController
     {
        // $this->load->model('LeiturasModel');
         $variaveisView                  = [];
-        $variaveisView = $this->LeiturasModel->getVolumeChuvaMinimo();
+        $variaveisView['vol_chuva_mmin']  = $this->LeiturasModel->getVolumeChuvaMinimo();
 
         $this->loadSmartyView('Dashboard/cards/cardVolumeChuvaMinimo', $variaveisView);
     }
@@ -185,7 +190,7 @@ class Dashboard extends BasePrivateController
     {
         //$this->load->model('LeiturasModel');
         $variaveisView                  = [];
-        $variaveisView = $this->objLeituraModel->getVolumeChuvaMaxima();
+        $variaveisView['vol_chuva_max'] = $this->objLeituraModel->getVolumeChuvaMaxima();
 
         $this->loadSmartyView('Dashboard/cards/cardVolumeChuvaMaximo', $variaveisView);
     }
@@ -204,7 +209,7 @@ class Dashboard extends BasePrivateController
     {
       //  $this->load->model('LeiturasModel');
         $variaveisView = [];
-        $variaveisView = $this->LeiturasModel->getVelocidadeMaxima();
+        $variaveisView['velocidade_maxima'] = $this->objLeituraModel->getVelocidadeMaxima();
 
         if ($variaveisView) {
             $variaveisView['velocidade_maxima'] = Conversao::metroPorSegundoParaKmPorHora($variaveisView['velocidade_maxima']);
