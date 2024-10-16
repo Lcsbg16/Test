@@ -449,10 +449,6 @@ class LeiturasModel_copy extends BaseModel
                     $colunaTipoInformacao = 'volume_acc_chuva';
                     break;
 
-                case FiltrosLeitura::TIPO_PRESSAO_ATMOSFERICA:
-                    $colunaTipoInformacao = 'pressao_atm';
-                    break;
-
                 default:
                     throw new Exception('É necessário informar o tipo de informação desejada.');
             }
@@ -955,7 +951,7 @@ class FiltrosLeitura
     const TIPO_VELOCIDADE_VENTO = 'velocidade_vento';
     const TIPO_DIRECAO_VENTO    = 'dir_vento'; //Jaque 31/07 -> monitoramento individual de estações
     const TIPO_RAJADA_VENTO    = 'rajada_vento_1h'; //Jaque 15/05 -> #adicionando_rajada_vento 
-    const TIPO_PRESSAO_ATMOSFERICA    = 'pressao_atm'; //Jaque 19/09 -> #adicionando_pressao_atm 
+    const TIPO_PRESSAO_ATMOSFERICA    = 'pressao_atm'; //Jaque 16/10 -> #adicionando_pressao_atm 
     const TIPO_TEMPERATURA      = 'temperatura';
     const TIPO_VOLUME_CHUVA     = 'volume_chuva';
     const TIPO_UMIDADE_AR       = 'umidade_ar';
@@ -978,7 +974,7 @@ class FiltrosLeitura
             self::TIPO_TEMPERATURA      => 'Temperatura',
             self::TIPO_DIRECAO_VENTO    => 'Direção do Vento',
             self::TIPO_UMIDADE_AR       => 'Umidade do Ar',
-            self::TIPO_VELOCIDADE_VENTO => 'Velocidade do Vento',
+            self::TIPO_VELOCIDADE_VENTO => 'Velocidade do Vento'
         ];
     }
 

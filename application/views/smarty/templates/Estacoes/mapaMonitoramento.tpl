@@ -224,7 +224,7 @@
                     let marker = L.marker(latlng, {
                         icon: L.divIcon({
                             className: 'leaflet-rotated-icon', 
-                            html: `<div style="transform: rotate(${angulo}deg);"><img src="${arrowHead}" width="23" height="23" /></div>`,
+                            html: `<img src="${arrowHead}" width="23" height="23" style="background-color: white; border-radius: 50%; padding: 4px; transform: rotate(${angulo}deg);" />`,
                             iconSize: [32, 32] 
                         })
                     });
