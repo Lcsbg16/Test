@@ -399,7 +399,7 @@
                             tipo_informação = "Rajada do Vento (km/h)";
                             geraGrafico(graficoRajadaVento, tipo_informação, periodos, valores, escala);
                             break;
-                        case 'TIPO_PRESSAO_ATM':
+                        case 'TIPO_PRESSAO_ATMOSFERICA':
                             tipo_informação = "Pressão Atmosférica (atm)";
                             geraGrafico(graficoPressaoAtm, tipo_informação, periodos, valores, escala);
                             
@@ -537,7 +537,7 @@
                 onClose: function(dp, $input) {
                     let novoValorData = $input.val();
                     if (novoValorData !== valorAnteriorData) {
-                        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO", "TIPO_PRESSAO_ATM"].forEach(function (tipo) {
+                        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO", "TIPO_PRESSAO_ATMOSFERICA"].forEach(function (tipo) {
                             carregarGraficoPorTipo(tipo, {$estacao.id});
                         });
                         valorAnteriorData = novoValorData;
@@ -595,7 +595,7 @@
            
                     let novaEscala = GetEscala();
                     configuraDateTimePicker(novaEscala); //altera o tipo de calendario, se a escala for "minuto" há algumas alterações em relação as outras escalas
-                    ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_VOLUME_ACC_CHUVA", "TIPO_RAJADA_VENTO", "TIPO_PRESSAO_ATM"].forEach(function (tipo) {
+                    ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_VOLUME_ACC_CHUVA", "TIPO_RAJADA_VENTO", "TIPO_PRESSAO_ATMOSFERICA"].forEach(function (tipo) {
                     carregarGraficoPorTipo(tipo, {$estacao.id}); }); //carrega os gráficos 
 
                         
@@ -612,7 +612,7 @@
         let dataHoraInicial = ("0" + dataInicial.getDate()).slice(-2) + "/" + ("0" + (dataInicial.getMonth() + 1)).slice(-2) + "/" + dataInicial.getFullYear() + " " + ("0" + dataInicial.getHours()).slice(-2) + ":" + ("0" + dataInicial.getMinutes()).slice(-2);
         $('#dataInicial').val(dataHoraInicial);
 
-        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO", "TIPO_PRESSAO_ATM"].forEach(function (tipo) {
+        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO", "TIPO_PRESSAO_ATMOSFERICA"].forEach(function (tipo) {
             carregarGraficoPorTipo(tipo, {$estacao.id}); });
 
     }
@@ -628,7 +628,7 @@
         let dataHoraInicial = ("0" + dataInicial.getDate()).slice(-2) + "/" + ("0" + (dataInicial.getMonth() + 1)).slice(-2) + "/" + dataInicial.getFullYear() + " " + ("0" + dataInicial.getHours()).slice(-2) + ":" + ("0" + dataInicial.getMinutes()).slice(-2);
         $('#dataInicial').val(dataHoraInicial);
 
-        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO", "TIPO_PRESSAO_ATM"].forEach(function (tipo) {
+        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO", "TIPO_PRESSAO_ATMOSFERICA"].forEach(function (tipo) {
             carregarGraficoPorTipo(tipo, {$estacao.id}); });
 
     }
@@ -646,7 +646,7 @@
        let dataHoraInicial = ("0" + inicioSemana.getDate()).slice(-2) + "/" + ("0" + (inicioSemana.getMonth() + 1)).slice(-2) + "/" + inicioSemana.getFullYear() + " " + ("0" + dataInicial.getHours()).slice(-2) + ":" + ("0" + dataInicial.getMinutes()).slice(-2);
         $('#dataInicial').val(dataHoraInicial);
 
-        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO", "TIPO_PRESSAO_ATM"].forEach(function (tipo) {
+        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO", "TIPO_PRESSAO_ATMOSFERICA"].forEach(function (tipo) {
             carregarGraficoPorTipo(tipo, {$estacao.id}); });
 
     }
@@ -670,7 +670,7 @@
             ["#card_vel_vento",{$estacao.id}, "TIPO_VELOCIDADE_VENTO"],
             ["#card_vol_chuva", {$estacao.id}, "TIPO_VOLUME_CHUVA"],
             ["#card_rajada_vento", {$estacao.id}, "TIPO_RAJADA_VENTO"],
-            ["#card_pressao_atm", {$estacao.id}, "TIPO_PRESSAO_ATM"]
+            ["#card_pressao_atm", {$estacao.id}, "TIPO_PRESSAO_ATMOSFERICA"]
 
             ];
 
@@ -685,7 +685,7 @@
             }, 10000); 
 
         //ATUALIZA O GRÁFICO COM OS VALORES PADRÃO NO LOAD DA PAGE
-        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO", "TIPO_PRESSAO_ATM"].forEach(function (tipo) {
+        ["TIPO_TEMPERATURA", "TIPO_UMIDADE_AR", "TIPO_VELOCIDADE_VENTO", "TIPO_VOLUME_CHUVA", "TIPO_RAJADA_VENTO", "TIPO_PRESSAO_ATMOSFERICA"].forEach(function (tipo) {
             carregarGraficoPorTipo(tipo, {$estacao.id}); });
 
   });

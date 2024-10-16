@@ -149,6 +149,10 @@ class LeiturasModelEstatica extends LeiturasModelAbstract
                     $colunaTipoInformacao = 'umidade_ar';
                     break;
 
+                case FiltrosLeitura::TIPO_PRESSAO_ATMOSFERICA:
+                    $colunaTipoInformacao = 'pressao_atm'; // #adicionando_pressao atm
+                    break;    
+
                     case FiltrosLeitura::TIPO_RAJADA_VENTO: //#adicionando_rajada_vento .
                         $colunaTipoInformacao = "rajada_vento_1h";
                         break;
@@ -409,6 +413,11 @@ class LeiturasModelEstatica extends LeiturasModelAbstract
                     $colunaTipoInformacao = 'volume_acc_chuva';
                     break;
 
+                case FiltrosLeitura::TIPO_PRESSAO_ATMOSFERICA:
+                    $colunaTipoInformacao = 'pressao_atm'; // #adicionando_pressao atm
+                    break;
+    
+
                 default:
                     throw new Exception('É necessário informar o tipo de informação desejada.');
             }
@@ -492,6 +501,10 @@ class LeiturasModelEstatica extends LeiturasModelAbstract
                 case FiltrosLeitura::TIPO_VOLUME_ACC_CHUVA:
                     $colunaTipoInformacao = 'volume_acc_chuva';
                     break;
+
+                    case FiltrosLeitura::TIPO_PRESSAO_ATMOSFERICA:
+                        $colunaTipoInformacao = 'pressao_atm'; // #adicionando_pressao atm
+                        break;    
 
                 case FiltrosLeitura::TIPO_RAJADA_VENTO:
                     $colunaTipoInformacao = 'rajada_vento_1h'; // #adicionando_rajada_vento .

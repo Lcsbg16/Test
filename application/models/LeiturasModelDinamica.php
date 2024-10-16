@@ -144,6 +144,10 @@ class LeiturasModelDinamica extends LeiturasModelAbstract
                     $agregador            = 'SUM';
                     break;
 
+                    case FiltrosLeitura::TIPO_PRESSAO_ATMOSFERICA:
+                        $colunaTipoInformacao = 'pressao_atm'; // #adicionando_pressao atm
+                        break;
+
                 case FiltrosLeitura::TIPO_UMIDADE_AR:
                     $colunaTipoInformacao = 'umidade_ar';
                     break;
