@@ -10,7 +10,8 @@ class AdminLeituras extends BaseCrudController
 
     public function index()
     {
-       // $this->load->model('LeiturasModel');
+        ini_set('memory_limit', '256M');
+        // $this->load->model('LeiturasModel');
         $this->load->model('EstacoesModel');
 
         $crud = new AppGroceryCRUD();
@@ -22,20 +23,24 @@ class AdminLeituras extends BaseCrudController
         $data_inicial = $this->input->get('data_inicial');
         $data_final   = $this->input->get('data_final');
 
-        if (isset($data_inicial)) {
+        if (isset($data_inicial))
+        {
             $this->session->set_userdata('leituras_filtro_data_inicial', $data_inicial);
         }
 
-        if (isset($data_final)) {
+        if (isset($data_final))
+        {
             $this->session->set_userdata('leituras_filtro_data_final', $data_final);
         }
 
-        if (!empty($this->session->leituras_filtro_data_inicial)) {
+        if (!empty($this->session->leituras_filtro_data_inicial))
+        {
             $data_inicial = date('Y-m-d H:i:s', strtotime($this->session->leituras_filtro_data_inicial));
             $crud->where('datahora >=', $data_inicial);
         }
 
-        if (!empty($this->session->leituras_filtro_data_final)) {
+        if (!empty($this->session->leituras_filtro_data_final))
+        {
             $data_final = date('Y-m-d H:i:s', strtotime($this->session->leituras_filtro_data_final));
             $crud->where('datahora <=', $data_final);
         }
@@ -56,7 +61,8 @@ class AdminLeituras extends BaseCrudController
         $crud->unset_add();
         $crud->unset_edit();
 
-        if (!$this->checaPermissaoUsuarioLogado('ADMIN_EXCLUIR_LEITURAS')) {
+        if (!$this->checaPermissaoUsuarioLogado('ADMIN_EXCLUIR_LEITURAS'))
+        {
             $crud->unset_delete();
         }
 
@@ -112,11 +118,10 @@ class AdminLeituras extends BaseCrudController
     }
 
     public function resetFilters()
-{
-    $this->session->unset_userdata('leituras_filtro_data_inicial');
-    $this->session->unset_userdata('leituras_filtro_data_final');
+    {
+        $this->session->unset_userdata('leituras_filtro_data_inicial');
+        $this->session->unset_userdata('leituras_filtro_data_final');
 
-    redirect('AdminLeituras');
-}
-
+        redirect('AdminLeituras');
+    }
 }
