@@ -4,7 +4,7 @@
  * Arquivo de configurações
  */
 
-error_reporting(E_ALL & E_DEPRECATED);
+error_reporting(E_ALL & ~E_DEPRECATED);
 
 ////// Configuração de BD
 define("APP_DB_SERVER", "localhost");
@@ -37,4 +37,4 @@ define("WEBSITE_BASE_URL", "http://localhost/telemetria-web");
 
 //define('ADMIN_EMAIL', 'lbguimaraes16@gmail.com');
 
-define('ENVIRONMENT', 'development');
+//define('ENVIRONMENT', 'development');
