@@ -3,6 +3,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 require_once 'BaseController.php';
+require_once BASEPATH . '../application/models/LeiturasModel.php';
 
 class Api extends BaseController
 {
@@ -15,6 +16,13 @@ class Api extends BaseController
 
         $this->load->model('LoginModel');
         $this->LoginModel->setAcessoSemLogin(true);
+
+        if (defined('Fonte_AdminLeituras'))
+        {
+            $this->fonteDadosController = Fonte_AdminLeituras;
+        }
+
+        $this->objLeituraModel = new LeiturasModel($this->fonteDadosController);
     }
 
     private function autenticar()
@@ -93,7 +101,7 @@ class Api extends BaseController
                 ];
 
                 $this->db->db_debug = FALSE;
-                $leitura_id         = $this->LeiturasModel->inserirLeitura($estacao['id'], $dadosLeitura);
+                $leitura_id         = $this->objLeituraModel->inserirLeitura($estacao['id'], $dadosLeitura);
 
                 echo 'OK';
             }
@@ -118,7 +126,7 @@ class Api extends BaseController
     public function atualizarCacheLeituraCalculada()
     {
         $this->load->model('LeiturasModel');
-        $this->LeiturasModel->atualizarCacheLeituraCalculada();
+        $this->objLeituraModel->atualizarCacheLeituraCalculada();
 
         $this->retornoApi['atualizarCacheLeituraCalculada'] = 'OK';
     }
@@ -127,7 +135,6 @@ class Api extends BaseController
     {
         $this->load->library('weathercom');
         $this->load->model('EstacoesModel');
-        $this->load->model('LeiturasModel');
         $this->load->library('Conversao');
 
         $estacoes = $this->EstacoesModel->getEstacoes(true, [], 'weather.com');
@@ -153,7 +160,7 @@ class Api extends BaseController
                         ];
 
                         $this->db->db_debug = FALSE;
-                        $this->LeiturasModel->inserirLeitura($estacaoAtual['id'], $dadosLeitura);
+                        $this->objLeituraModel->inserirLeitura($estacaoAtual['id'], $dadosLeitura);
                     }
                 }
                 catch (WeatherComException $e)
