@@ -9,22 +9,15 @@ class RelatorioLeituras extends BaseCrudController
 {
 
     private $objLeituraModel;
-    private $fonteDadosController = "";
 
     public function __construct()
     {
         parent::__construct();
-        $this->load->model("LeiturasModel");
+        $this->load->model('LeiturasModel');
     }
 
     public function index()
     {
-
-        if (defined('Fonte_RelatorioLeitura'))
-        {
-            $this->fonteDadosController = Fonte_RelatorioLeitura;
-        }
-
         $this->objLeituraModel = new LeiturasModel($this->fonteDadosController);
         $this->load->model('EstacoesModel');
         $variaveisView         = [];

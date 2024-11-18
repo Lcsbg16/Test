@@ -9,16 +9,10 @@ class Leituras extends BasePrivateController
 {
 
     private $objLeituraModel;
-    private $fonteDadosController = "";
 
     public function __construct()
     {
         parent::__construct();
-
-        if (defined('Fonte_AdminLeituras'))
-        {
-            $this->fonteDadosController = Fonte_AdminLeituras;
-        }
 
         $this->load->model("LeiturasModel");
 

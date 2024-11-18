@@ -22,8 +22,9 @@ abstract class BaseController extends CI_Controller
      * @property WeatherCom weathercom
      */
     public $smartylib;
-    protected $selected_site_menu = 'home';
-    private $alertas              = [];
+    protected $selected_site_menu   = 'home';
+    private $alertas                = [];
+    protected $fonteDadosController = "";
 
     public function __construct()
     {
@@ -32,6 +33,11 @@ abstract class BaseController extends CI_Controller
 
         $this->load->model('LoginModel');
         $this->limparCacheBancoDeDados();
+
+        if (defined('Fonte_RelatorioLeitura'))
+        {
+            $this->fonteDadosController = Fonte_RelatorioLeitura;
+        }
     }
 
     private function limparCacheBancoDeDados()

@@ -9,9 +9,20 @@ class LeiturasModel extends CI_Model
 
     private $fonteDados;
 
-    public function __construct($fonte)
+    public function __construct($fonte = NULL)
     {
 
+        if ($fonte = NULL)
+        {
+            error_log('É necessário definir o tipo de ponte para leituras. Considerando estática por padrão.');
+            $fonte = 'estatica';
+        }
+
+        $this->setFonteAdapter($fonte);
+    }
+
+    public function setFonteAdapter($fonte)
+    {
         switch ($fonte)
         {
             case 'estatica' :

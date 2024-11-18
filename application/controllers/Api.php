@@ -130,6 +130,8 @@ class Api extends BaseController
         $this->load->model('LeiturasModel');
         $this->load->library('Conversao');
 
+        $this->LeiturasModel = new LeiturasModel($this->fonteDadosController);
+
         $estacoes = $this->EstacoesModel->getEstacoes(true, [], 'weather.com');
 
         foreach ($estacoes as $estacaoAtual)
