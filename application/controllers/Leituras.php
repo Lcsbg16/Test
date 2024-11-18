@@ -5,8 +5,6 @@ if (!defined('BASEPATH'))
 
 require_once 'BasePrivateController.php';
 
-require_once BASEPATH . '../application/models/LeiturasModel.php';
-
 class Leituras extends BasePrivateController
 {
 
@@ -17,19 +15,19 @@ class Leituras extends BasePrivateController
     {
         parent::__construct();
 
-       
-       if(defined('Fonte_AdminLeituras')){
-        $this->fonteDadosController = Fonte_AdminLeituras ;
-    }
+        if (defined('Fonte_AdminLeituras'))
+        {
+            $this->fonteDadosController = Fonte_AdminLeituras;
+        }
 
-       
-        $this->objLeituraModel = new LeiturasModel($this->fonteDadosController); 
+        $this->load->model("LeiturasModel");
 
+        $this->objLeituraModel = new LeiturasModel($this->fonteDadosController);
     }
 
     public function getEstatisticasLeiturasJson() //Gerencia dados do Gráfico
     {
-       // $this->load->model('LeiturasModel');
+        // $this->load->model('LeiturasModel');
 
         $estacao     = $this->input->post('estacao_selecionada');
         $dataInicial = $this->input->post('data_inicial');
@@ -45,7 +43,7 @@ class Leituras extends BasePrivateController
         $filtros->setTipoInformacao(constant("FiltrosLeitura::$tipo_dados"));
         $filtros->setDirecao(FiltrosLeitura::DIRECAO_ASC);
 
-       // $this->objLeituraModel = new LeiturasModel($this->fonteDadosController); 
+        // $this->objLeituraModel = new LeiturasModel($this->fonteDadosController);
 
         $leituras = $this->objLeituraModel->calcularEstatisticasPorPeriodo($filtros);
 
@@ -68,7 +66,7 @@ class Leituras extends BasePrivateController
 
     public function exportarLeitura()
     {
-       // $this->load->model('LeiturasModel');
+        // $this->load->model('LeiturasModel');
         $this->load->model('EstacoesModel');
         $this->load->model('LoginModel');
 
