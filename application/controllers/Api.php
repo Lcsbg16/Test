@@ -72,7 +72,6 @@ class Api extends BaseController
     {
         $this->autenticar();
         $this->load->model('EstacoesModel');
-        $this->load->model('LeiturasModel');
 
         $postData             = $this->input->post();
         $identificadorEstacao = $postData['identidade'];
@@ -125,7 +124,6 @@ class Api extends BaseController
 
     public function atualizarCacheLeituraCalculada()
     {
-        $this->load->model('LeiturasModel');
         $this->objLeituraModel->atualizarCacheLeituraCalculada();
 
         $this->retornoApi['atualizarCacheLeituraCalculada'] = 'OK';
