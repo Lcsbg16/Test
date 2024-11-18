@@ -4,16 +4,16 @@ require_once 'FonteDadosLeitura.php';
 require_once 'LeiturasModelEstatica.php';
 require_once 'LeiturasModelDinamica.php';
 
-class LeiturasModel 
+class LeiturasModel extends CI_Model
 {
-    
+
     private $fonteDados;
 
-   
     public function __construct($fonte)
     {
-       
-        switch($fonte){
+
+        switch ($fonte)
+        {
             case 'estatica' :
                 $this->fonteDados = new LeiturasModelEstatica();
                 break;
@@ -24,12 +24,9 @@ class LeiturasModel
                 echo 'mongo';
                 break;
             default :
-            $this->fonteDados = new LeiturasModelEstatica();
-            break;
-            
-
+                $this->fonteDados = new LeiturasModelEstatica();
+                break;
         }
-
     }
 
     public function getCoresNiveisAlertasPluviometria()
@@ -44,7 +41,7 @@ class LeiturasModel
 
     public function inserirLeitura($estacaoId, $dadosLeitura)
     {
-        return  $this->fonteDados->inserirLeitura($estacaoId, $dadosLeitura);
+        return $this->fonteDados->inserirLeitura($estacaoId, $dadosLeitura);
     }
 
     public function inserirLeituraAPI($estacaoId, $leitura_id, $postData)
@@ -54,7 +51,7 @@ class LeiturasModel
 
     public function inserirLeituraValor($leituraId, $tag, $value)
     {
-        return  $this->fonteDados->inserirLeituraValor($leituraId, $tag, $value);
+        return $this->fonteDados->inserirLeituraValor($leituraId, $tag, $value);
     }
 
     public function inserirUltimaLeitura($estacaoId, $leituraId, $tag, $value)
@@ -75,16 +72,13 @@ class LeiturasModel
 
     public function calcularEstatisticasPorPeriodo(FiltrosLeitura $filtros)
     {
-        return  $this->fonteDados->calcularEstatisticasPorPeriodo($filtros);
-      
+        return $this->fonteDados->calcularEstatisticasPorPeriodo($filtros);
     }
-
 
     public function getLeiturasPorEscala(FiltrosLeitura $filtros = NULL, $retornarTudo = true)
     {
-       
+
         return $this->fonteDados->getLeiturasPorEscala($filtros, $retornarTudo);
-           
     }
 
     public function getAcumuladoChuvaPorPeriodoGeral($cacheBD = true) //Acumulos de chuva + descrição da estação + temperatura // jaque
@@ -103,7 +97,6 @@ class LeiturasModel
     public function getUltimasLeituras(FiltrosLeitura $filtros = NULL, $tempoLimite = 2440)
     {
         return $this->fonteDados->getUltimasLeituras($filtros, $tempoLimite);
-      
     }
 
     /**
@@ -117,9 +110,8 @@ class LeiturasModel
      */
     public function getUltimaLeituraRegistrada(FiltrosLeitura $filtros = NULL)
     {
-        return $this->fonteDados->getUltimaLeituraRegistrada($filtros);    
+        return $this->fonteDados->getUltimaLeituraRegistrada($filtros);
     }
-
 
     public function getUltimaTemperaturaMedia()
     {
@@ -171,8 +163,6 @@ class LeiturasModel
         return $this->fonteDados->exportarLeiturasParaCSV($filtros);
     }
 
-   
-
     public function atualizarCacheLeituraCalculada()
     {
         $this->fonteDados->atualizarCacheLeituraCalculada();
@@ -182,22 +172,22 @@ class LeiturasModel
 class FiltrosLeitura
 {
 
-    const ESCALA_ANO            = 'ano';
-    const ESCALA_MES            = 'mes';
-    const ESCALA_SEMANA         = 'semana';
-    const ESCALA_DIA            = 'dia';
-    const ESCALA_HORA           = 'hora';
-    const ESCALA_MINUTO         = 'minuto';
-    const TIPO_VELOCIDADE_VENTO = 'velocidade_vento';
-    const TIPO_DIRECAO_VENTO    = 'dir_vento'; //Jaque 31/07 -> monitoramento individual de estações
-    const TIPO_RAJADA_VENTO    = 'rajada_vento_1h'; //Jaque 15/05 -> #adicionando_rajada_vento 
-    const TIPO_PRESSAO_ATMOSFERICA    = 'pressao_atm'; //Jaque 19/09 -> #adicionando_pressao_atm 
-    const TIPO_TEMPERATURA      = 'temperatura';
-    const TIPO_VOLUME_CHUVA     = 'volume_chuva';
-    const TIPO_UMIDADE_AR       = 'umidade_ar';
-    const TIPO_VOLUME_ACC_CHUVA = 'volume_acc_chuva';
-    const DIRECAO_ASC           = 'ASC';
-    const DIRECAO_DESC          = 'DESC';
+    const ESCALA_ANO               = 'ano';
+    const ESCALA_MES               = 'mes';
+    const ESCALA_SEMANA            = 'semana';
+    const ESCALA_DIA               = 'dia';
+    const ESCALA_HORA              = 'hora';
+    const ESCALA_MINUTO            = 'minuto';
+    const TIPO_VELOCIDADE_VENTO    = 'velocidade_vento';
+    const TIPO_DIRECAO_VENTO       = 'dir_vento'; //Jaque 31/07 -> monitoramento individual de estações
+    const TIPO_RAJADA_VENTO        = 'rajada_vento_1h'; //Jaque 15/05 -> #adicionando_rajada_vento
+    const TIPO_PRESSAO_ATMOSFERICA = 'pressao_atm'; //Jaque 19/09 -> #adicionando_pressao_atm
+    const TIPO_TEMPERATURA         = 'temperatura';
+    const TIPO_VOLUME_CHUVA        = 'volume_chuva';
+    const TIPO_UMIDADE_AR          = 'umidade_ar';
+    const TIPO_VOLUME_ACC_CHUVA    = 'volume_acc_chuva';
+    const DIRECAO_ASC              = 'ASC';
+    const DIRECAO_DESC             = 'DESC';
 
     private $estacoes = array();
     private $dataInicial;
@@ -209,12 +199,12 @@ class FiltrosLeitura
     public static function getTodosTiposInformacao()
     {
         return [
-            self::TIPO_VOLUME_CHUVA         => 'Pluviometria',
-            self::TIPO_TEMPERATURA          => 'Temperatura',
-            self::TIPO_DIRECAO_VENTO        => 'Direção do Vento',
-            self::TIPO_UMIDADE_AR           => 'Umidade do Ar',
-            self::TIPO_VELOCIDADE_VENTO     => 'Velocidade do Vento',
-            self::TIPO_PRESSAO_ATMOSFERICA  => 'Pressão Atmosférica'
+            self::TIPO_VOLUME_CHUVA        => 'Pluviometria',
+            self::TIPO_TEMPERATURA         => 'Temperatura',
+            self::TIPO_DIRECAO_VENTO       => 'Direção do Vento',
+            self::TIPO_UMIDADE_AR          => 'Umidade do Ar',
+            self::TIPO_VELOCIDADE_VENTO    => 'Velocidade do Vento',
+            self::TIPO_PRESSAO_ATMOSFERICA => 'Pressão Atmosférica'
         ];
     }
 
