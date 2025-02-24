@@ -1,8 +1,43 @@
+version: '3.8'
+
 services:
-  web:
-    image: php:8.3.0RC2-apache
-    volumes:
-      - c:/xampp/htdocs/telemetria-web-master:/var/www/html
+  aplicacao:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aplicacao
     ports:
-      - "80:80"
-      
+      - "8081:80"
+    volumes:
+      - ./application:/var/www/html
+    networks:
+      - minha-rede
+
+  teste:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: teste
+    ports:
+      - "8082:80"
+    volumes:
+      - ./teste:/var/www/html
+    networks:
+      - minha-rede
+
+
+  homologacao:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: homologacao
+    ports:
+      - "8083:80"
+    volumes:
+      - ./homologacao:/var/www/html
+    networks:
+      - minha-rede
+
+networks:
+  minha-rede:
+    driver: bridge
