@@ -13,23 +13,13 @@ pipeline {
                 }
             }
         }
-	    
-        stage('Deploy para Teste') {
-            steps {
-                script {
-                    echo "Fazendo deploy para o contêiner de teste..."
-                    bat "xcopy /E /I /Y .\\application\\* .\\teste\\"
-                }
-            }
-        }
-
-
 
         stage('Reiniciar Contêineres') {
             steps {
                 script {
                     echo "Reiniciando contêineres para aplicar as mudanças..."
-                    bat "docker-compose restart aplicacao teste homologacao"
+                    bat "docker-compose down"
+                    bat "docker-compose up -d"
                 }
             }
         }
