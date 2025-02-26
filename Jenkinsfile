@@ -13,24 +13,17 @@ pipeline {
                 }
             }
         }
-
-		stage('Deploy para Teste') {
-		    steps {
-		        script {
-		            echo "Fazendo deploy para o contêiner de teste..."
-		            bat "xcopy /E /I /Y .\\application\\* .\\teste\\"
-		        }
-		    }
-		}
-
-        stage('Deploy para Homologacao') {
+	    
+        stage('Deploy para Teste') {
             steps {
                 script {
-                    echo "Fazendo deploy para o contêiner de homologação..."
-                    bat "xcopy /E /I /Y .\\application\\* .\\homologacao\\"
+                    echo "Fazendo deploy para o contêiner de teste..."
+                    bat "xcopy /E /I /Y .\\application\\* .\\teste\\"
                 }
             }
         }
+
+
 
         stage('Reiniciar Contêineres') {
             steps {
