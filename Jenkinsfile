@@ -14,14 +14,14 @@ pipeline {
             }
         }
 
-        stage('Deploy para Teste') {
-            steps {
-                script {
-                    echo "Fazendo deploy para o contêiner de teste..."
-                    bat "xcopy /E /I /Y .\\application\\* .\\teste\\"
-                }
-            }
-        }
+		stage('Deploy para Teste') {
+		    steps {
+		        script {
+		            echo "Fazendo deploy para o contêiner de teste..."
+		            bat "xcopy /E /I /Y .\\application\\* .\\teste\\"
+		        }
+		    }
+		}
 
         stage('Deploy para Homologacao') {
             steps {
