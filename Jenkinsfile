@@ -14,15 +14,6 @@ pipeline {
             }
         }
 
-        stage('Criar Pastas de Destino') {
-            steps {
-                script {
-                    echo "Criando pastas de destino (teste e homologacao)..."
-                    bat "mkdir teste homologacao"
-                }
-            }
-        }
-
         stage('Deploy para Teste') {
             steps {
                 script {
