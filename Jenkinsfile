@@ -23,15 +23,6 @@ pipeline {
             }
         }
 
-        stage('Deploy para Aplicacao') {
-            steps {
-                script {
-                    echo "Fazendo deploy para o contêiner de aplicação..."
-                    bat "xcopy /E /I /Y .\\application\\* .\\application\\"
-                }
-            }
-        }
-
         stage('Deploy para Teste') {
             steps {
                 script {
