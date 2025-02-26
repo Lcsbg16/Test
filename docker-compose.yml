@@ -21,10 +21,9 @@ services:
     ports:
       - "8082:80"
     volumes:
-      - ./teste:/var/www/html
+      - ./application:/var/www/html  # Mapeia a pasta application para o contêiner
     networks:
       - minha-rede
-
 
   homologacao:
     build:
@@ -34,7 +33,7 @@ services:
     ports:
       - "8083:80"
     volumes:
-      - ./homologacao:/var/www/html
+      - ./application:/var/www/html  # Mapeia a pasta application para o contêiner
     networks:
       - minha-rede
 
