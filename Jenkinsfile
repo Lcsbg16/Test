@@ -14,11 +14,20 @@ pipeline {
             }
         }
 
+        stage('Criar Pastas de Destino') {
+            steps {
+                script {
+                    echo "Criando pastas de destino (teste e homologacao)..."
+                    bat "mkdir teste homologacao"
+                }
+            }
+        }
+
         stage('Deploy para Aplicacao') {
             steps {
                 script {
                     echo "Fazendo deploy para o contêiner de aplicação..."
-                    bat "xcopy /E /I /Y .\\application\\ .\\application\\"
+                    bat "xcopy /E /I /Y .\\application\\* .\\application\\"
                 }
             }
         }
@@ -27,7 +36,7 @@ pipeline {
             steps {
                 script {
                     echo "Fazendo deploy para o contêiner de teste..."
-                    bat "xcopy /E /I /Y .\\application\\ .\\teste\\"
+                    bat "xcopy /E /I /Y .\\application\\* .\\teste\\"
                 }
             }
         }
@@ -36,7 +45,7 @@ pipeline {
             steps {
                 script {
                     echo "Fazendo deploy para o contêiner de homologação..."
-                    bat "xcopy /E /I /Y .\\application\\ .\\homologacao\\"
+                    bat "xcopy /E /I /Y .\\application\\* .\\homologacao\\"
                 }
             }
         }
