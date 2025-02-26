@@ -11,8 +11,7 @@ pipeline {
         stage('Exclude Directories') {
             steps {
                 sh '''
-                    rm -rf application/config
-                    rm -rf assets/uploads
+                    rm -rf assets/uploads/*
                 '''
             }
         }
@@ -38,19 +37,46 @@ pipeline {
             }
         }
 
-        stage('Build/Deploy') {
+        stage('Deploy para Aplicacao') {
             steps {
-                sh 'echo "Realizando build ou deploy..."'
+                script {
+                    echo "Fazendo deploy para o contêiner de aplicação..."
+                    sh """
+                        rsync -avz --delete ./application/ ./application/
+                    """
+                }
+            }
+        }
+
+        stage('Deploy para Teste') {
+            steps {
+                script {
+                    echo "Fazendo deploy para o contêiner de teste..."
+                    sh """
+                        rsync -avz --delete ./application/ ./teste/
+                    """
+                }
+            }
+        }
+        
+        stage('Reiniciar Contêineres') {
+            steps {
+                script {
+                    echo "Reiniciando contêineres para aplicar as mudanças..."
+                    sh "docker-compose restart aplicacao teste homologacao"
+                }
             }
         }
     }
 
     post {
         success {
-            echo 'Pipeline executada com sucesso!'
+            echo "Pipeline executada com sucesso!"
         }
         failure {
-            echo 'Pipeline falhou. Verifique os logs.'
+            echo "Pipeline falhou. Verifique os logs."
         }
-    }
+    }         
 }
+
+
