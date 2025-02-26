@@ -14,11 +14,19 @@ pipeline {
             }
         }
 
-        stage('Reiniciar Contêineres') {
+        stage('Desmontar Contêineres Antigos') {
             steps {
                 script {
-                    echo "Reiniciando contêineres para aplicar as mudanças..."
+                    echo "Parando e removendo contêineres antigos..."
                     bat "docker-compose down"
+                }
+            }
+        }
+
+        stage('Levantar Contêineres Novamente') {
+            steps {
+                script {
+                    echo "Iniciando contêineres novamente..."
                     bat "docker-compose up -d"
                 }
             }
