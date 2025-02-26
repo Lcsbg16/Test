@@ -2,39 +2,15 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Clone Repository') {
             steps {
-                sh 'echo "OIII"'
-                git branch: 'develop', url: 'https://gitlab.com/test781701/telemetria2.git'
-            }
-        }
+                script {
+                    echo "Clonando repositório do GitLab..."
+                    git url: 'https://github.com/Lcsbg16/Test.git', branch: 'develop'
 
-        stage('Exclude Directories') {
-            steps {
-                sh '''
-                    rm -rf assets/uploads/*
-                '''
-            }
-        }
-
-        stage('Install NPM Dependencies') {
-            steps {
-				sh 'echo "Instalando NPM..."'
-                sh 'npm install'
-            }
-        }
-
-        stage('Install Bower Dependencies') {
-            steps {
-				sh 'echo "Instalando Bower..."'
-                sh 'bower install --allow-root'
-            }
-        }
-
-        stage('Install Composer Dependencies') {
-            steps {
-				sh 'echo "Instalando Composer..."'
-                sh 'composer install --no-dev --optimize-autoloader'
+                    echo "Listando conteúdo do workspace para verificação..."
+                    bat "dir"
+                }
             }
         }
 
@@ -42,9 +18,7 @@ pipeline {
             steps {
                 script {
                     echo "Fazendo deploy para o contêiner de aplicação..."
-                    sh """
-                        rsync -avz --delete ./application/ ./application/
-                    """
+                    bat "xcopy /E /I /Y .\\application\\ .\\application\\"
                 }
             }
         }
@@ -53,18 +27,25 @@ pipeline {
             steps {
                 script {
                     echo "Fazendo deploy para o contêiner de teste..."
-                    sh """
-                        rsync -avz --delete ./application/ ./teste/
-                    """
+                    bat "xcopy /E /I /Y .\\application\\ .\\teste\\"
                 }
             }
         }
-        
+
+        stage('Deploy para Homologacao') {
+            steps {
+                script {
+                    echo "Fazendo deploy para o contêiner de homologação..."
+                    bat "xcopy /E /I /Y .\\application\\ .\\homologacao\\"
+                }
+            }
+        }
+
         stage('Reiniciar Contêineres') {
             steps {
                 script {
                     echo "Reiniciando contêineres para aplicar as mudanças..."
-                    sh "docker-compose restart aplicacao teste homologacao"
+                    bat "docker-compose restart aplicacao teste homologacao"
                 }
             }
         }
@@ -77,7 +58,5 @@ pipeline {
         failure {
             echo "Pipeline falhou. Verifique os logs."
         }
-    }         
+    }
 }
-
-
