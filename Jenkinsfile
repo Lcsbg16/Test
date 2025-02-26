@@ -4,6 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                sh 'echo "OIII"'
                 git branch: 'develop', url: 'https://gitlab.com/test781701/telemetria2.git'
             }
         }
