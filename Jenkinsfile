@@ -44,7 +44,7 @@ pipeline {
             steps {
                 script {
                     echo "Pipeline executada com sucesso!"
-                    
+                    // Adicione aqui notificações (e-mail, Slack, etc.)
                 }
             }
         }
@@ -53,7 +53,7 @@ pipeline {
     post {
         failure {
             echo "Pipeline falhou. Verifique os logs."
-            )
+            // Adicione aqui notificações de falha (e-mail, Slack, etc.)
         }
     }
 }
